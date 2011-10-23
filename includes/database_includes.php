@@ -11,7 +11,6 @@ function database_connect($fn){
 }
 
 function database_query($query, $params = array()) {
-    $sth;
     database_connect(function($dbh) use($query, $params, &$sth) {
         $sth = $dbh->prepare($query);
         $sth->execute($params);
