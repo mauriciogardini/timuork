@@ -3,8 +3,9 @@
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />    
 </head>
 <?php
-include(dirname(__FILE__) . "/includes/user_includes.php");
-include(dirname(__FILE__) . "/includes/general_includes.php");
+require_once(dirname(__FILE__) . "/includes/user_includes.php");
+require_once(dirname(__FILE__) . "/includes/general_includes.php");
+require_once(dirname(__FILE__) . "/includes/security_includes.php");
 $username = filter_var($_POST["username"], FILTER_SANITIZE_STRING);
 $password = filter_var($_POST["password"], FILTER_SANITIZE_STRING);
 $auth_user = (object) array("username" => $username, "password" => $password);
