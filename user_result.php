@@ -5,10 +5,10 @@
 <?php
 require_once(dirname(__FILE__) . "/includes/user_includes.php");
 require_once(dirname(__FILE__) . "/includes/security_includes.php");
-$name = filter_var($_POST["unregistered_name"], FILTER_SANITIZE_STRING);
-$email = filter_var($_POST["unregistered_email"], FILTER_SANITIZE_STRING);
-$username = filter_var($_POST["unregistered_username"], FILTER_SANITIZE_STRING);
-$password = filter_var($_POST["unregistered_password"], FILTER_SANITIZE_STRING);
+$name = $_POST["unregistered_name"];
+$email = $_POST["unregistered_email"];
+$username = $_POST["unregistered_username"];
+$password = $_POST["unregistered_password"];
 $user = (object) array("name" => $name, "email" => $email, 
     "username" => $username, "password" => $password);
 $crypted_password = crypt_word($password);

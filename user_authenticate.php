@@ -7,8 +7,8 @@ require_once(dirname(__FILE__) . "/includes/user_includes.php");
 require_once(dirname(__FILE__) . "/includes/general_includes.php");
 require_once(dirname(__FILE__) . "/includes/security_includes.php");
 require_once(dirname(__FILE__) . "/includes/session_includes.php");
-$username = filter_var($_POST["username"], FILTER_SANITIZE_STRING);
-$password = filter_var($_POST["password"], FILTER_SANITIZE_STRING);
+$username = $_POST["username"];
+$password = $_POST["password"];
 $auth_user = (object) array("username" => $username, "password" => $password);
 ?>
 <form action="index.php" method="post">
