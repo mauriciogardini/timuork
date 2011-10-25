@@ -10,6 +10,16 @@
     <style type="text/css">
     </style>
 </head>
+<!-- Testing only -->
+<?php
+    require_once(dirname(__FILE__) . "/includes/session_includes.php");
+
+    if (isset($_POST['logout']) && $_POST['logout']) {
+        echo "Apaguei";
+        quit_session();
+    }
+?>
+
 <body>
     <div class="topbar">
         <div class="fill">

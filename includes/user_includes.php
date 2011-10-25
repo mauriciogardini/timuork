@@ -32,8 +32,6 @@ function user_update($user) {
 function user_authenticate($auth_user) {
     if(user_exists($auth_user->username)) {
         $user = user_first($auth_user->username);
-        echo nl2br($user->password . "</br>");
-        echo nl2br($auth_user->password . "</br>");
         $check = words_match($auth_user->password, $user->password);
 
         if ($check)

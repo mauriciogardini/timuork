@@ -6,6 +6,7 @@
 require_once(dirname(__FILE__) . "/includes/user_includes.php");
 require_once(dirname(__FILE__) . "/includes/general_includes.php");
 require_once(dirname(__FILE__) . "/includes/security_includes.php");
+require_once(dirname(__FILE__) . "/includes/session_includes.php");
 $username = filter_var($_POST["username"], FILTER_SANITIZE_STRING);
 $password = filter_var($_POST["password"], FILTER_SANITIZE_STRING);
 $auth_user = (object) array("username" => $username, "password" => $password);
@@ -14,8 +15,9 @@ $auth_user = (object) array("username" => $username, "password" => $password);
 <?php
 $authenticated = user_authenticate($auth_user); 
 if ($authenticated) {
+    start_session($auth_user->username); 
     echo "Seja bem-vindo! Você será redirecionado para o site principal em 3 segundos.";
-    redirect("http://www.pudim.com.br", 3);
+    redirect("chat.php", 3);
 }
 else {
     echo "Usuário ou senha incorretos. Tente novamente.";
