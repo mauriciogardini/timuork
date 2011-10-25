@@ -6,6 +6,10 @@ function user_first($username) {
     return database_fetch(database_query("SELECT * FROM users WHERE username = ?", array($username)));
 }
 
+function user_by_id($id) {
+    return database_fetch(database_query("SELECT * FROM users WHERE id = ?", array($id)));
+}
+
 function user_exists($username) {
     $sql = "SELECT COUNT(*) AS count FROM users WHERE username = ?";
     $count = database_fetch(database_query($sql, array($username)))->count;
