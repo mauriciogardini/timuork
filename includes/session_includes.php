@@ -3,6 +3,7 @@ function start_session($username) {
     if (session_id() == "") {
         session_start();
     }
+    //TODO: Verificar se o usuário existe no banco.
     $_SESSION['username'] = $username;
 }
 
