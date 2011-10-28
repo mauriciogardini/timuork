@@ -10,7 +10,10 @@
     if(check_session()) { 
 ?>
 <iframe name="chat" src="chat.php" width="50%" height="300">
-    <p>Your browser does not support iframes.</p>
+    <p>Eu acho que tá na hora de você trocar de browser, porque aparentente a sua lata velha não suporta frames.</p>
+</iframe>
+<iframe name="online_users" src="online_users.php" width="20%" height="300">
+    <p>Eu acho que tá na hora de você trocar de browser, porque aparentente a sua lata velha não suporta frames.</p>
 </iframe> 
 <?php
     }

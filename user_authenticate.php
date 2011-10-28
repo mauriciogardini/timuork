@@ -17,7 +17,7 @@ $authenticated = user_authenticate($auth_user);
 if ($authenticated) {
     start_session($auth_user->username); 
     echo "Seja bem-vindo! Você será redirecionado para o site principal em 3 segundos.";
-    redirect("chat.php", 3);
+    redirect("project.php", 3);
 }
 else {
     echo "Usuário ou senha incorretos. Tente novamente.";

@@ -36,3 +36,13 @@ CREATE TABLE messages (
     FOREIGN KEY(chat_id) REFERENCES chats(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
+
+CREATE TABLE online_users (
+    id INTEGER PRIMARY KEY ASC,
+    user_id INTEGER,
+    chat_id INTEGER,
+    last_seen_at INTEGER,
+    FOREIGN KEY(chat_id) REFERENCES chats(id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+    

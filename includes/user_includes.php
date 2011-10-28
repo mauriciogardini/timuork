@@ -38,10 +38,12 @@ function user_authenticate($auth_user) {
         $user = user_first($auth_user->username);
         $check = words_match($auth_user->password, $user->password);
 
-        if ($check)
+        if ($check) {
             return true;
-        else
+        }
+        else {
             return false;
+        }
     }
     else {
         return false;
