@@ -10,7 +10,8 @@ CREATE TABLE users (
 CREATE TABLE projects (
     id INTEGER PRIMARY KEY ASC,
     name TEXT,
-    description TEXT
+    description TEXT,
+    admin_user_id INTEGER
 );
 
 CREATE TABLE projects_users (
