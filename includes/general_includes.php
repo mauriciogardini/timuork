@@ -9,8 +9,8 @@ function redirect($url, $seconds_to_redirect)
     } 
     else 
     {   //Como funciona isso? 
-        @ob_flush();
-        @ob_end_clean();
+        //@ob_flush();
+        //@ob_end_clean();
         header("Location: $url"); 
         exit; 
     } 

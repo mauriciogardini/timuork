@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />    
     <!--TODO: Título -->
@@ -81,70 +80,80 @@
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 </head>
 <body>
-    <!-- Testing only -->
     <?php
         require_once(dirname(__FILE__) . "/includes/session_includes.php");
-
-        if (isset($_GET['logout']) && $_GET['logout']) {
-            quit_session();
-        }
-    ?>
-    <?php
-        require_once(dirname(__FILE__) . "/includes/general_includes.php");
-        require_once(dirname(__FILE__) . "/includes/session_includes.php");
-        if (check_session()) {
-            redirect("home.php", 0);
-        }
+        require_once(dirname(__FILE__) . "/includes/project_includes.php");
+        require_once(dirname(__FILE__) . "/includes/user_includes.php");
+        
+        if(check_session()) {
+            if(isset($_GET["id"])) {
+                $project = project_by_id($_GET["id"]);
+                $session = get_session();
+                $user = user_first($session);
     ?>
     <div class="topbar">
         <div class="fill">
             <div class="container">
                 <a class="brand" href="#">Project name</a>
                 <ul class="nav">
-                    <li class="active"><a href="
-                        <?php 
-                            if (check_session()) { 
-                                echo "home.php";
-                            }
-                            else {
-                                echo "index.php";
-                            }    
-                        ?>">Home</a>
-                    </li>
+                <li class="active"><a href="
+                    <?php 
+                        if (check_session()) { 
+                            echo "home.php";
+                        }
+                        else {
+                            echo "index.php";
+                        }    
+                    ?>">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <form action="user_authenticate.php" method="post" class="pull-right">    
-                    <input class="input-small" id="username" name="username" size="30" type="text" placeholder="Username" />
-                    <input class="input-small" id="password" name="password" size="30" type="password" placeholder="Senha" />
-                    <button class="btn">Entrar</button>
-                    <span class="help-block">
-                        <input type="checkbox" name="remember_me" id="remember_me" value="remember_me"> Lembrar-me 
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="forgot_password.php">Esqueceu sua senha?</a>
-                    </span>
-                </form>               
-            </div>
+                <p class="pull-right">Logado como <a href="#"><?php echo $user->name ?></a> | <a href="index.php?logout=true">Sair</a></p>
+                <span class="help-block">
+                    &nbsp;
+                </span>
+        </div>
         </div>
     </div>
     <div class="container">
-        <div class="content" id="centered">
-            <div class="row center">
-                <div class="span14">
-                    <form action="user_result.php" method="post" class="center">
-                        <h3>Novo aqui? Junte-se à nós!</h3>
-                        <p><input class="input-xlarge" id="unregistered_name" name="unregistered_name" size="30" type="text" placeholder="Nome completo" /></p>
-                        <p><input class="input-xlarge" id="unregistered_email" name="unregistered_email" size="30" type="text" placeholder="E-mail" /></p>
-                        <p><input class="input-xlarge" id="unregistered_username" name="unregistered_username" size="30" type="text" placeholder="Username" /></p>
-                        <p><input class="input-xlarge" id="unregistered_password" name="unregistered_password" size="30" type="password" placeholder="Senha" /></p>
-                        <p><button class="btn">Registrar</button>
-                    </form>
+        <div class="content">
+            <div class="row">
+                <div class="span10"> 
+                    <h1><?php echo $project->name; ?></h1>
+                    <?php echo $project->description; ?>
+                    </br>
+                    </br>
+                    <?php
+                        if(project_allowance_exists($project->id, $user->id)) {
+                    ?>
+                    <a href="project.php?id=<?php echo $project->id ?>">Ir para o projeto</a>
+                    <?php
+                        }
+                    ?>
+                </div>
+                <div class="span4">
+                    <h3>Usuários participantes</h3>
+                    <?php project_allowed_users_by_project_id(function($item) use($project) { ?>
+                    <p><?php 
+                            if($project->admin_user_id == $item->id) {
+                                echo "*" . $item->name;
+                            }
+                            else {
+                                echo $item->name;
+                            } 
+                        ?>
+                    </p>
+                    <?php }, $project->id); ?>
                 </div>
             </div>
         </div>
-        <footer id="bottom">
-            <p>&copy; Company 2011</p>
-        </footer>
     </div>
+    <?php
+            }
+        }
+        else {
+            echo "Você não está logado.";
+        }
+    ?>
 </body>
 </html>

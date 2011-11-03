@@ -16,8 +16,7 @@ $auth_user = (object) array("username" => $username, "password" => $password);
 $authenticated = user_authenticate($auth_user); 
 if ($authenticated) {
     start_session($auth_user->username); 
-    echo "Seja bem-vindo! Você será redirecionado para o site principal em 3 segundos.";
-    redirect("home.php", 3);
+    redirect("home.php", 0);
 }
 else {
     echo "Usuário ou senha incorretos. Tente novamente.";

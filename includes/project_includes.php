@@ -38,6 +38,12 @@ function project_allowance_exists($project_id, $user_id) {
     return $count;
 }
 
+function project_allowed_users_by_project_id($fn, $project_id) {
+    $sql = "SELECT users.* FROM users JOIN projects_users ON user_id WHERE projects_users.project_id = ?";
+    $values = array($project_id);
+    database_iterate(database_query($sql, $values), $fn);
+}
+
 function project_allow_user($project_id, $user_id) {
     $sql = "INSERT INTO projects_users(id, project_id, user_id) VALUES(NULL, ?, ?)";
     $values = array($project_id, $user_id);
@@ -51,7 +57,7 @@ function project_disallow_user($project_id, $user_id) {
 }
 
 function project_by_user_id($fn, $user_id) {
-    $sql = "SELECT * FROM projects WHERE id IN (SELECT project_id FROM projects_users WHERE user_id = ?)";
+    $sql = "SELECT projects.* FROM projects JOIN projects_users ON project_id WHERE projects_users.project_id = ?";
     $values = array($user_id);
     database_iterate(database_query($sql, $values), $fn);
 }
