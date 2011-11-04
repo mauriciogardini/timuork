@@ -96,7 +96,7 @@
             <div class="container">
                 <a class="brand" href="#">Project name</a>
                 <ul class="nav">
-                <li class="active"><a href="
+                <li><a href="
                     <?php 
                         if (check_session()) { 
                             echo "home.php";
@@ -126,7 +126,15 @@
                     <?php
                         if(project_allowance_exists($project->id, $user->id)) {
                     ?>
-                    <a href="project.php?id=<?php echo $project->id ?>">Ir para o projeto</a>
+                    <a href="project.php?id=<?php echo $project->id ?>">Ir para o projeto</a> 
+                    <?php
+                        }
+                    ?>
+                    </br>
+                    <?php
+                        if(is_project_admin($project->id, $user->id)) {
+                    ?>
+                    <a href="project_manage.php?id=<?php echo $project->id ?>">Editar projeto</a>
                     <?php
                         }
                     ?>

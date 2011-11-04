@@ -90,6 +90,7 @@
     require_once(dirname(__FILE__) . "/includes/message_includes.php");
     require_once(dirname(__FILE__) . "/includes/user_includes.php");
     require_once(dirname(__FILE__) . "/includes/project_includes.php");
+    require_once(dirname(__FILE__) . "/includes/chat_includes.php");
 
     if(check_session()) {
         if(isset($_GET["id"])) {
@@ -125,22 +126,28 @@
 <div class="container">
     <div class="content">
         <div class="row">
-            <div class="span14">
+            <div class="span9">
                 <h1><?php echo $project->name ?></h1>    
+            </div>
+            <div class="span5">
+                <h3>Usuários online</h3>
             </div>
         </div>
         <div class="row">
             <div class="span9">
-            <iframe name="chat" src="chat.php?id=<?php echo $project->id ?>" width="100%" height="300">
+                <?php 
+                    $chat = chat_by_project_id($project->id);
+                ?>
+                <iframe name="chat" src="chat.php?id=<?php echo $chat->id ?>" width="100%" height="300">
                     <p>Eu acho que tá na hora de você trocar de browser, porque aparentente a sua lata velha não suporta frames.</p>
                 </iframe>
-                <form action="chat.php?id=<?php echo $project->id ?>" method="post" target="chat">
+                <form action="chat.php?id=<?php echo $chat->id ?>" method="post" target="chat">
                     <input class="chat_textbox" type="<?php echo check_session() ? 'text' : 'hidden' ?>" id="text" name="text"/>
                     <input type="<?php echo check_session() ? 'submit' : 'hidden' ?>" value="Enviar"/>
                 </form>
             </div>
             <div class="span5">
-            <iframe name="online_users" src="online_users.php?id=<?php echo $project->id ?>" width="100%" height="300">
+            <iframe name="online_users" src="online_users.php?id=<?php echo $chat->id ?>" width="100%" height="300">
                     <p>Eu acho que tá na hora de você trocar de browser, porque aparentente a sua lata velha não suporta frames.</p>
                 </iframe> 
             </div>

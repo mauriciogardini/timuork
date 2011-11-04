@@ -15,7 +15,7 @@
         if(check_session()) {
             $user = user_first($_SESSION['username']);
             if(isset($_GET['id'])) {
-                $chat_id = chat_by_project_id($_GET['id']);
+                $chat_id = $_GET['id'];
                 if(isset($_POST['text'])) {
                     $text = $_POST['text'];
                     $message = (object) array("text" => $text, "date_time" => idate("U"), 
@@ -34,7 +34,7 @@
     ?>
     </p>
     <?php
-                }, 1);
+                }, $_GET['id']);
                 status_manage($status_info);
                 redirect('chat.php?id=' . $_GET['id'], 5);
             }

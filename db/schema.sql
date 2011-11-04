@@ -26,7 +26,8 @@ CREATE TABLE chats (
     id INTEGER PRIMARY KEY ASC,
     project_id INTEGER,
     user_id INTEGER,
-    FOREIGN KEY(project_id) REFERENCES projects(id)
+    FOREIGN KEY(project_id) REFERENCES projects(id),
+    FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
 CREATE TABLE messages (

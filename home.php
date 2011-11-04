@@ -81,59 +81,59 @@
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 </head>
 <body>
-<?php
-    require_once(dirname(__FILE__) . "/includes/session_includes.php");
-    require_once(dirname(__FILE__) . "/includes/user_includes.php");
-    require_once(dirname(__FILE__) . "/includes/general_includes.php");
+    <?php
+        require_once(dirname(__FILE__) . "/includes/session_includes.php");
+        require_once(dirname(__FILE__) . "/includes/user_includes.php");
+        require_once(dirname(__FILE__) . "/includes/general_includes.php");
 
-    if (check_session()) {
-        $session = get_session();
-        $user = user_first($session);
-?>
-<div class="topbar">
-    <div class="fill">
-        <div class="container">
-            <a class="brand" href="#">Project name</a>
-            <ul class="nav">
-                <li class="active"><a href="
-                    <?php 
-                        if (check_session()) { 
-                            echo "home.php";
-                        }
-                        else {
-                            echo "index.php";
-                        }    
-                    ?>">Home</a>
-                </li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <p class="pull-right">Logado como <a href="#"><?php echo $user->name ?></a> | <a href="index.php?logout=true">Sair</a></p>
-            <span class="help-block">
-                &nbsp;
-            </span>
-       </div>
+        if (check_session()) {
+            $session = get_session();
+            $user = user_first($session);
+    ?>
+    <div class="topbar">
+        <div class="fill">
+            <div class="container">
+                <a class="brand" href="#">Project name</a>
+                <ul class="nav">
+                    <li><a href="
+                        <?php 
+                            if (check_session()) { 
+                                echo "home.php";
+                            }
+                            else {
+                                echo "index.php";
+                            }    
+                        ?>">Home</a>
+                    </li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <p class="pull-right">Logado como <a href="#"><?php echo $user->name ?></a> | <a href="index.php?logout=true">Sair</a></p>
+                <span class="help-block">
+                    &nbsp;
+                </span>
+        </div>
+        </div>
     </div>
-</div>
-<div class="container">
-    <div class="content">
-        <div class="row">
-            <div class="span10">
-                <h2>Últimas interações</h2>
-            </div>
-            <div class="span4">
-            <iframe name="project_list" src="project_list.php" width="50%" height="300" frameBorder=0>
-                <p>Eu acho que tá na hora de você trocar de browser, porque aparentente a sua lata velha não suporta frames.</p>
-            </iframe>
+    <div class="container">
+        <div class="content">
+            <div class="row">
+                <div class="span10">
+                    <h2>Últimas interações</h2>
+                </div>
+                <div class="span4">
+                <iframe name="project_list" src="project_list.php" width="50%" height="300" frameBorder=0>
+                    <p>Eu acho que tá na hora de você trocar de browser, porque aparentente a sua lata velha não suporta frames.</p>
+                </iframe>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<?php
-    }
-    else {
-        redirect("index.php", 0);
-    }
-?>
+    <?php
+        }
+        else {
+            redirect("index.php", 0);
+        }
+    ?>
 </body>
 </html>
