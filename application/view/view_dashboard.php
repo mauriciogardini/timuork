@@ -24,9 +24,8 @@
     <div class="topbar">
         <div class="fill">
             <div class="container">
-                <a class="brand" href="#">Project name</a>
+                <a class="brand" href="#">Timuork</a>
                 <ul class="nav">
-                    <li><a href="/">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>

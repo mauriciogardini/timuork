@@ -4,6 +4,11 @@
         }
 
         function index() {
-            $this->loadView('view_home', NULL);
+            if ($this->authenticated) {
+                $this->loadView('view_dashboard', NULL);
+            }
+            else {
+                $this->loadView('view_home', NULL);
+            }
         }
     }

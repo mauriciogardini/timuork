@@ -1,5 +1,4 @@
 <?php
-    require_once(INCLUDES_PATH . "/session_includes.php");
     require_once(INCLUDES_PATH . "/validation_includes.php");
     require_once(INCLUDES_PATH . "/security_includes.php");
     require_once(INCLUDES_PATH . "/user_includes.php");
@@ -7,10 +6,6 @@
     class model_user extends Application {
         function __construct() {
             //
-        }
-
-        function get_user_session() {
-            return check_session();
         }
 
         function add($user) {
@@ -30,7 +25,7 @@
                         }
                         else
                         {
-                            return "O sistema estea indisponível. Tente novamente mais tarde.";
+                            return "O sistema está indisponível. Tente novamente mais tarde.";
                         }       
                     }
                     else {

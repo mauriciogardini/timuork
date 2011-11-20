@@ -19,12 +19,16 @@
             $username = $_POST["username"];
             $password = $_POST["password"];
             $auth_user = (object) array("username" => $username, "password" => $password);
-            $is_authenticated = $this->model_user->authenticate($auth_user);
-            if ($is_authenticated) {
+            $this->authenticated = $this->model_user->authenticate($auth_user);
+            if ($this->authenticated) {
                 $this->loadView('view_dashboard', NULL);
             }
             else {
-                $this->loadView('home', NULL);
+                $this->loadView('view_home', NULL);
             }
+        }
+
+        protected function requiresAuth() {
+            return $this->currentAction != 'login';
         }
     }

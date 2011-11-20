@@ -8,16 +8,12 @@ function start_session($username) {
 }
 
 function quit_session() {
-    if (session_id() == "") {
-        session_start();
+    if (check_session()) {
+        session_destroy();
     }
-    session_destroy();
 }
 
 function check_session() {
-    if (session_id() == "") {
-        session_start();
-    }    
     if (isset($_SESSION['username'])) {
         return true;
     }
@@ -27,10 +23,5 @@ function check_session() {
 }
 
 function get_session() {
-    if (check_session()) {
-        return $_SESSION['username'];
-    }
-    else {
-        return NULL;
-    }
+    return check_session() ? $_SESSION['username'] : NULL;
 }
