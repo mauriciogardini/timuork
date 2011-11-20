@@ -1,25 +1,25 @@
 <?php
     require_once(INCLUDES_PATH . "/session_includes.php" );
+    require_once(INCLUDES_PATH . "/general_includes.php" );
 
     class Application
     {
         var $url;
         var $model;
-        var $authenticated;
 
         function __construct($url)
         {
             $this->url = $url;
-            $authenticated = $this->checkSession();
+            $this->beforeFilter();
         }
 
-        function checkSession() {
+        function authenticated() {
             return check_session();
         }
 
         public function beforeFilter() {
             if($this->requiresAuth() && !$this->authenticated()) {
-                $this->redirect('/');
+                redirect('/', 0);
             }
         }
 
@@ -36,7 +36,7 @@
             }
             require_once($file);
 
-            $controller = new $class();
+            $controller = new $class($this->url);
 
             if(method_exists($controller, $this->url['action'])) {
                 if (isset($this->url['id'])) {
