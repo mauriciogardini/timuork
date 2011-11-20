@@ -4,11 +4,11 @@
     require_once(INCLUDES_PATH . "/user_includes.php");
 
     class model_user extends Application {
-        function __construct() {
+        public function __construct() {
             //
         }
 
-        function add($user) {
+        public function add($user) {
             if(validate_username($user->username)) {
                 if(validate_password($user->password)) {
                     if(validate_email($user->email)) {
@@ -41,11 +41,11 @@
             }
         }
 
-        function select() {
+        public function select() {
         
         }
 
-        function authenticate($auth_user) {
+        public function authenticate($auth_user) {
             return user_authenticate($auth_user);
         }
     }

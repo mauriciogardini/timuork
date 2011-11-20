@@ -1,6 +1,6 @@
 <?php
     class Home extends Application {
-        function index() {
+        public function index() {
             if ($this->authenticated()) {
                 $this->loadView('view_dashboard', NULL);
             }
@@ -9,7 +9,7 @@
             }
         }
 
-        function requiresAuth() {
+        protected function requiresAuth() {
             return false;
         }
     }

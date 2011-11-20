@@ -1,10 +1,11 @@
 <?php
     class User extends Application {
-        function __construct() {
+        public function __construct() {
             $this->loadModel('model_user');
         }
 
-        function manage() {
+        public function manage() {
+
             $name = $_POST["unregistered_name"];
             $email = $_POST["unregistered_email"];
             $username = $_POST["unregistered_username"];
@@ -15,7 +16,7 @@
             $this->loadView('view_user_manage', $data);
         }
 
-        function login() {
+        public function login() {
             $username = $_POST["username"];
             $password = $_POST["password"];
             $auth_user = (object) array("username" => $username, "password" => $password);

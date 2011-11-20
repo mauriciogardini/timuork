@@ -7,17 +7,17 @@
         var $url;
         var $model;
 
-        function __construct($url)
+        public function __construct($url)
         {
             $this->url = $url;
             $this->beforeFilter();
         }
 
-        function authenticated() {
+        protected function authenticated() {
             return check_session();
         }
 
-        public function beforeFilter() {
+        protected function beforeFilter() {
             if($this->requiresAuth() && !$this->authenticated()) {
                 redirect('/', 0);
             }
@@ -27,7 +27,7 @@
             return true;
         }
 
-        function loadController($class)
+        public function loadController($class)
         {
             $file = "controller/".$this->url['controller'].".php";
     
