@@ -3,7 +3,7 @@
     require_once(INCLUDES_PATH . "/security_includes.php");
     require_once(INCLUDES_PATH . "/user_includes.php");
 
-    class model_user extends Application {
+    class Users extends Application {
         public function __construct() {
             //
         }

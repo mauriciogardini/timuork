@@ -29,7 +29,7 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <form action="user/login" method="post" class="pull-right">    
+                <form action="/login" method="post" class="pull-right">    
                     <input class="input-small" id="username" name="username" size="30" type="text" placeholder="Username" />
                     <input class="input-small" id="password" name="password" size="30" type="password" placeholder="Senha" />
                     <button class="btn">Entrar</button>
@@ -46,7 +46,7 @@
         <div class="content" id="centered">
             <div class="row center">
                 <div class="span14">
-                    <form action="user/manage" method="post" class="center">
+                    <form action="/users/add" method="post" class="center">
                         <h3>Novo aqui? Junte-se à nós!</h3>
                         <p><input class="input-xlarge" id="unregistered_name" name="unregistered_name" size="30" type="text" placeholder="Nome completo" /></p>
                         <p><input class="input-xlarge" id="unregistered_email" name="unregistered_email" size="30" type="text" placeholder="E-mail" /></p>

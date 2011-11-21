@@ -2,7 +2,7 @@
     require_once(INCLUDES_PATH . "/project_includes.php");
     require_once(INCLUDES_PATH . "/chat_includes.php");
 
-    class model_project extends Application {
+    class Projects extends Application {
         public function __construct() {
             //
         }

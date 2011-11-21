@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />    
-    <!--TODO: Título -->
-    <title>Home</title>
-    <meta name="description" content="Home">
+    <title><?php echo $project->name ?></title> 
+    <meta name="description" content="Log In">
     <meta name="author" content="Maurício Gardini">
     <link rel="stylesheet" href="<?php echo WEB_PATH . '/styles/bootstrap.min.css'?>">
-    <link rel="stylesheet" href="<?php echo WEB_PATH . '/styles/snippets.css'?>">    
+    <link rel="stylesheet" href="<?php echo WEB_PATH . '/styles/snippets.css'?>">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -24,12 +23,12 @@
     <div class="topbar">
         <div class="fill">
             <div class="container">
-                <a class="brand" href="#">Timuork</a>
+                <a class="brand" href="/">Timuork</a>
                 <ul class="nav">
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <p class="pull-right">Logado como <a href="#">Teste</a> | <a href="index.php?logout=true">Sair</a></p>
+                <p class="pull-right">Logado como <a href="#"><?php echo $username ?></a> | <a href="index.php?logout=true">Sair</a></p>
                 <span class="help-block">
                     &nbsp;
                 </span>
@@ -39,15 +38,21 @@
     <div class="container">
         <div class="content">
             <div class="row">
-                <div class="span10">
-                    <h2>Últimas interações</h2>
+                <div class="span9">
+                    <h1><?php echo $project->name ?></h1>    
                 </div>
-                <div class="span4">
-                <!--<iframe name="project_list" src="project_list.php" width="50%" height="300" frameBorder=0>
-                    <p>Eu acho que tá na hora de você trocar de browser, porque aparentente a sua lata velha não suporta frames.</p>
-                </iframe>-->
+                <div class="span5">
+                    <h3>Usuários online</h3>
                 </div>
             </div>
+            <div class="row">
+                <div class="span9">
+                <!-- chat.php -->
+                </div>
+                <div class="span5">
+                <!-- online_users.php -->
+                </div>
+            </div> 
         </div>
     </div>
 </body>

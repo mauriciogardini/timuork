@@ -2,8 +2,9 @@
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />    
-    <title>Overview - <?php echo $project->name ?></title>
-    <meta name="description" content="<?php echo $project->name ?>">
+    <!--TODO: Título -->
+    <title>Novo Projeto</title>
+    <meta name="description" content="Novo Projeto">
     <meta name="author" content="Maurício Gardini">
     <link rel="stylesheet" href="<?php echo WEB_PATH . '/styles/bootstrap.min.css'?>">
     <link rel="stylesheet" href="<?php echo WEB_PATH . '/styles/snippets.css'?>">
@@ -23,12 +24,12 @@
     <div class="topbar">
         <div class="fill">
             <div class="container">
-                <a class="brand" href="#">Timuork</a>
+                <a class="brand" href="/">Timuork</a>
                 <ul class="nav">
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <p class="pull-right">Logado como <a href="#"><?php echo "Teste" ?></a> | <a href="index.php?logout=true">Sair</a></p>
+                <p class="pull-right">Logado como <a href="#"><?php echo $username ?></a> | <a href="index.php?logout=true">Sair</a></p>
                 <span class="help-block">
                     &nbsp;
                 </span>
@@ -40,9 +41,11 @@
             <div class="row">
                 <div class="span10"> 
                     <form action="project_result.php" method="post">
-                    <input type="hidden" name="id" value="<?php echo $project->id ?>"/>
-                        <h1><?php echo $project->name ?></h1>
-                        <p><?php echo $project->description ?></p>
+                        <h1>Novo Projeto</h1>
+                        <input type="hidden" name="id" />
+                        <p>Nome <input type="text" id="name" name="name" /></p>
+                        <p>Descrição <textarea id="description" name="description"></textarea></p>
+                        <input type="submit" value="Confirmar"/>
                     </form>
                 </div>
             </div>
