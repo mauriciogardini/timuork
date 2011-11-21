@@ -1,6 +1,7 @@
 <?php
 function start_session($username) {
-    if (session_id() == "") {
+    $s = session_id();
+    if (empty($s)) {
         session_start();
     }
     //TODO: Verificar se o usuário existe no banco.
@@ -14,7 +15,8 @@ function quit_session() {
 }
 
 function check_session() {
-    if (isset($_SESSION['username'])) {
+    $s = session_id();
+    if (!empty($s)) {
         return true;
     }
     else {

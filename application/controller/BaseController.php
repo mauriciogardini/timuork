@@ -10,7 +10,7 @@
             $this->url = $url;
         }
 
-        protected function authenticated() {
+        protected function hasSession() {
             return check_session();
         }
 
@@ -18,7 +18,7 @@
             return get_session();
         }
         protected function beforeFilter() {
-            if($this->requiresAuth() && !$this->authenticated()) {
+            if($this->requiresAuth() && !($this->hasSession())) {
                 redirect('/', 0);
             }
         }
