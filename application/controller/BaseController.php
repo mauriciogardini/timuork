@@ -32,12 +32,12 @@
             if(is_array($vars) && count($vars) > 0) {
                 extract($vars, EXTR_PREFIX_SAME, "wddx");
             }
-            require_once('view/'.$view.'.php');
+            require_once(BASE_PATH . '/application/view/'.$view.'.php');
         }
 
         function loadModel($model)
         {
-            require_once('model/'.$model.'.php');
+            require_once(BASE_PATH . '/application/model/'.$model.'.php');
             $this->$model = new $model;
         }
 

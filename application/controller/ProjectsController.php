@@ -3,6 +3,7 @@
 
     class ProjectsController extends BaseController {
         public function __construct() {
+            $this->beforeFilter();
             $this->loadModel('Projects');
         }
 
@@ -11,8 +12,8 @@
         }
 
         public function view($id) {
-            $project = $this->Projects->select_by_id($id);
-            $chat = $this->Projects->chat_by_project_id($id);
+            $project = $this->Projects->getProjectById($id);
+            $chat = $this->Projects->getChatByProjectId($id);
             $data['project'] = $project;
             $data['chat'] = $chat;
             $data['username'] = $this->getSession();
@@ -20,14 +21,14 @@
         }
 
         public function overview($id) {
-            $project = $this->Projects->select_by_id($id);
+            $project = $this->Projects->getProjectById($id);
             $data['project'] = $project;
             $data['username'] = $this->getSession();
             $this->loadView('ProjectOverview', $data);
         }
 
         public function edit($id) {
-            $project = $this->Projects->select_by_id($id);
+            $project = $this->Projects->getProjectById($id);
             $data['project'] = $project;
             $data['username'] = $this->getSession();
             $this->loadView('ProjectEdit', $data);

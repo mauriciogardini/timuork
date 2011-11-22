@@ -14,7 +14,7 @@
             $username = $_POST["unregistered_username"];
             $password = $_POST["unregistered_password"];
             $user = (object) array("name" => $name, "email" => $email, "username" => $username, "password" => $password);
-            $message = $this->Users->add($user);
+            $message = $this->Users->addUser($user);
             $data['message'] = $message; 
             $this->loadView('UserAdd', $data);
         }
@@ -23,9 +23,9 @@
             $username = $_POST["username"];
             $password = $_POST["password"];
             $auth_user = (object) array("username" => $username, "password" => $password);
-            $this->authenticated = $this->Users->authenticate($auth_user);
+            $this->authenticated = $this->Users->authenticateUser($auth_user);
             if ($this->authenticated) {
-                start_session($username);
+                $this->Users->startSession($username);
                 $data['username'] = $this->getSession();   
                 $this->loadView('Dashboard', $data);
             }
@@ -35,7 +35,7 @@
         }
 
         public function logout() {
-            quit_session();
+            $this->Users->quitSession();
             $this->loadView('Home', NULL);
         }
 

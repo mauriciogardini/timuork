@@ -16,7 +16,10 @@ function quit_session() {
 
 function check_session() {
     $s = session_id();
-    if (!empty($s)) {
+    if (session_id() == "") {
+        session_start();
+    } 
+    if (isset($_SESSION['username'])) {
         return true;
     }
     else {
