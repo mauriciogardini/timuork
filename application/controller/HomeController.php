@@ -3,8 +3,8 @@
 
     class HomeController extends BaseController {
         public function index() {
-            if($this->hasSession()) {
-                $data['username'] = $this->getSession();
+            if($this->Sessions->checkSession()) {
+                $data['username'] = $this->Sessions->getSession();
                 $this->loadView('Dashboard', $data);
             }
             else {

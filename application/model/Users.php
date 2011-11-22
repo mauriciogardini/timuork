@@ -3,7 +3,7 @@
     require_once(BASE_PATH . "/lib/PasswordHash.php");
     require_once(BASE_PATH . "/config/config.php");
 
-    class Users extends Application {
+    class Users {
         public function __construct() {
             //
         }
@@ -24,38 +24,6 @@
         public function comparePasswords($word, $word_hash) {
             $hasher = new PasswordHash(STRETCHING_TIMES, PORTABLE_HASH);
             return ($hasher->CheckPassword($word, $word_hash));
-        }
-
-        public function startSession($username) {
-            $s = session_id();
-            if (empty($s)) {
-                session_start();
-            }
-            //TODO: Verificar se o usuário existe no banco.
-            $_SESSION['username'] = $username;
-        }
-
-        public function quitSession() {
-            if ($this->checkSession()) {
-                session_destroy();
-            }
-        }
-
-        public function checkSession() {
-            $s = session_id();
-            if (session_id() == "") {
-                session_start();
-            } 
-            if (isset($_SESSION['username'])) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-
-        public function getSession() {
-            return $this->checkSession() ? $_SESSION['username'] : NULL;
         }
 
         public function addUser($user) {

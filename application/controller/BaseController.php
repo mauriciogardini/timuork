@@ -4,21 +4,12 @@
 
     class BaseController {
 
-        var $url;
-
-        public function __construct($url) {
-            $this->url = $url;
+        public function __construct() {
+            $this->loadModel('Sessions');
         }
 
-        protected function hasSession() {
-            return check_session();
-        }
-
-        protected function getSession() {
-            return get_session();
-        }
         protected function beforeFilter() {
-            if($this->requiresAuth() && !($this->hasSession())) {
+            if($this->requiresAuth() && !($this->Sessions->checkSession())) {
                 redirect('/', 0);
             }
         }

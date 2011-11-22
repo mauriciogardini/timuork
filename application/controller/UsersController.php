@@ -5,7 +5,8 @@
     
         public function __construct($url) {
             $this->url = $url;
-            $this->loadModel('Users');
+            $this->loadModel('Users'); 
+            $this->loadModel('Sessions');
         }
 
         public function add() {
@@ -25,8 +26,8 @@
             $auth_user = (object) array("username" => $username, "password" => $password);
             $this->authenticated = $this->Users->authenticateUser($auth_user);
             if ($this->authenticated) {
-                $this->Users->startSession($username);
-                $data['username'] = $this->getSession();   
+                $this->Sessions->startSession($username);
+                $data['username'] = $this->Sessions->getSession();   
                 $this->loadView('Dashboard', $data);
             }
             else {
@@ -35,7 +36,7 @@
         }
 
         public function logout() {
-            $this->Users->quitSession();
+            $this->Sessions->quitSession();
             $this->loadView('Home', NULL);
         }
 

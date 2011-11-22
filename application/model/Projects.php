@@ -1,7 +1,7 @@
 <?php
     require_once(INCLUDES_PATH . "/database_includes.php");
 
-    class Projects extends Application {
+    class Projects {
         public function __construct() {
             //
         }
