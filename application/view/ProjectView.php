@@ -5,8 +5,9 @@
     <title><?php echo $project->name ?></title> 
     <meta name="description" content="Log In">
     <meta name="author" content="Maurício Gardini">
-    <link rel="stylesheet" href="<?php echo WEB_PATH . '/styles/bootstrap.min.css'?>">
-    <link rel="stylesheet" href="<?php echo WEB_PATH . '/styles/snippets.css'?>">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/snippets.css">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -18,9 +19,9 @@
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
-    <script src="<?php echo WEB_PATH . 'scripts/chat.js'?>"></script>
-    <script>
+    <script src="/scripts/jquery.min.js" type="text/javascript"></script>
+    <script src="/scripts/chat.js" type="text/javascript"></script>
+    <script type="text/javascript">
         var chat =  new Chat(<?php echo $chat->id ?>);
         chat.update;
 

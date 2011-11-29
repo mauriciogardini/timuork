@@ -9,7 +9,8 @@
         }
 
         public function add() {
-            $this->loadView('ProjectAdd', NULL);
+            $data['user'] = $this->Sessions->getSession();
+            $this->loadView('ProjectAdd', $data);
         }
 
         public function update($id) {
@@ -26,7 +27,6 @@
 
         public function sendMessage($id) {
             $text = $_POST['text'];
-            echo $text;
             $timestamp = $_POST['timestamp'];
             $userId = $_POST['user_id'];
             $message = (object) array("text" => $text, "dateTime" => $timestamp, "chatId" => $id, "userId" => $userId);

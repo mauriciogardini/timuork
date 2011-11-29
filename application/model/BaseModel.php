@@ -1,8 +1,10 @@
 <?php
+    require_once("config/config.php");
+
     class BaseModel {
         public function connectDB($fn) {
             try {
-                $dbh = new PDO("sqlite:" . BASE_PATH . "/db/database");
+                $dbh = new PDO("sqlite:" . ROOT . "/db/database");
                 $fn($dbh);
                 $dbh = null;
             }

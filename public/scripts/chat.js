@@ -38,8 +38,9 @@ function sendMessage(text, user_id, chat_id){
                 'user_id': user_id,
                 'text': text
         },
+        dataType: "html",
         error: function(xhr, status, error){
-            alert(xhr.responseText)
+            alert('sdkskdskd')
         }
     });
 }

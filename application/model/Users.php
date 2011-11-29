@@ -1,7 +1,7 @@
 <?php
     require_once("BaseModel.php");    
-    require_once(BASE_PATH . "/lib/PasswordHash.php");
-    require_once(BASE_PATH . "/config/config.php");
+    require_once("lib/PasswordHash.php");
+    require_once("config/config.php");
 
     class Users extends BaseModel {
         public function __construct() {

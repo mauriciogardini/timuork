@@ -6,8 +6,8 @@
     <title>#</title>
     <meta name="description" content="#">
     <meta name="author" content="Maurício Gardini">
-    <link rel="stylesheet" href="<?php echo WEB_PATH . '/styles/bootstrap.min.css'?>">
-    <link rel="stylesheet" href="<?php echo WEB_PATH . '/styles/snippets.css'?>">
+    <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/snippets.css">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>

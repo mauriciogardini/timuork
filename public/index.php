@@ -1,7 +1,5 @@
 <?php
-    define('BASE_PATH', dirname(dirname(__FILE__)));
-    define('INCLUDES_PATH', BASE_PATH . "/includes");
-    define('WEB_PATH', "/~mauriciogardini/PHP/MVCPHPChat/");
+    require_once (dirname(dirname(__FILE__)) . '/config/config.php');
     define('DEFAULT_CONTROLLER', "Home");
     
     $url = $_SERVER['REQUEST_URI'];
@@ -22,7 +20,7 @@
     //echo nl2br("</br>");
     //echo $url_values['controller'] . " | " . $url_values['action'] . " | " . $url_values['id'];
     
-    require_once("Application.php");
+    require_once("application/Application.php");
 
     //Special cases: login e logout
     if (($url_values['controller'] == 'login') || ($url_values['controller'] == 'logout')) {
@@ -41,7 +39,7 @@
         $url_values['action'] = "";
         $url_values['id'] = "";
     }
-
+    
     $url_values['controller'] = ucfirst($url_values['controller']);
     $application = new Application($url_values);
     $application->loadController($url_values['controller']);
