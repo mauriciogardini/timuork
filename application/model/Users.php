@@ -1,11 +1,11 @@
 <?php
-    require_once(INCLUDES_PATH . "/database_includes.php");
+    require_once("BaseModel.php");    
     require_once(BASE_PATH . "/lib/PasswordHash.php");
     require_once(BASE_PATH . "/config/config.php");
 
-    class Users {
+    class Users extends BaseModel {
         public function __construct() {
-            //
+            $this->database = new BaseModel();
         }
 
         public function cryptPassword($word) {
@@ -21,9 +21,9 @@
             }
         }
 
-        public function comparePasswords($word, $word_hash) {
+        public function comparePasswords($word, $wordHash) {
             $hasher = new PasswordHash(STRETCHING_TIMES, PORTABLE_HASH);
-            return ($hasher->CheckPassword($word, $word_hash));
+            return ($hasher->CheckPassword($word, $wordHash));
         }
 
         public function addUser($user) {
@@ -37,7 +37,7 @@
                             if(!$this->existsUser($user->username)) {
                                 $sql = "INSERT INTO users(id, name, email, username, password) VALUES(NULL, ?, ?, ?, ?)";
                                 $values = array($user->name, $user->email, $user->username, $user->password);
-                                if((bool) database_query($sql, $values)->rowCount()) {
+                                if((bool) $this->database->executeQueryDB($sql, $values)->rowCount()) {
                                     return "O usuário " . $user->name . " foi cadastrado com sucesso.";
                                 }
                                 else {
@@ -76,22 +76,22 @@
 
         public function existsUser($username) {
             $sql = "SELECT COUNT(*) AS count FROM users WHERE username = ?";
-            $count = database_fetch(database_query($sql, array($username)))->count;
+            $count = $this->database->fetchDB($this->database->executeQueryDB($sql, array($username)))->count;
             return $count;
         }
 
         public function updateUser($user) {
             $sql = "UPDATE users SET name = ?, email = ?, username = ?, password = ? WHERE id = ?";
             $values = array($user->name, $user->email, $user->username, $user->password, $user->id);
-            return (bool) database_query($sql, $values)->rowCount();
+            return (bool) $this->database->executeQueryDB($sql, $values)->rowCount();
         }
 
         public function getUserByUsername($username) {
-            return database_fetch(database_query("SELECT * FROM users WHERE username = ?", array($username)));
+            return $this->database->fetchDB($this->database->executeQueryDB("SELECT * FROM users WHERE username = ?", array($username)));
         }
 
         public function getUserById($id) {
-            return database_fetch(database_query("SELECT * FROM users WHERE id = ?", array($id)));
+            return $this->database->fetchDB($this->database->executeQueryDB("SELECT * FROM users WHERE id = ?", array($id)));
         }
 
         public function authenticateUser($auth_user) {
@@ -100,14 +100,14 @@
                 $check = $this->comparePasswords($auth_user->password, $user->password);
 
                 if ($check) {
-                    return true;
+                    return $user;
                 }
                 else {
-                    return false;
+                    return NULL;
                 }
             }
             else {
-                return false;
+                return NULL;
             }
         }
 

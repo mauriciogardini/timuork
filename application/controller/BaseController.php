@@ -1,5 +1,4 @@
 <?php
-    require_once(INCLUDES_PATH . "/session_includes.php" );
     require_once(INCLUDES_PATH . "/general_includes.php" );
 
     class BaseController {

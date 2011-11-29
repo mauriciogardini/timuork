@@ -34,9 +34,9 @@
                     <input class="input-small" id="password" name="password" size="30" type="password" placeholder="Senha" />
                     <button class="btn">Entrar</button>
                     <span class="help-block">
-                        <input type="checkbox" name="remember_me" id="remember_me" value="remember_me"> Lembrar-me 
+                        <input type="checkbox" name="rememberMe" id="rememberMe" value="rememberMe"> Lembrar-me 
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="forgot_password.php">Esqueceu sua senha?</a>
+                        <a href="/forgotPassword">Esqueceu sua senha?</a>
                     </span>
                 </form>               
             </div>
@@ -48,10 +48,10 @@
                 <div class="span14">
                     <form action="/users/add" method="post" class="center">
                         <h3>Novo aqui? Junte-se à nós!</h3>
-                        <p><input class="input-xlarge" id="unregistered_name" name="unregistered_name" size="30" type="text" placeholder="Nome completo" /></p>
-                        <p><input class="input-xlarge" id="unregistered_email" name="unregistered_email" size="30" type="text" placeholder="E-mail" /></p>
-                        <p><input class="input-xlarge" id="unregistered_username" name="unregistered_username" size="30" type="text" placeholder="Username" /></p>
-                        <p><input class="input-xlarge" id="unregistered_password" name="unregistered_password" size="30" type="password" placeholder="Senha" /></p>
+                        <p><input class="input-xlarge" id="unregisteredName" name="unregisteredName" size="30" type="text" placeholder="Nome completo" /></p>
+                        <p><input class="input-xlarge" id="unregisteredEmail" name="unregisteredEmail" size="30" type="text" placeholder="E-mail" /></p>
+                        <p><input class="input-xlarge" id="unregisteredUsername" name="unregisteredUsername" size="30" type="text" placeholder="Username" /></p>
+                        <p><input class="input-xlarge" id="unregisteredPassword" name="unregisteredPassword" size="30" type="password" placeholder="Senha" /></p>
                         <p><button class="btn">Registrar</button>
                     </form>
                 </div>

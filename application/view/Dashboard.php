@@ -29,7 +29,7 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <p class="pull-right">Logado como <a href="#"><?php echo $username ?></a> | <a href="/logout">Sair</a></p>
+                <p class="pull-right">Logado como <a href="#"><?php echo $user->name ?></a> | <a href="/logout">Sair</a></p>
                 <span class="help-block">
                     &nbsp;
                 </span>
@@ -39,13 +39,16 @@
     <div class="container">
         <div class="content">
             <div class="row">
-                <div class="span10">
+                <div class="span9">
                     <h2>Últimas interações</h2>
                 </div>
-                <div class="span4">
-                <!--<iframe name="project_list" src="project_list.php" width="50%" height="300" frameBorder=0>
-                    <p>Eu acho que tá na hora de você trocar de browser, porque aparentente a sua lata velha não suporta frames.</p>
-                </iframe>-->
+                <div class="span5">
+                    <h3>Projetos</h3>
+                    <ul class="unstyled">
+                        <?php foreach ($projects as $project) { ?>
+                        <li><a href="/projects/overview/<?php echo $project->id ?>"><?php echo $project->name ?></a></li>
+                        <?php } ?>
+                    </ul> 
                 </div>
             </div>
         </div>

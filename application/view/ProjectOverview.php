@@ -28,7 +28,7 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <p class="pull-right">Logado como <a href="#"><?php echo $username ?></a> | <a href="/logout">Sair</a></p>
+                <p class="pull-right">Logado como <a href="#"><?php echo $user->name ?></a> | <a href="/logout">Sair</a></p>
                 <span class="help-block">
                     &nbsp;
                 </span>
@@ -38,12 +38,19 @@
     <div class="container">
         <div class="content">
             <div class="row">
-                <div class="span10"> 
-                    <form action="project_result.php" method="post">
+                <div class="span9"> 
                     <input type="hidden" name="id" value="<?php echo $project->id ?>"/>
-                        <h1><?php echo $project->name ?></h1>
-                        <p><?php echo $project->description ?></p>
-                    </form>
+                    <h1><?php echo $project->name ?></h1>
+                    <p><?php echo $project->description ?></p>
+                    <a href="/projects/view/<?php echo $project->id ?>">Ir para o projeto</a>
+                </div>
+                <div class="span5">
+                    <h3>Usuários participantes</h3>
+                    <ul class="unstyled">
+                        <?php foreach ($allowedUsers as $allowedUser) { ?>
+                        <li><?php echo $allowedUser->name ?></li>
+                        <?php } ?>
+                    </ul>
                 </div>
             </div>
         </div>

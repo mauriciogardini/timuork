@@ -3,17 +3,17 @@
 
     class UsersController extends BaseController {
     
-        public function __construct($url) {
-            $this->url = $url;
-            $this->loadModel('Users'); 
-            $this->loadModel('Sessions');
+        public function __construct() {
+            parent::__construct();
+            $this->loadModel('Projects'); 
+            $this->loadModel('Users');
         }
 
         public function add() {
-            $name = $_POST["unregistered_name"];
-            $email = $_POST["unregistered_email"];
-            $username = $_POST["unregistered_username"];
-            $password = $_POST["unregistered_password"];
+            $name = $_POST["unregisteredName"];
+            $email = $_POST["unregisteredEmail"];
+            $username = $_POST["unregisteredUsername"];
+            $password = $_POST["unregisteredPassword"];
             $user = (object) array("name" => $name, "email" => $email, "username" => $username, "password" => $password);
             $message = $this->Users->addUser($user);
             $data['message'] = $message; 
@@ -24,10 +24,17 @@
             $username = $_POST["username"];
             $password = $_POST["password"];
             $auth_user = (object) array("username" => $username, "password" => $password);
-            $this->authenticated = $this->Users->authenticateUser($auth_user);
-            if ($this->authenticated) {
-                $this->Sessions->startSession($username);
-                $data['username'] = $this->Sessions->getSession();   
+            $this->authenticatedUser = $this->Users->authenticateUser($auth_user);
+            if ($this->authenticatedUser != NULL) {
+                $sessionUser = (object) array("id" => $this->authenticatedUser->id, "name" => $this->authenticatedUser->name, "username" => $this->authenticatedUser->username); 
+                $this->Sessions->startSession($sessionUser);
+                $projects = array();
+                $user = $this->Sessions->getSession();
+                $this->Projects->listProjectsByUserId(function($item) use(&$projects) {
+                    $projects[] = $item;
+                }, $sessionUser->id);
+                $data['user'] = $sessionUser;
+                $data['projects'] = $projects;
                 $this->loadView('Dashboard', $data);
             }
             else {

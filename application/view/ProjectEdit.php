@@ -29,7 +29,7 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <p class="pull-right">Logado como <a href="#"><?php echo $username ?></a> | <a href="/logout">Sair</a></p>
+                <p class="pull-right">Logado como <a href="#"><?php echo $user->name ?></a> | <a href="/logout">Sair</a></p>
                 <span class="help-block">
                     &nbsp;
                 </span>

@@ -18,6 +18,13 @@
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+    <script src="<?php echo WEB_PATH . 'scripts/chat.js'?>"></script>
+    <script>
+        var chat =  new Chat(<?php echo $chat->id ?>);
+        chat.update;
+
+    </script>
 </head>
 <body>
     <div class="topbar">
@@ -28,7 +35,7 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <p class="pull-right">Logado como <a href="#"><?php echo $username ?></a> | <a href="/logout">Sair</a></p>
+                <p class="pull-right">Logado como <a href="#"><?php echo $user->name ?></a> | <a href="/logout">Sair</a></p>
                 <span class="help-block">
                     &nbsp;
                 </span>
@@ -40,20 +47,33 @@
             <div class="row">
                 <div class="span9">
                     <h1><?php echo $project->name ?></h1>    
+                    <div id="chat-wrap">
+                        <div id="chat">
+                        </div>
+                    </div>
+                    <form id="new-message">
+                        <p>
+                            <textarea id="text" maxlength="100"></textarea>
+                            <input type="submit" text="Enviar">
+                        </p>    
+                    </form>
                 </div>
                 <div class="span5">
                     <h3>Usuários online</h3>
+                    <ul class="unstyled">
+                        (Needs refreshing)
+                        <?php foreach ($onlineUsers as $onlineUser) { ?>
+                        <li><?php echo $onlineUser->name ?></li>
+                        <?php } ?>
+                    </ul>
                 </div>
             </div>
-            <div class="row">
-                <div class="span9">
-                <!-- chat.php -->
-                </div>
-                <div class="span5">
-                <!-- online_users.php -->
-                </div>
-            </div> 
         </div>
     </div>
+    <script>
+        $('#new-message').submit(function() {
+            chat.send($("#text").val(), <?php echo $user->id ?>, <?php echo $chat->id ?>)     
+        });
+    </script>
 </body>
 </html>
