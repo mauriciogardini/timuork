@@ -19,13 +19,6 @@
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-    <script src="/scripts/jquery.min.js" type="text/javascript"></script>
-    <script src="/scripts/chat.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        var chat =  new Chat(<?php echo $chat->id ?>);
-        chat.update;
-
-    </script>
 </head>
 <body>
     <div class="topbar">
@@ -61,20 +54,18 @@
                 </div>
                 <div class="span5">
                     <h3>Usuários online</h3>
-                    <ul class="unstyled">
-                        (Needs refreshing)
-                        <?php foreach ($onlineUsers as $onlineUser) { ?>
-                        <li><?php echo $onlineUser->name ?></li>
-                        <?php } ?>
-                    </ul>
+                    <div id="online-users-wrap">
+                        <div id="online-users">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="/scripts/jquery.min.js" type="text/javascript"></script>
+    <script src="/scripts/chat.js" type="text/javascript"></script>
     <script>
-        $('#new-message').submit(function() {
-            chat.send($("#text").val(), <?php echo $user->id ?>, <?php echo $chat->id ?>)     
-        });
+        var chat = new Chat(<?php echo $chat->project_id ?>, <?php echo $chat->id ?>, <?php echo $user->id ?>);
     </script>
 </body>
 </html>

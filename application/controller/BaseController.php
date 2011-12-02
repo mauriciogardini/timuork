@@ -30,6 +30,4 @@
             require_once('application/model/'.$model.'.php');
             $this->$model = new $model;
         }
-
     }
-

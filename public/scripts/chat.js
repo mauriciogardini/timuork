@@ -1,46 +1,70 @@
-function Chat (chat_id) {
+function Chat(projectId, chatId, userId) {
     var self = this;
-    this.timestamp = '';
-    this.chat_id = chat_id;
-    this.update = updateChat(this.timestamp, this.chat_id, function(data) {
-    self.timestamp = data.messages ? data.messages[data.messages.length - 1].timestamp : self.timestamp   
-    });
-    this.send = sendMessage;
-}
 
-function updateChat(timestamp, chat_id){
-    $.ajax({
-        type: "GET",
-        url: "/projects/update/" + chat_id,
-        data: { 'timestamp': timestamp },
-        dataType: "json",
-        success: function(data){
-            if(data.messages){
-                for (var i = 0; i < data.messages.length; i++) {
-                    $('#chat').append($("<p><b>"+ data.messages[i].name + "</b> - " + (data.messages[i]).text +"</p>"));   
-                }
-            }
-            else {
-                alert('No new messages!')
-            }
-        },
-        error: function(xhr, status, error){
-            alert(xhr.responseText)
-        }
-    });
-}
+    var timestamp = "";
 
-function sendMessage(text, user_id, chat_id){
-    $.ajax({
-        type: "POST",
-        url: "/projects/sendMessage/" + chat_id,
-        data: { 'timestamp': Math.round(new Date().getTime() / 1000),
-                'user_id': user_id,
-                'text': text
-        },
-        dataType: "html",
-        error: function(xhr, status, error){
-            alert('sdkskdskd')
+    var updateChatMessagesUrl = "/projects/updateChatMessages/" + chatId;
+    var sendMessageUrl = "/projects/sendMessage/" + chatId;
+    var updateOnlineUsersUrl = "/projects/updateOnlineUsers/" + projectId;
+    
+    var updateChatMessagesCallback = function(data) {
+        console.log(timestamp);
+        if(data.messages && data.messages.length) {
+            $.each(data.messages, function(index, message) {
+                $("#chat").append($("<p><b>"+ message.name + "</b> - " + message.text +"</p>"));   
+            });
+            timestamp = data.messages[data.messages.length - 1].date_time;
         }
+        else {
+            console.log("No new messages");
+        }
+        setTimeout(self.update, 5000);
+    };
+
+    var sendMessageCallback = function(){};
+
+    var updateOnlineUsersCallback = function(data) {
+        console.log('Users updated');
+        if(data.onlineUsers && data.onlineUsers.length) {
+            $("#online-users").empty();
+            $.each(data.onlineUsers, function(index, user) {
+                $("#online-users").append($("<p>" + user.name + "</p>"));
+            });
+        }
+
+        setTimeout(self.getUsers, 5000);
+    };
+
+    var errorCallback = function(xhr, status, error) {
+        console.log(arguments);
+    };
+
+    self.update = function() {
+        $.getJSON(updateChatMessagesUrl, {timestamp: timestamp}).success(updateChatMessagesCallback)
+            .error(errorCallback);
+    };
+
+    self.sendMessage = function() {
+        var data = {
+            text: $("#text").val(),
+            chatId: chatId,
+            userId: userId
+        };
+        $.post(sendMessageUrl, data).success(sendMessageCallback)
+            .error(errorCallback);
+    }
+
+    self.getUsers = function() {
+        $.getJSON(updateOnlineUsersUrl).success(updateOnlineUsersCallback)
+            .error(errorCallback);
+    }
+
+    self.update();
+    self.getUsers();
+
+    $("#new-message").submit(function(e) {
+        self.sendMessage();
+        $("#text").val("");
+        e.preventDefault();
     });
 }

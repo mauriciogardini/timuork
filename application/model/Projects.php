@@ -105,8 +105,8 @@
         }
 
         public function createMessage($message) {
-            $sql = "INSERT INTO messages(id, text, date_time, chat_id, user_id) VALUES(NULL, ?, ?, ?, ?)";
-            $values = array($message->text, $message->dateTime, $message->chatId, $message->userId);
+            $sql = "INSERT INTO messages(id, text, date_time, chat_id, user_id) VALUES(NULL, ?, strftime('%s', 'now'), ?, ?)";
+            $values = array($message->text, $message->chatId, $message->userId);
             return (bool) $this->database->executeQueryDB($sql, $values)->rowCount();
         }
 
@@ -123,23 +123,23 @@
         }
 
         public function manageStatus($statusInfo) {
-            if (existsStatus($statusInfo)) {
-                return updateStatus($statusInfo);
+            if ($this->existsStatus($statusInfo)) {
+                return $this->updateStatus($statusInfo);
             }
             else {
-                return createStatus($statusInfo);
+                return $this->createStatus($statusInfo);
             }    
         }
 
         public function updateStatus($statusInfo) {
-            $sql = "UPDATE online_users SET last_seen_at = ? WHERE user_id = ? AND chat_id = ?";
-            $values = array($statusInfo->timestamp, $statusInfo->userId, $statusInfo->chatId);
+            $sql = "UPDATE online_users SET last_seen_at = strftime('%s', 'now') WHERE user_id = ? AND chat_id = ?";
+            $values = array($statusInfo->userId, $statusInfo->chatId);
             return (bool) $this->database->executeQueryDB($sql, $values)->rowCount();
         }
 
         public function createStatus($statusInfo) {
-            $sql = "INSERT INTO online_users(id, chat_id, user_id, last_seen_at) VALUES(NULL, ?, ?, ?)";
-            $values = array($statusInfo->chatId, $statusInfo->userId, $statusInfo->timestamp);
+            $sql = "INSERT INTO online_users(id, chat_id, user_id, last_seen_at) VALUES(NULL, ?, ?, strftime('%s', 'now'))";
+            $values = array($statusInfo->chatId, $statusInfo->userId);
             return (bool) $this->database->executeQueryDB($sql, $values)->rowCount();    
         }
 
@@ -151,7 +151,7 @@
         }
 
         public function listOnlineUsersByProjectId($fn, $projectId) {
-            $sql = "SELECT users.*, online_users.last_seen_at FROM users JOIN online_users ON users.id = online_users.user_id JOIN chats ON online_users.chat_id = chats.id WHERE chats.project_id = ? AND chats.user_id = -1";
+            $sql = "SELECT users.* FROM users JOIN online_users ON users.id = online_users.user_id JOIN chats ON online_users.chat_id = chats.id WHERE chats.project_id = ? AND chats.user_id = -1 AND (strftime('%s', 'now') - online_users.last_seen_at) < 10";
             $values = array($projectId);
             $this->database->iterateDB($this->database->executeQueryDB($sql, $values), $fn);
         }
