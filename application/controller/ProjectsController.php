@@ -6,6 +6,7 @@
             parent::__construct();
             $this->beforeFilter();
             $this->loadModel('Projects');
+            $this->loadModel('Interactions');
         }
 
         public function add() {
@@ -79,6 +80,15 @@
             $data['project'] = $project;
             $data['user'] = $this->Sessions->getSession();
             $this->loadView('ProjectEdit', $data);
+        }
+
+        public function createInteraction() {
+            $users = array(1, 2);
+            $id = 1;
+            $name = "Test";
+            $interactionInfo = (object) array("title" => $name, "description" => $name, "projectId" => $id, 
+                "users" => $users);
+            $this->Interactions->createInteraction($interactionInfo);
         }
     }
 ?>

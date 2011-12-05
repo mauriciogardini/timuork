@@ -44,7 +44,7 @@
                 </div>
                 <div class="span3">
                     <h3>Interações</h3>
-                    <form action="/test/test" method="post">
+                    <form action="/Projects/createInteraction" method="post">
                     <input type="text" id="it">
                     <input type="submit" id="sit">
                     </form>
