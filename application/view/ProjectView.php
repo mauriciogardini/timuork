@@ -39,20 +39,29 @@
     <div class="container">
         <div class="content">
             <div class="row">
-                <div class="span9">
-                    <h1><?php echo $project->name ?></h1>    
-                    <div id="chat-wrap">
+                <div class "span15"> 
+                    <center><h1><?php echo $project->name ?></h1></center>    
+                </div>
+                <div class="span3">
+                    <h3>Interações</h3>
+                    <form action="/test/test" method="post">
+                    <input type="text" id="it">
+                    <input type="submit" id="sit">
+                    </form>
+                </div>
+                <div class="span8">
+                    <div class="chat-content" id="chat-wrap">
                         <div id="chat">
                         </div>
                     </div>
                     <form id="new-message">
                         <p>
-                            <textarea id="text" maxlength="100"></textarea>
-                            <input type="submit" text="Enviar">
+                            <textarea id="message-text" class="chat-text-box"></textarea>
+                            <input class="chat-submit-button" type="submit" text="Enviar">
                         </p>    
                     </form>
                 </div>
-                <div class="span5">
+                <div class="span3">
                     <h3>Usuários online</h3>
                     <div id="online-users-wrap">
                         <div id="online-users">

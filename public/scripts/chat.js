@@ -11,7 +11,7 @@ function Chat(projectId, chatId, userId) {
         console.log(timestamp);
         if(data.messages && data.messages.length) {
             $.each(data.messages, function(index, message) {
-                $("#chat").append($("<p><b>"+ message.name + "</b> - " + message.text +"</p>"));   
+                $("#chat").append($("<p class=\"chat-paragraph\"><span class=\"chat-username\"><b>"+ message.name + "</b></span><span class=\"chat-text\">" + message.text +"</span></p>"));   
             });
             timestamp = data.messages[data.messages.length - 1].date_time;
         }
@@ -46,7 +46,7 @@ function Chat(projectId, chatId, userId) {
 
     self.sendMessage = function() {
         var data = {
-            text: $("#text").val(),
+            text: $("#message-text").val(),
             chatId: chatId,
             userId: userId
         };
@@ -64,7 +64,7 @@ function Chat(projectId, chatId, userId) {
 
     $("#new-message").submit(function(e) {
         self.sendMessage();
-        $("#text").val("");
+        $("#message-text").val("");
         e.preventDefault();
     });
 }

@@ -4,7 +4,6 @@ CREATE TABLE users (
     email TEXT,
     username TEXT,
     password TEXT,
-    password_salt TEXT
 );
 
 CREATE TABLE projects (
@@ -48,4 +47,19 @@ CREATE TABLE online_users (
     FOREIGN KEY(chat_id) REFERENCES chats(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
-    
+
+CREATE TABLE interactions (
+    id INTEGER PRIMARY KEY ASC,
+    title TEXT,
+    description TEXT,
+    project_id INTEGER,
+    FOREIGN KEY(project_id) REFERENCES projects(id)
+);
+
+CREATE TABLE interactions_users (
+    id INTEGER PRIMARY KEY ASC,
+    interaction_id INTEGER,
+    user_id INTEGER,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+    FOREIGN KEY(interaction_id) REFERENCES interactions(id)
+);

@@ -5,7 +5,7 @@
 
     class Users extends BaseModel {
         public function __construct() {
-            $this->database = new BaseModel();
+            $this->database = BaseModel::getInstance();
         }
 
         public function cryptPassword($word) {

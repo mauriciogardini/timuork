@@ -4,7 +4,7 @@
     class Statuses {
         private $database; 
         public function __construct() {
-            $this->database = new BaseModel();
+            $this->database = BaseModel::getInstance();
         }
         
         function manageStatus($statusInfo) {

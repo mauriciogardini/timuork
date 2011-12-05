@@ -4,7 +4,7 @@
     class Projects {
         private $database; 
         public function __construct() {
-            $this->database = new BaseModel();
+            $this->database = BaseModel::getInstance();
         }
 
         public function createProject($project) {
