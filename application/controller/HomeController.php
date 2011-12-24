@@ -12,7 +12,8 @@
             if($this->Sessions->checkSession()) {
                 $projects = array();
                 $user = $this->Sessions->getSession();
-                $this->Projects->listProjectsByUserId(function($item) use(&$projects) {
+                $this->Projects->listProjectsByUserId(function($item) use(
+                    &$projects) {
                     $projects[] = $item;
                 }, $user->id);
                 $data['user'] = $user;

@@ -13,7 +13,8 @@
             $users = array(1, 2);
             $id = 1;
             $name = "Test";
-            $interactionInfo = (object) array("title" => $name, "description" => $name, "projectId" => $id, 
+            $interactionInfo = (object) array("title" => $name, "description" =>
+                $name, "projectId" => $id, 
                 "users" => $users);
             $this->Interactions->createInteraction($interactionInfo);
         }

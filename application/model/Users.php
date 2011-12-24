@@ -30,27 +30,36 @@
             if($this->validateUsername($user->username)) {
                 if($this->validatePassword($user->password)) {
                     if($this->validateEmail($user->email)) {
-                        $crypted_password = $this->cryptPassword($user->password);
+                        $crypted_password = $this->cryptPassword(
+                            $user->password);
                         if ($crypted_password != NULL)
                         {
                             $user->password = $crypted_password;
                             if(!$this->existsUser($user->username)) {
-                                $sql = "INSERT INTO users(id, name, email, username, password) VALUES(NULL, ?, ?, ?, ?)";
-                                $values = array($user->name, $user->email, $user->username, $user->password);
-                                if((bool) $this->database->executeQueryDB($sql, $values)->rowCount()) {
-                                    return "O usuário " . $user->name . " foi cadastrado com sucesso.";
+                                $sql = "INSERT INTO users
+                                    (id, name, email, username, password) 
+                                    VALUES(NULL, ?, ?, ?, ?)";
+                                $values = array($user->name, $user->email, 
+                                    $user->username, $user->password);
+                                if((bool) $this->database->executeQueryDB($sql, 
+                                    $values)->rowCount()) {
+                                        return "O usuário " . $user->name . " 
+                                            foi cadastrado com sucesso.";
                                 }
                                 else {
-                                    return "O sistema está indisponível. Tente novamente mais tarde."; 
+                                    return "O sistema está indisponível. 
+                                        Tente novamente mais tarde."; 
                                 }
                             }
                             else {
-                                return  "Já existe um usuário utilizando este username.";
+                                return  "Já existe um usuário utilizando este 
+                                    username.";
                             }
                         }
                         else
                         {
-                            return "O sistema está indisponível. Tente novamente mais tarde.";
+                            return "O sistema está indisponível. Tente 
+                                novamente mais tarde.";
                         }       
                     }
                     else {
@@ -58,7 +67,8 @@
                     }
                 }
                 else {
-                    return "O password informado precisa ter entre 6 e 24 caracteres."; 
+                    return "O password informado precisa ter entre 6 e 24 
+                        caracteres."; 
                 }
             }
             else {
@@ -75,29 +85,46 @@
         }
 
         public function existsUser($username) {
-            $sql = "SELECT COUNT(*) AS count FROM users WHERE username = ?";
+            $sql = "SELECT COUNT(*) AS count 
+                FROM users 
+                WHERE username = ?";
             $count = $this->database->fetchDB($this->database->executeQueryDB($sql, array($username)))->count;
             return $count;
         }
 
         public function updateUser($user) {
-            $sql = "UPDATE users SET name = ?, email = ?, username = ?, password = ? WHERE id = ?";
-            $values = array($user->name, $user->email, $user->username, $user->password, $user->id);
-            return (bool) $this->database->executeQueryDB($sql, $values)->rowCount();
+            $sql = "UPDATE users 
+                SET name = ?, email = ?, username = ?, password = ? 
+                WHERE id = ?";
+            $values = array($user->name, $user->email, $user->username, 
+                $user->password, $user->id);
+            return (bool) $this->database->executeQueryDB($sql, $values)->
+                rowCount();
         }
 
         public function getUserByUsername($username) {
-            return $this->database->fetchDB($this->database->executeQueryDB("SELECT * FROM users WHERE username = ?", array($username)));
+            $sql = "SELECT * 
+                FROM users 
+                WHERE username = ?";
+            $values = array($username);
+            return $this->database->fetchDB($this->database->executeQueryDB(
+                $sql, $values));
         }
 
         public function getUserById($id) {
-            return $this->database->fetchDB($this->database->executeQueryDB("SELECT * FROM users WHERE id = ?", array($id)));
+            $sql = "SELECT * 
+                FROM users 
+                WHERE id = ?";
+            $values = array($id);
+            return $this->database->fetchDB($this->database->executeQueryDB(
+                $sql, $values));
         }
 
         public function authenticateUser($auth_user) {
             if($this->existsUser($auth_user->username)) {
                 $user = $this->getUserByUsername($auth_user->username);
-                $check = $this->comparePasswords($auth_user->password, $user->password);
+                $check = $this->comparePasswords($auth_user->password, 
+                    $user->password);
 
                 if ($check) {
                     return $user;

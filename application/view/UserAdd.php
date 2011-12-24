@@ -10,14 +10,15 @@
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
-        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+        </script>
     <![endif]-->
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="images/favicon.ico">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="#">
+    <link rel="apple-touch-icon" sizes="114x114" href="#">
 
 </head>
 <body>
@@ -29,13 +30,18 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <form action="user_authenticate.php" method="post" class="pull-right">    
-                    <input class="input-small" id="username" name="username" size="30" type="text" placeholder="Username" />
-                    <input class="input-small" id="password" name="password" size="30" type="password" placeholder="Senha" />
+                <form action="user_authenticate.php" method="post" 
+                    class="pull-right">    
+                    <input class="input-small" id="username" name="username" 
+                        size="30" type="text" placeholder="Username" />
+                    <input class="input-small" id="password" name="password" 
+                        size="30" type="password" placeholder="Senha" />
                     <button class="btn">Entrar</button>
                     <span class="help-block">
-                        <input type="checkbox" name="remember_me" id="remember_me" value="remember_me"> Lembrar-me 
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" name="remember_me" 
+                            id="remember_me" value="remember_me"> Lembrar-me 
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;
                         <a href="forgot_password.php">Esqueceu sua senha?</a>
                     </span>
                 </form>

@@ -3,37 +3,44 @@ function Chat(projectId, chatId, userId) {
 
     var timestamp = "";
 
-    var updateChatMessagesUrl = "/projects/updateChatMessages/" + chatId;
     var sendMessageUrl = "/projects/sendMessage/" + chatId;
+    var updateChatMessagesUrl = "/projects/updateChatMessages/" + chatId;
     var updateOnlineUsersUrl = "/projects/updateOnlineUsers/" + projectId;
-    
+    var createInteractionUrl = "/projects/createInteraction/"; 
+
     var updateChatMessagesCallback = function(data) {
-        console.log(timestamp);
         if(data.messages && data.messages.length) {
             $.each(data.messages, function(index, message) {
-                $("#chat").append($("<p class=\"chat-paragraph\"><span class=\"chat-username\"><b>"+ message.name + "</b></span><span class=\"chat-text\">" + message.text +"</span></p>"));   
+                $("#chat").append($("<p data-controls-modal=\"modal-interaction\" data-backdrop=\"true\" data-keyboard=\"true\" class=\"chat-paragraph\"><span class=\"chat-username\"><b>"+ message.user_name + "</b></span></br><span class=\"chat-text\">" + message.message_text +"</span></p>"));             
             });
-            timestamp = data.messages[data.messages.length - 1].date_time;
+            
+            timestamp = data.messages[data.messages.length - 1].message_date_time;
+            console.log(timestamp);
         }
-        else {
-            console.log("No new messages");
-        }
+
         setTimeout(self.update, 5000);
     };
 
     var sendMessageCallback = function(){};
 
     var updateOnlineUsersCallback = function(data) {
-        console.log('Users updated');
         if(data.onlineUsers && data.onlineUsers.length) {
             $("#online-users").empty();
-            $.each(data.onlineUsers, function(index, user) {
-                $("#online-users").append($("<p>" + user.name + "</p>"));
+            $.each(data.onlineUsers, function(index, user) { 
+                if(user.admin) {
+                    var p = $("<p class=\"admin-online-users-row\" />").text(user.name);
+                }
+                else {
+                    var p = $("<p class=\"online-users-row\" />").text(user.name);
+                }
+                $("#online-users").append(p);
             });
         }
 
         setTimeout(self.getUsers, 5000);
     };
+
+    var createInteractionCallback = function(){};
 
     var errorCallback = function(xhr, status, error) {
         console.log(arguments);
@@ -59,12 +66,33 @@ function Chat(projectId, chatId, userId) {
             .error(errorCallback);
     }
 
+    self.createInteraction = function() {
+        console.log("Chegou");
+        var usersTemp = new Array();
+        usersTemp[0] = $("#normalSelect").find('option:selected').attr('id');
+        var users = usersTemp.toString();
+        var data = {
+            projectId: projectId,
+            users: users,
+            title: $("#title-text").val(),
+            description: $("#description-text").val()
+        };
+        $.post(createInteractionUrl, data).success(createInteractionCallback)
+            .error(errorCallback);
+    }
+
     self.update();
     self.getUsers();
 
     $("#new-message").submit(function(e) {
         self.sendMessage();
         $("#message-text").val("");
+        e.preventDefault();
+    });
+    
+    $("#new-interaction").submit(function(e) {
+        console.log("Interação");
+        self.createInteraction();
         e.preventDefault();
     });
 }

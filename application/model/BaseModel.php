@@ -6,7 +6,6 @@
         private static $baseModel;
 
         private function __construct() {
-
         }
 
         public static function getInstance() {
@@ -15,6 +14,7 @@
             }
             return self::$baseModel;
         }
+
         public function connectDB($fn) {
             try {
                 $this->getConnection();
@@ -51,6 +51,16 @@
                 {
                     break;
                 }   
+            }
+        }
+
+        public function iterateArray($arr, $fn) {
+            foreach($arr as $item) {
+                $result = $fn($item);
+                if($result === false)
+                {
+                    break;
+                }
             }
         }
     }
