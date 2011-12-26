@@ -96,14 +96,14 @@
 
         public function createInteraction() {
             $projectId = $_POST['projectId'];
-            $users = explode(",", $_POST['users']);
+            $users = explode(',', $_POST['users']);
+            
             if ((bool)count($users)) {
                 if ($users[0] == -1) {
                     $users = NULL;
                 }
             }
 
-            //$users = array(1, 2);
             $title = $_POST['title'];
             $description = $_POST['description'];
             $interactionInfo = (object) array("title" => $title, 

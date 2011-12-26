@@ -70,7 +70,8 @@ function Chat(projectId, chatId, userId) {
         console.log("Chegou");
         var usersTemp = new Array();
         usersTemp[0] = $("#normalSelect").find('option:selected').attr('id');
-        var users = usersTemp.toString();
+        users = usersTemp.toString();
+        console.log(users);
         var data = {
             projectId: projectId,
             users: users,

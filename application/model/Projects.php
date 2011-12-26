@@ -291,30 +291,31 @@
                 $interactionId = $this->database->fetchDB(
                     $this->database->executeQueryDB(
                     "SELECT last_insert_rowid() AS id", array()))->id;
-                $sql = "INSERT INTO interactions_users
-                        (id, interaction_id, user_id) 
-                        VALUES(NULL, ?, ?)";
-                if ($users == NULL) {
-                    $this->listAllowedUsersByProjectId(function($item) 
-                        use($interactionId) {
-                        $values = array($interactionId, $item->id);
-                        if (!(bool) $this->database->executeQueryDB(
-                            $sql, $values)->rowCount()) {
-                            return false;
-                        }
-                    }, $interactionInfo->projectId);                     
+                if ($interactionInfo->users == NULL) {
+                    echo "dsfnkjsdfn";
+                    $allowedUsers = array();
+                    $this->listAllowedUsersByProjectId(function($item) use(
+                        $interactionId, &$allowedUsers) {
+                        $allowedUsers[] = $item;
+                        }, $interactionInfo->projectId);
+                    $interactionInfo['users'] = $allowedUsers;
                 }
-                else {
-                    foreach($interactionInfo->users as $userId) {
-                        $values = array($interactionId, $userId);
-                        if (!(bool) $this->database->executeQueryDB(
-                            $sql, $values)->rowCount()) {
-                            return false;
-                        }
-                    }
-                }
+
+                foreach($interactionInfo->users as $userId) {
+                    createInteractionAssociation($interactionId, $userId);
+                }    
             }
             else {
+                return false;
+            }
+        } 
+        private function createInteractionAssociation($interactionId, $userId) {
+            $sql = "INSERT INTO interactions_users
+                (id, interaction_id, user_id) 
+                VALUES(NULL, ?, ?)";
+            $values = array($interactionId, $userId);
+            if (!(bool) $this->database->executeQueryDB(
+                $sql, $values)->rowCount()) {
                 return false;
             }
         }
