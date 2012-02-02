@@ -5,10 +5,12 @@
 
         public function __construct() {
             $this->loadModel('Sessions');
+            $this->loadModel('SessionUser');
         }
 
         protected function beforeFilter() {
-            if($this->requiresAuth() && !($this->Sessions->checkSession())) {
+            $sessionUser = $this->SessionUser;
+            if($this->requiresAuth() && !($sessionUser->getId())) {
                 redirect('/', 0);
             }
         }

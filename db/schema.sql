@@ -2,13 +2,14 @@ CREATE TABLE users (
     id INTEGER PRIMARY KEY ASC,
     name TEXT,
     email TEXT,
+    twitter TEXT,
     username TEXT,
-    password TEXT,
+    password TEXT
 );
 
 CREATE TABLE projects (
     id INTEGER PRIMARY KEY ASC,
-    name TEXT,
+    title TEXT,
     description TEXT,
     admin_user_id INTEGER
 );
@@ -48,18 +49,27 @@ CREATE TABLE online_users (
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
-CREATE TABLE interactions (
+CREATE TABLE notifications (
     id INTEGER PRIMARY KEY ASC,
     title TEXT,
     description TEXT,
+    sender_user_id INTEGER, 
     project_id INTEGER,
     FOREIGN KEY(project_id) REFERENCES projects(id)
 );
 
-CREATE TABLE interactions_users (
+CREATE TABLE notifications_users (
     id INTEGER PRIMARY KEY ASC,
-    interaction_id INTEGER,
+    notification_id INTEGER,
     user_id INTEGER,
     FOREIGN KEY(user_id) REFERENCES users(id)
-    FOREIGN KEY(interaction_id) REFERENCES interactions(id)
+    FOREIGN KEY(notification_id) REFERENCES notifications(id)
+);
+
+CREATE TABLE links (
+    id INTEGER PRIMARY KEY ASC,
+    caption TEXT,
+    url TEXT,
+    project_id INTEGER,
+    FOREIGN KEY(project_id) REFERENCES projects(id)
 );

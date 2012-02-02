@@ -5,7 +5,7 @@
     <title>Overview - <?php echo $project->name ?></title>
     <meta name="description" content="<?php echo $project->name ?>">
     <meta name="author" content="Maurício Gardini">
-    <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/bootstrap.css">
     <link rel="stylesheet" href="/styles/snippets.css">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
@@ -30,7 +30,7 @@
                     <li><a href="#contact">Contact</a></li>
                 </ul>
                 <p class="pull-right">Logado como 
-                    <a href="#"><?php echo $user->name ?></a> | 
+                    <a href="#"><?php echo $user->getName() ?></a> | 
                     <a href="/logout">Sair</a></p>
                 <span class="help-block">
                     &nbsp;
@@ -44,7 +44,7 @@
                 <div class="span9"> 
                     <input type="hidden" name="id" value="
                         <?php echo $project->id ?>"/>
-                    <h1><?php echo $project->name ?></h1>
+                    <h1><?php echo $project->title ?></h1>
                     <p><?php echo $project->description ?></p>
                     <a href="/projects/view/<?php echo $project->id ?>">
                         Ir para o projeto

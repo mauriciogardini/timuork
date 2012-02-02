@@ -6,7 +6,7 @@
     <title>#</title>
     <meta name="description" content="#">
     <meta name="author" content="Maurício Gardini">
-    <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/bootstrap.css">
     <link rel="stylesheet" href="/styles/snippets.css">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
@@ -30,10 +30,10 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <form action="/login" method="post" class="pull-right">    
-                    <input class="input-small" id="username" name="username" 
+                <form id="login" action="/login" method="post" class="pull-right">    
+                    <input class="input-small" id="loginUsername" name="username" 
                         size="30" type="text" placeholder="Username" />
-                    <input class="input-small" id="password" name="password" 
+                    <input class="input-small" id="loginPassword" name="password" 
                         size="30" type="password" placeholder="Senha" />
                     <button class="btn">Entrar</button>
                     <span class="help-block">
@@ -49,21 +49,30 @@
     </div>
     <div class="container">
         <div class="content" id="centered">
-            <div class="row center">
-                <div class="span14">
-                    <form action="/users/add" method="post" class="center">
+            <div class="row">
+                <div class="span7">
+                    <h4>Timuork é a solução para você, que precisa fazer um
+                        trabalho de escola/faculdade, mas não quer ver a 
+                        caixa de entrada do seu e-mail lotada por causa disso.
+                    </h4>
+                </div>
+                <div class="span7">
+                    <form id="addUser" method="post" class="center">
                         <h3>Novo aqui? Junte-se à nós!</h3>
-                        <p><input class="input-xlarge" id="unregisteredName" 
-                            name="unregisteredName" size="30" type="text" 
+                        <p><input class="input-xlarge" id="name" 
+                            name="name" size="30" type="text" 
                             placeholder="Nome completo" /></p>
-                        <p><input class="input-xlarge" id="unregisteredEmail" 
-                            name="unregisteredEmail" size="30" type="text" 
+                        <p><input class="input-xlarge" id="email" 
+                            name="email" size="30" type="text" 
                             placeholder="E-mail" /></p>
-                        <p><input class="input-xlarge" id="unregisteredUsername"
-                            name="unregisteredUsername" size="30" type="text" 
+                        <p><input class="input-xlarge" id="twitter"
+                            name="twitter" size="30" type="text"
+                            placeholder="Twitter" /></p>
+                        <p><input class="input-xlarge" id="username"
+                            name="username" size="30" type="text" 
                             placeholder="Username" /></p>
-                        <p><input class="input-xlarge" id="unregisteredPassword"
-                            name="unregisteredPassword" size="30" 
+                        <p><input class="input-xlarge" id="password"
+                            name="password" size="30" 
                             type="password" placeholder="Senha" /></p>
                         <p><button class="btn">Registrar</button>
                     </form>
@@ -74,5 +83,12 @@
             <p>&copy; Company 2011</p>
         </footer>
     </div>
+<script src="/scripts/jquery.min.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-twipsy.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-popover.js" type="text/javascript"></script>
+<script src="/scripts/home.js" type="text/javascript"></script>
+<script>
+    var home = new Home();
+</script>
 </body>
 </html>

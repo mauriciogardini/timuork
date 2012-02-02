@@ -9,24 +9,63 @@
         }
 
         public function add() {
-            $data['user'] = $this->Sessions->getSession();
-            $this->loadView('ProjectAdd', $data);
+            $log = array();
+            $title = $_POST['title'];
+            $description = $_POST['description'];
+            $userId = $_POST['userId'];
+            $projectInfo = (object) array('userId' => $userId,
+                'title' => $title, 'description' => $description);
+            if($this->Projects->isValidProject($projectInfo)) {
+                $this->Projects->createProject($projectInfo);
+            }
+
+            else {
+                $errors = $this->Projects->getProjectValidationErrors($projectInfo);
+                $log = array("errors" => $errors);
+            }
+
+            echo json_encode($log);
+        }
+
+        public function updateProjects() {
+            $log = array();
+            $projects = array();
+            $sessionUser = $this->SessionUser;
+            $this->Projects->listProjectsByUserId(function($item) use(
+                &$projects) {
+                $projects[] = $item;
+            }, $sessionUser->getId());
+            $log['projects'] = $projects;
+
+            echo json_encode($log);
         }
 
         public function updateChatMessages($chatId) {
             $log = array();
             $timestamp = isset($_GET['timestamp']) ? $_GET['timestamp'] : NULL;
             $messages = array();
-            $user = $this->Sessions->getSession();
+            $sessionUser = $this->SessionUser;
             $this->Projects->listMessagesByChatId(function($item) use(
                 &$messages) {
                 $messages[] = $item;
             }, $chatId, $timestamp);
             $statusInfo = (object) array("chatId" => $chatId, 
-                "userId" => $user->id);       
+                "userId" => $sessionUser->getId());       
             $this->Projects->manageStatus($statusInfo);
             $log['messages'] = $messages; 
             
+            echo json_encode($log);
+        }
+
+        public function updateLinks($projectId) {
+            $log = array();
+            $links = array();
+            $this->Projects->listLinksByProjectId(function(
+                $item) use(&$links) {
+                $links[] = $item;
+            }, $projectId);
+            $log['links'] = $links;
+
             echo json_encode($log);
         }
         
@@ -54,9 +93,9 @@
         public function view($id) {
             $onlineUsers = array();
             $projectUsers = array();
+            $sessionUser = $this->SessionUser;
             $project = $this->Projects->getProjectById($id);
             $chat = $this->Projects->getChatByProjectId($id);
-            $user = $this->Sessions->getSession();
             $this->Projects->listOnlineUsersWithAdminFieldByProjectId(function(
                 $item) use(&$onlineUsers) {
                 $onlineUsers[] = $item;                    
@@ -68,7 +107,7 @@
 
             $data['project'] = $project;
             $data['chat'] = $chat;
-            $data['user'] = $user;
+            $data['user'] = $sessionUser;
             $data['onlineUsers'] = $onlineUsers;
             $data['projectUsers'] = $projectUsers;
             $this->loadView('ProjectView', $data);
@@ -76,9 +115,10 @@
 
         public function overview($id) {
             $allowedUsers = array();
+            $sessionUser = $this->SessionUser;
             $project = $this->Projects->getProjectById($id);
             $data['project'] = $project;
-            $data['user'] = $this->Sessions->getSession();
+            $data['user'] = $sessionUser;
             $this->Projects->listAllowedUsersByProjectId(function($item) use(
                 &$allowedUsers) {
                 $allowedUsers[] = $item;
@@ -90,25 +130,45 @@
         public function edit($id) {
             $project = $this->Projects->getProjectById($id);
             $data['project'] = $project;
-            $data['user'] = $this->Sessions->getSession();
+            $data['user'] = $this->SessionUser;
             $this->loadView('ProjectEdit', $data);
         }
 
-        public function createInteraction() {
+        public function createNotification() {
             $projectId = $_POST['projectId'];
             $users = explode(',', $_POST['users']);
-            
+            $sessionUser = $this->SessionUser;        
             if ((bool)count($users)) {
                 if ($users[0] == -1) {
                     $users = NULL;
                 }
             }
-
             $title = $_POST['title'];
             $description = $_POST['description'];
-            $interactionInfo = (object) array("title" => $title, 
+            $notificationInfo = (object) array("title" => $title, 
                 "description" => $description, "projectId" => $projectId, 
-                "users" => $users);
-            $this->Projects->createInteraction($interactionInfo);
+                "senderUserId" => $sessionUser->getId(), "users" => $users);
+            $this->Projects->createNotification($notificationInfo);
+        }
+
+        public function createLink() {
+            $log = array();
+            $projectId = $_POST['projectId'];
+            $caption = $_POST['caption'];
+            $url = $_POST['url'];
+            $url = $this->Projects->prependScheme($url);
+            $linkInfo = (object) array("projectId" => $projectId,
+                "caption" => $caption, "url" => $url);
+
+            if ($this->Projects->isValidLink($linkInfo)) {
+                $this->Projects->createLink($linkInfo);
+            }
+
+            else {
+                $errors = $this->Projects->getValidationErrors($linkInfo);
+                $log = array("errors" => $errors);
+            }
+
+            echo json_encode($log);    
         }
     }

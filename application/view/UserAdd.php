@@ -5,7 +5,7 @@
     <title>#</title>
     <meta name="description" content="Log In">
     <meta name="author" content="Maurício Gardini">
-    <link rel="stylesheet" href="/styles/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/bootstrap.css">
     <link rel="stylesheet" href="/styles/snippets.css">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
@@ -30,7 +30,7 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
-                <form action="user_authenticate.php" method="post" 
+                <form action="/login" method="post" 
                     class="pull-right">    
                     <input class="input-small" id="username" name="username" 
                         size="30" type="text" placeholder="Username" />
@@ -52,7 +52,7 @@
         <div class="content">
             <div class="row">
                 <div class="span10">
-                    <?php echo $message; ?></br>
+                    <?php echo "O usuário foi cadastrado com sucesso."?></br>
                     <a href="/">Voltar para a página principal</a>
                 </div>
             </div>

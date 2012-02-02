@@ -1,3 +1,4 @@
+
 <?php
     require_once("BaseModel.php");    
     require_once("lib/PasswordHash.php");
@@ -26,62 +27,64 @@
             return ($hasher->CheckPassword($word, $wordHash));
         }
 
-        public function addUser($user) {
-            if($this->validateUsername($user->username)) {
-                if($this->validatePassword($user->password)) {
-                    if($this->validateEmail($user->email)) {
-                        $crypted_password = $this->cryptPassword(
-                            $user->password);
-                        if ($crypted_password != NULL)
-                        {
-                            $user->password = $crypted_password;
-                            if(!$this->existsUser($user->username)) {
-                                $sql = "INSERT INTO users
-                                    (id, name, email, username, password) 
-                                    VALUES(NULL, ?, ?, ?, ?)";
-                                $values = array($user->name, $user->email, 
-                                    $user->username, $user->password);
-                                if((bool) $this->database->executeQueryDB($sql, 
-                                    $values)->rowCount()) {
-                                        return "O usuário " . $user->name . " 
-                                            foi cadastrado com sucesso.";
-                                }
-                                else {
-                                    return "O sistema está indisponível. 
-                                        Tente novamente mais tarde."; 
-                                }
-                            }
-                            else {
-                                return  "Já existe um usuário utilizando este 
-                                    username.";
-                            }
-                        }
-                        else
-                        {
-                            return "O sistema está indisponível. Tente 
-                                novamente mais tarde.";
-                        }       
-                    }
-                    else {
-                        return "E-mail inválido.";
-                    }
-                }
-                else {
-                    return "O password informado precisa ter entre 6 e 24 
-                        caracteres."; 
+        public function isValidUser($userInfo) {
+            $validationErrors = $this->getUserValidationErrors($userInfo);
+            foreach($validationErrors as $error) {
+                if ($error != NULL) {
+                    return false;
                 }
             }
-            else {
-                return "O username só pode conter letras, números e '_'";
-            }
+
+            return true;
         }
 
-        public function createUser($user) {
-            if(!$this->existsUser($user->username)) {
-                            }
-            else {
+        public function createUser($userInfo) {
+            $crypted_password = $this->cryptPassword($userInfo->password); 
+            if ($crypted_password == NULL) {
                 return false;
             }
+            else { 
+                $userInfo->password = $crypted_password;
+            }
+            $sql = "INSERT INTO users
+                (id, name, email, twitter, username, password) 
+                VALUES(NULL, ?, ?, ?, ?, ?)";
+            $values = array($userInfo->name, $userInfo->email, $userInfo->twitter, 
+                $userInfo->username, $userInfo->password);
+
+            return ((bool) $this->database->executeQueryDB($sql, 
+                $values)->rowCount());
+        }
+
+        public function getUserValidationErrors($userInfo) {
+            $validationErrors = array("name" => NULL,
+                "email" => NULL, "username" => NULL, 
+                "password" => NULL);
+            if(!$this->validateUsername($userInfo->username)) {
+                $validationErrors["username"] =  
+                    "O username só pode conter letras, números e '_'";
+            }
+            else if($this->existsUser($userInfo->username)) {
+                $validationErrors["username"] = 
+                    "Já existe um usuário utilizando este username.";
+            }
+
+            if(!$this->validatePassword($userInfo->password)) {
+                $validationErrors["password"] = 
+                    "O password deve ter entre 6 e 24 caracteres.";
+            }
+
+            if(!$this->validateEmail($userInfo->email)) {
+                $validationErrors["email"] = 
+                    "E-mail inválido.";
+            }
+
+            if(!$this->validateTwitter($userInfo->twitter)) {
+                $validationErrors["twitter"] = 
+                    "Twitter inválido";
+            }
+
+            return $validationErrors;     
         }
 
         public function existsUser($username) {
@@ -89,15 +92,16 @@
                 FROM users 
                 WHERE username = ?";
             $count = $this->database->fetchDB($this->database->executeQueryDB($sql, array($username)))->count;
+
             return $count;
         }
 
-        public function updateUser($user) {
+        public function updateUser($userInfo) {
             $sql = "UPDATE users 
                 SET name = ?, email = ?, username = ?, password = ? 
                 WHERE id = ?";
-            $values = array($user->name, $user->email, $user->username, 
-                $user->password, $user->id);
+            $values = array($userInfo->name, $userInfo->email, $userInfo->username, 
+                $userInfo->password, $userInfo->id);
             return (bool) $this->database->executeQueryDB($sql, $values)->
                 rowCount();
         }
@@ -111,22 +115,21 @@
                 $sql, $values));
         }
 
-        public function getUserById($id) {
+        public function getUserById($userId) {
             $sql = "SELECT * 
                 FROM users 
                 WHERE id = ?";
-            $values = array($id);
+            $values = array($userId);
             return $this->database->fetchDB($this->database->executeQueryDB(
                 $sql, $values));
         }
 
-        public function authenticateUser($auth_user) {
-            if($this->existsUser($auth_user->username)) {
-                $user = $this->getUserByUsername($auth_user->username);
-                $check = $this->comparePasswords($auth_user->password, 
-                    $user->password);
-
-                if ($check) {
+        //TODO - Improve authentication (getValidationErrors)
+        public function authenticateUser($authenticationUserInfo) {
+            if($this->existsUser($authenticationUserInfo->username)) {
+                $user = $this->getUserByUsername($authenticationUserInfo->username);
+                if ($this->comparePasswords($authenticationUserInfo->password, 
+                    $user->password)) {
                     return $user;
                 }
                 else {
@@ -139,7 +142,7 @@
         }
 
         public function validateUsername($username) {
-            if (preg_match('/^[a-zA-Z0-9_]{1,60}$/', $username)) {
+            if (preg_match('/^[a-zA-Z0-9_]{3,15}$/', $username)) {
                 return true;
             }
             else {
@@ -165,8 +168,17 @@
             }
         }
 
-        public function authenticate($auth_user) {
-            return $this->authenticateUser($auth_user);
+        public function validateTwitter($twitter) {
+            if (preg_match('/^[a-zA-Z0-9_]{3,15}$/', $twitter)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        public function authenticate($authenticationUserInfo) {
+            return $this->authenticateUser($suthenticationUserInfo);
         }
     }
 ?>

@@ -1,35 +1,32 @@
 <?php
-    
     class Sessions {
-        public function startSession($user) {
-            $s = session_id();
-            if (empty($s)) {
+        public function startSession() {
+            if (!$this->checkSession()) {
                 session_start();
             }
-            //TODO: Verificar se o usuário existe no banco.
-            $_SESSION['user'] = $user;
         }
 
-        public function quitSession() {
+        public function destroySession() {
             if ($this->checkSession()) {
                 session_destroy();
             }
         }
 
-        public function checkSession() {
-            $s = session_id();
-            if (session_id() == "") {
-                session_start();
-            } 
-            if (isset($_SESSION['user'])) {
-                return true;
-            }
-            else {
-                return false;
+        private function checkSession() {
+            return (bool) session_id();
+        }
+
+        public function read($key) {
+            if(isset($_SESSION[$key])) {
+                return $_SESSION[$key];
             }
         }
 
-        public function getSession() {
-            return $this->checkSession() ? $_SESSION['user'] : NULL;
+        public function write($key, $value) {
+            $_SESSION[$key] = $value;
+        }
+
+        public function delete($key) {
+            unset($_SESSION[$key]);
         }
     }

@@ -1,0 +1,6 @@
+2:Fix "About" and "Contact"
+2:Implement "Settings" window
+2:List the last interactions (10) in Dashboard
+2:Make logo (Beta)
+2:Fix Popover position in "Add Link" modal
+2:Remove "twitter" from Users' table and create notification_accounts table (id, value, notification_account_type, user_id)

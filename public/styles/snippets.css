@@ -119,3 +119,7 @@
     border-radius: 3px;
     padding-left: 5px;
     }
+
+    .input-with-error {
+    border-color: #CC0000;
+    }

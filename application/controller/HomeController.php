@@ -1,6 +1,7 @@
 <?php
     require_once("BaseController.php");
 
+
     class HomeController extends BaseController {
         public function __construct() {
             parent::__construct();
@@ -9,19 +10,19 @@
         }
         
         public function index() {
-            if($this->Sessions->checkSession()) {
+            $sessionUser = $this->SessionUser;
+            if ($sessionUser->getId()) {   
                 $projects = array();
-                $user = $this->Sessions->getSession();
                 $this->Projects->listProjectsByUserId(function($item) use(
                     &$projects) {
                     $projects[] = $item;
-                }, $user->id);
-                $data['user'] = $user;
+                }, $sessionUser->getId());
+                $data['user'] = $sessionUser;
                 $data['projects'] = $projects;
                 $this->loadView('Dashboard', $data);
             }
             else {
                 $this->loadView('Home', NULL);
-            }    
+            }
         }
     }

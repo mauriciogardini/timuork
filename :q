@@ -52,7 +52,7 @@
                 $this->Projects->listProjectsByUserId(function($item) use(
                     &$projects) {
                     $projects[] = $item;
-                }, $sessionUser->getId());
+                }, $this->Sessions->read("userId"));
                 $data['user'] = $sessionUser;                
                 $data['projects'] = $projects;
                 if (isset($_SESSION["flash"])) {
@@ -67,7 +67,7 @@
         }
 
         public function logout() {
-            $this->Sessions->destroySession();
+            $this->Sessions->quitSession();
             $this->loadView('Home', NULL);
         }
 
