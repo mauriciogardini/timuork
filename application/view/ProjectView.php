@@ -50,7 +50,7 @@
                         <div id="chat">
                         </div>
                     </div>
-                    <form id="new-message">
+                    <form id="newMessage">
                         <p>
                             <textarea id="message" 
                                 class="chat-text-box"></textarea>
@@ -164,7 +164,7 @@
     <script src="/scripts/chat.js" type="text/javascript"></script>
         <script>
         var chat = new Chat(<?php echo $chat->project_id ?>, 
-            <?php echo $chat->id ?>, <?php echo $user->id ?>);
+            <?php echo $chat->id ?>, <?php echo $user->getId() ?>);
     </script>
 </body>
 </html>

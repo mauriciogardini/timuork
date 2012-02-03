@@ -10,7 +10,7 @@ function Chat(projectId, chatId, userId) {
     var createInteractionUrl = "/projects/createInteraction/";
     var createLinkUrl = "/projects/createLink/";
 
-    var updateChatMessagesCallback = function(data) {//{{{
+    var updateChatMessagesCallback = function(data) {
         if(data.messages && data.messages.length) {
             $.each(data.messages, function(index, message) {
                 $("#chat").append($("<p data-controls-modal=\"modalInteraction\" data-backdrop=\"true\" data-keyboard=\"true\" class=\"chat-paragraph\"><span class=\"chat-username\"><b>"+ message.user_name + "</b></span></br><span class=\"chat-text\">" + message.message_text +"</span></p>"));             
@@ -20,9 +20,9 @@ function Chat(projectId, chatId, userId) {
         }
 
         setTimeout(self.update, 5000);
-    };//}}}
+    };
 
-    var updateOnlineUsersCallback = function(data) {//{{{
+    var updateOnlineUsersCallback = function(data) {
         if(data.onlineUsers && data.onlineUsers.length) {
             $("#onlineUsers").empty();
             $.each(data.onlineUsers, function(index, user) { 
@@ -37,9 +37,9 @@ function Chat(projectId, chatId, userId) {
         }
 
         setTimeout(self.getUsers, 5000);
-    };//}}}
+    };
 
-    var updateLinksCallback = function(data) {//{{{
+    var updateLinksCallback = function(data) {
         if(data.links && data.links.length) {
             $("#links").empty();
             $.each(data.links, function(index, link) {
@@ -50,7 +50,7 @@ function Chat(projectId, chatId, userId) {
         }
 
         setTimeout(self.getLinks, 5000);
-    }//}}}
+    }
 
     var createInteractionCallback = function(){};
  
@@ -58,7 +58,7 @@ function Chat(projectId, chatId, userId) {
         $("#message").val("");
     };
 
-    var createLinkCallback = function(data) {//{{{
+    var createLinkCallback = function(data) {
         if(data.errors) {
             $.each(data.errors, function(index, error) {
                 if (error != null) {
@@ -80,19 +80,19 @@ function Chat(projectId, chatId, userId) {
             $("#caption").val("");
             $("#url").val("");
         }
-    };//}}}
+    };
 
-    var errorCallback = function(xhr, status, error) {//{{{
+    var errorCallback = function(xhr, status, error) {
         console.log("Erro");
         console.log(arguments);
-    };//}}}
+    };
 
-    self.update = function() {//{{{
+    self.update = function() {
         $.getJSON(updateChatMessagesUrl, {timestamp: timestamp}).success(updateChatMessagesCallback)
             .error(errorCallback);
-    };//}}}
+    };
 
-    self.sendMessage = function() {//{{{
+    self.sendMessage = function() {
         var data = {
             text: $("#message").val(),
             chatId: chatId,
@@ -100,19 +100,19 @@ function Chat(projectId, chatId, userId) {
         };
         $.post(sendMessageUrl, data).success(sendMessageCallback)
             .error(errorCallback);
-    }//}}}
+    }
 
-    self.getUsers = function() {//{{{
+    self.getUsers = function() {
         $.getJSON(updateOnlineUsersUrl).success(updateOnlineUsersCallback)
             .error(errorCallback);
-    }//}}}
+    }
 
-    self.getLinks = function()  {//{{{
+    self.getLinks = function()  {
         $.getJSON(updateLinksUrl).success(updateLinksCallback)
             .error(errorCallback);
-    }//}}}
+    }
 
-    self.createInteraction = function() {//{{{
+    self.createInteraction = function() {
         var usersTemp = new Array();
         usersTemp[0] = $("#normalSelect").find('option:selected').attr('id');
         users = usersTemp.toString();
@@ -124,9 +124,9 @@ function Chat(projectId, chatId, userId) {
         };
         $.post(createInteractionUrl, data).success(createInteractionCallback)
             .error(errorCallback);
-    }//}}} 
+    } 
 
-    self.createLink = function() {//{{{ 
+    self.createLink = function() { 
         var data = {
             projectId: projectId,
             caption: $("#caption").val(),
@@ -135,27 +135,27 @@ function Chat(projectId, chatId, userId) {
 
         $.post(createLinkUrl, data, createLinkCallback, "json")
             .error(errorCallback);
-    }//}}} 
+    } 
 
     self.update();
     self.getUsers();
     self.getLinks();
 
-    $("#newMessage").submit (function(e) {//{{{
+    $("#newMessage").submit (function(e) {
         self.sendMessage();
         $("#message").val("");
         e.preventDefault();
-    });//}}}
+    });
     
-    $("#newInteraction").submit(function(e) {//{{{
+    $("#newInteraction").submit(function(e) {
         console.log("Interação");
         self.createInteraction();
         e.preventDefault();
-    });//}}} 
+    }); 
 
-    $("#newLink").submit(function(e) {//{{{
+    $("#newLink").submit(function(e) {
         console.log("Link");
         self.createLink();
         e.preventDefault();
-    });//}}}
+    });
 }

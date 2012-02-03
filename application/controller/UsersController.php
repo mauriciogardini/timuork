@@ -13,15 +13,16 @@
             $log = array();
             $name = $_POST["name"];
             $email = $_POST["email"];
-            $twitter = $_POST["twitter"];
+            $account = $_POST["account"];
+            $accountType = "Twitter";
             $username = $_POST["username"];
             $password = $_POST["password"];
             $userInfo = (object) array("name" => $name, "email" => $email, 
-                "twitter" => $twitter, "username" => $username, 
-                "password" => $password);
+                "account" => $account, "accountType" => $accountType,
+                "username" => $username, "password" => $password);
             if ($this->Users->isValidUser($userInfo)) {
-                $this->Users->createUser($userInfo);
-                $_SESSION["flash"] = "Teste";
+                $this->Users->createUserAndDependencies($userInfo);
+                //$_SESSION["flash"] = "Teste";
             }
             else {
                 $errors = $this->Users->getUserValidationErrors($userInfo);

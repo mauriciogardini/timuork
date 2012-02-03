@@ -9,22 +9,92 @@
             $this->database = BaseModel::getInstance();
         }
 
-        public function cryptPassword($word) {
-            $hasher = new PasswordHash(STRETCHING_TIMES, PORTABLE_HASH);
-            $hash = $hasher->HashPassword($word);
-            if (strlen($hash) >= 20) {
-                return $hash;
-            } 
-            else 
-            {
-                // Something went wrong - 20 is the minimum.
-                return NULL; 
+        public function createUserAndDependencies($userInfo) {
+            $self = $this;
+            $function = function() use($userInfo) { 
+                $self->createUser($userInfo); 
+            };
+            $this->database->executeTransaction($function); 
+        }
+
+        public function createUser($userInfo) {
+            $cryptedPassword = $this->cryptPassword($userInfo->password); 
+            if ($cryptedPassword == NULL) {
+                return false;
+            }
+            else { 
+                $userInfo->password = $cryptedPassword;
+            }
+            $sql = "INSERT INTO users
+                (id, name, email, username, password) 
+                VALUES(NULL, ?, ?, ?, ?)";
+            $values = array($userInfo->name, $userInfo->email, 
+                $userInfo->username, $userInfo->password);
+            $result = ((bool) $this->database->executeQueryDB($sql, 
+                $values)->rowCount());
+            if ($result) {
+                $accountInfo = (object) array("value" => $userInfo->account, 
+                    "type" => $userInfo->accountType);
+                return $this->manageNotificationAccount($accountInfo); 
+            }
+            else {
+                return false;
             }
         }
 
-        public function comparePasswords($word, $wordHash) {
-            $hasher = new PasswordHash(STRETCHING_TIMES, PORTABLE_HASH);
-            return ($hasher->CheckPassword($word, $wordHash));
+        public function manageNotificationAccount($accountInfo) {
+            if (!isset($accountInfo->id)) {
+                $this->createNotificationAccount($accountInfo);
+            }
+            else {
+                $this->updateNotificationAccount($accountInfo);
+            }
+        }
+        
+        public function createNotificationAccount($accountInfo) {
+            if (isset($accountInfo->userId)) {
+                $sql = "INSERT INTO notification_accounts
+                    (id, value, type, user_id)
+                    VALUES(NULL, ?, ?, ?)";
+                $values = array($accountInfo->value, $accountInfo->type,
+                    $accountInfo->userId);
+            }
+            else {
+                $sql = "INSERT INTO notification_accounts
+                    (id, value, type, user_id)
+                    VALUES(NULL, ?, ?, SELECT last_row_id() FROM users)";
+                $values = array($accountInfo->value, $accountInfo->type,
+                    $accountInfo->userId);
+
+            }
+                return (bool) $this->database->executeQueryDB($sql, 
+                $values)->rowCount();
+        }
+
+        public function removeNotificationAccount($accountId) {
+            $sql = "DELETE FROM notification_accounts
+                WHERE id = ?";
+            $values = array($accountInfo->userId);
+            return (bool) $this->database->executeQueryDB($sql, 
+                $values)->rowCount();
+        }
+
+        public function updateNotificationAccount($accountInfo) {
+            $sql = "UPDATE notification_accounts
+                SET value = ?
+                WHERE id = ?";
+            $values = array($accountInfo->value, $accountInfo->userId);
+            return (bool) $this->database->executeQueryDB($sql, 
+                $values)->rowCount();
+        }
+        
+        public function getNotificationAccount($userId, $accountType) {
+            $sql = "SELECT *
+                FROM notification_accounts
+                WHERE user_id = ? AND type = ?";
+            $values = $array($userId, $accountType);
+            return $this->database->fetchDB($this->database->executeQueryDB(
+                $sql, $values));
         }
 
         public function isValidUser($userInfo) {
@@ -36,24 +106,6 @@
             }
 
             return true;
-        }
-
-        public function createUser($userInfo) {
-            $crypted_password = $this->cryptPassword($userInfo->password); 
-            if ($crypted_password == NULL) {
-                return false;
-            }
-            else { 
-                $userInfo->password = $crypted_password;
-            }
-            $sql = "INSERT INTO users
-                (id, name, email, twitter, username, password) 
-                VALUES(NULL, ?, ?, ?, ?, ?)";
-            $values = array($userInfo->name, $userInfo->email, $userInfo->twitter, 
-                $userInfo->username, $userInfo->password);
-
-            return ((bool) $this->database->executeQueryDB($sql, 
-                $values)->rowCount());
         }
 
         public function getUserValidationErrors($userInfo) {
@@ -79,9 +131,11 @@
                     "E-mail inválido.";
             }
 
-            if(!$this->validateTwitter($userInfo->twitter)) {
-                $validationErrors["twitter"] = 
-                    "Twitter inválido";
+            if(!$this->validateAccount($userInfo->account, $userInfo->accountType)) {
+                if($userInfo->accountType == "Twitter") {
+                    $validationErrors["account"] = 
+                        "Twitter inválido";
+                }
             }
 
             return $validationErrors;     
@@ -168,17 +222,38 @@
             }
         }
 
-        public function validateTwitter($twitter) {
-            if (preg_match('/^[a-zA-Z0-9_]{3,15}$/', $twitter)) {
-                return true;
+        public function validateAccount($account, $accountType) {
+            if ($accountType == "Twitter") {
+                if (preg_match('/^[a-zA-Z0-9_]{3,15}$/', $twitter)) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
             }
-            else {
-                return false;
-            }
+            return false;
         }
 
         public function authenticate($authenticationUserInfo) {
             return $this->authenticateUser($suthenticationUserInfo);
+        }
+
+        public function cryptPassword($word) {
+            $hasher = new PasswordHash(STRETCHING_TIMES, PORTABLE_HASH);
+            $hash = $hasher->HashPassword($word);
+            if (strlen($hash) >= 20) {
+                return $hash;
+            } 
+            else 
+            {
+                // Something went wrong - 20 is the minimum.
+                return NULL; 
+            }
+        }
+
+        public function comparePasswords($word, $wordHash) {
+            $hasher = new PasswordHash(STRETCHING_TIMES, PORTABLE_HASH);
+            return ($hasher->CheckPassword($word, $wordHash));
         }
     }
 ?>

@@ -2,9 +2,16 @@ CREATE TABLE users (
     id INTEGER PRIMARY KEY ASC,
     name TEXT,
     email TEXT,
-    twitter TEXT,
     username TEXT,
     password TEXT
+);
+
+CREATE TABLE notification_accounts (
+    id INTEGER PRIMARY KEY ASC, 
+    value TEXT, 
+    type TEXT, 
+    user_id INTEGER,
+    FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
 CREATE TABLE projects (

@@ -63,4 +63,10 @@
                 }
             }
         }
+
+        public function executeTransaction($fn) {
+            $this->executeQueryDB("BEGIN TRANSACTION;", NULL);
+            $fn();    
+            $this->executeQueryDB("COMMIT;", NULL);
+        } 
     }

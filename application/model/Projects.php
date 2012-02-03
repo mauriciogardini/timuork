@@ -16,10 +16,13 @@
             $result = (bool) $this->database->executeQueryDB($sql, 
                 $values)->rowCount();
             if ($result) {
-                $projectId = $this->database->fetchDB(
-                    $this->database->executeQueryDB(
-                    "SELECT last_insert_rowid() AS id", array()))->id;
-                return $this->allowUser($projectId, $projectInfo->userId);
+                $result = $this->createChat(NULL, -1);
+                if ($result) {        
+                    return $this->allowUser(NULL, $projectInfo->userId);
+                }
+                else {
+                    return false;
+                }    
             }
         }
 
@@ -128,10 +131,18 @@
         }
 
         public function allowUser($projectId, $userId) {
-            $sql = "INSERT INTO projects_users
-                (id, project_id, user_id)
-                VALUES(NULL, ?, ?)";
-            $values = array($projectId, $userId);
+            if (isset($projectId)) { 
+                $sql = "INSERT INTO projects_users
+                    (id, project_id, user_id)
+                    VALUES(NULL, ?, ?)";
+                $values = array($projectId, $userId);
+            }
+            else {
+                $sql = "INSERT INTO projects_users
+                    (id, project_id, user_id)
+                    VALUES(NULL, SELECT last_insert_rowid() from projects, ?)";
+                $values = array($userId);
+            }    
             return (bool) $this->database->executeQueryDB($sql, $values)->
                 rowCount();
         }
@@ -146,10 +157,17 @@
         }
 
         public function createChat($projectId, $userId) {
-            $sql = "INSERT INTO chats
-                (id, project_id, user_id)
-                VALUES(NULL, ?, ?)";
-            $values = array($projectId, $userId);
+            if(isset($projectId)) {
+                $sql = "INSERT INTO chats
+                    (id, project_id, user_id)
+                    VALUES(NULL, ?, ?)";
+                $values = array($projectId, $userId);
+
+                $sql = "INSERT INTO chats
+                    (id, project_id, user_id)
+                    VALUES(NULL, SELECT last_insert_rowid() from projects, ?)";
+                $values = array($userId);
+            }
             return (bool) $this->database->executeQueryDB($sql, $values)->
                 rowCount();
         }
