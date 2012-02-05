@@ -1,0 +1,42 @@
+.login-body {
+    padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+}
+
+.login-div {
+    vertical-align: middle;
+}
+
+.navbar .input-small {
+    margin-top: 5px;
+}
+    
+.divider {
+    float:left;
+    width:1px;
+    height:18px;
+    background:#333;
+    background:-moz-linear-gradient(100% 100% 90deg,#555,#000);
+}
+
+.remember input[type=checkbox] {
+    margin:0;
+    height:13px;
+    display:inline;
+    vertical-align:text-top;
+}
+
+.sublogin-label {
+    display:inline;
+}
+
+.sublogin-checkbox {
+    margin-bottom: 6px;
+    display:inline;
+}
+
+.sublogin-span {
+    color: #eee;
+}
+.login-form {
+    margin-bottom:6px;
+}

@@ -7,7 +7,8 @@
     <meta name="description" content="#">
     <meta name="author" content="Maurício Gardini">
     <link rel="stylesheet" href="/styles/bootstrap.css">
-    <link rel="stylesheet" href="/styles/snippets.css">
+    <link rel="stylesheet" href="/styles/general.css">
+    <link rel="stylesheet" href="/styles/home.css">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -21,7 +22,7 @@
     <link rel="apple-touch-icon" sizes="72x72" href="#">
     <link rel="apple-touch-icon" sizes="114x114" href="#">
 </head>
-<body>
+<body class="login-body">
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
@@ -31,7 +32,7 @@
                     <li><a href="#contact">Contato</a></li>
                 </ul>
                 <div class="pull-right">
-                    <form class="form-search login-form" id="login" action="/login" method="post"> 
+                    <form class="form-search" style="margin-bottom: 6px" id="login" action="/login" method="post"> 
                         <fieldset>
                             <input class="input-small" id="loginUsername" name="username"
                                 type="text" placeholder="Username" />
@@ -41,9 +42,9 @@
                         </fieldset>
                     </form>
                     <fieldset>
-                        <label class="sublogin-component">
-                            <input class="sublogin-checkbox sublogin-component" type="checkbox" value="1" name="remember_me">
-                            <span>Lembrar-me</span>
+                        <label class="sublogin-label">
+                            <input class="sublogin-checkbox" type="checkbox" value="1" name="remember_me">
+                            <span class="sublogin-span">Lembrar-me</span>
                         </label>
                         <span class="separator">&middot;</span> 
                         <a href="/forgotPassword">Esqueceu sua senha?</a>
@@ -55,13 +56,14 @@
     <div class="container">
         <div class="content" id="centered">
             <div class="row">
-                <div class="span7">
-                    <h4>Timuork é a solução para você, que precisa fazer um
-                        trabalho de escola/faculdade, mas não quer ver a 
-                        caixa de entrada do seu e-mail lotada por causa disso.
-                    </h4>
+                <div class="span6">
+                    <span>
+                    Timuork é a solução para você, que precisa fazer um
+                    trabalho de escola/faculdade, mas não quer ver a 
+                    caixa de entrada do seu e-mail lotada por causa disso.
+                    </span>
                 </div>
-                <div class="span7">
+                <div class="span6">
                     <form id="addUser" method="post" class="center">
                         <h3>Novo aqui? Junte-se à nós!</h3>
                         <div class="control-group" id="nameDiv">
