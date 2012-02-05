@@ -14,7 +14,7 @@
             $name = $_POST["name"];
             $email = $_POST["email"];
             $account = $_POST["account"];
-            $accountType = "Twitter";
+            $accountType = $_POST["accountType"];
             $username = $_POST["username"];
             $password = $_POST["password"];
             $userInfo = (object) array("name" => $name, "email" => $email, 

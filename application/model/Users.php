@@ -11,7 +11,7 @@
 
         public function createUserAndDependencies($userInfo) {
             $self = $this;
-            $function = function() use($userInfo) { 
+            $function = function() use($userInfo, $self) { 
                 $self->createUser($userInfo); 
             };
             $this->database->executeTransaction($function); 
@@ -19,11 +19,11 @@
 
         public function createUser($userInfo) {
             $cryptedPassword = $this->cryptPassword($userInfo->password); 
-            if ($cryptedPassword == NULL) {
-                return false;
+            if ($cryptedPassword != NULL) {
+                $userInfo->password = $cryptedPassword;
             }
             else { 
-                $userInfo->password = $cryptedPassword;
+                return false;
             }
             $sql = "INSERT INTO users
                 (id, name, email, username, password) 
@@ -63,11 +63,10 @@
                 $sql = "INSERT INTO notification_accounts
                     (id, value, type, user_id)
                     VALUES(NULL, ?, ?, SELECT last_row_id() FROM users)";
-                $values = array($accountInfo->value, $accountInfo->type,
-                    $accountInfo->userId);
+                $values = array($accountInfo->value, $accountInfo->type);
 
             }
-                return (bool) $this->database->executeQueryDB($sql, 
+            return (bool) $this->database->executeQueryDB($sql, 
                 $values)->rowCount();
         }
 
@@ -104,14 +103,17 @@
                     return false;
                 }
             }
-
             return true;
         }
 
         public function getUserValidationErrors($userInfo) {
             $validationErrors = array("name" => NULL,
                 "email" => NULL, "username" => NULL, 
-                "password" => NULL);
+                "account" => NULL, "password" => NULL);
+            if(!$this->validateName($userInfo->username)) {
+                $validationErrors["name"] =  
+                    "O nome só pode conter letras, números e '_'";
+            }
             if(!$this->validateUsername($userInfo->username)) {
                 $validationErrors["username"] =  
                     "O username só pode conter letras, números e '_'";
@@ -120,24 +122,20 @@
                 $validationErrors["username"] = 
                     "Já existe um usuário utilizando este username.";
             }
-
             if(!$this->validatePassword($userInfo->password)) {
                 $validationErrors["password"] = 
                     "O password deve ter entre 6 e 24 caracteres.";
             }
-
             if(!$this->validateEmail($userInfo->email)) {
                 $validationErrors["email"] = 
                     "E-mail inválido.";
             }
-
-            if(!$this->validateAccount($userInfo->account, $userInfo->accountType)) {
+            if(!$this->validateAccount($userInfo->account, 
+                $userInfo->accountType)) {
                 if($userInfo->accountType == "Twitter") {
-                    $validationErrors["account"] = 
-                        "Twitter inválido";
+                    $validationErrors["account"] = "Twitter inválido";
                 }
             }
-
             return $validationErrors;     
         }
 
@@ -145,8 +143,8 @@
             $sql = "SELECT COUNT(*) AS count 
                 FROM users 
                 WHERE username = ?";
-            $count = $this->database->fetchDB($this->database->executeQueryDB($sql, array($username)))->count;
-
+            $count = $this->database->fetchDB($this->database->executeQueryDB(
+                $sql, array($username)))->count;
             return $count;
         }
 
@@ -154,8 +152,8 @@
             $sql = "UPDATE users 
                 SET name = ?, email = ?, username = ?, password = ? 
                 WHERE id = ?";
-            $values = array($userInfo->name, $userInfo->email, $userInfo->username, 
-                $userInfo->password, $userInfo->id);
+            $values = array($userInfo->name, $userInfo->email, 
+                $userInfo->username, $userInfo->password, $userInfo->id);
             return (bool) $this->database->executeQueryDB($sql, $values)->
                 rowCount();
         }
@@ -195,6 +193,15 @@
             }
         }
 
+        public function validateName($name) {
+            if (preg_match('/^[a-zA-Z0-9_]{3,15}$/', $name)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
         public function validateUsername($username) {
             if (preg_match('/^[a-zA-Z0-9_]{3,15}$/', $username)) {
                 return true;
@@ -224,7 +231,7 @@
 
         public function validateAccount($account, $accountType) {
             if ($accountType == "Twitter") {
-                if (preg_match('/^[a-zA-Z0-9_]{3,15}$/', $twitter)) {
+                if (preg_match('/^[a-zA-Z0-9_]{3,15}$/', $account)) {
                     return true;
                 }
                 else {

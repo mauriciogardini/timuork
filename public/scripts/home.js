@@ -6,15 +6,17 @@ function Home() {
         if(data.errors) {
             $.each(data.errors, function(index, error) {
                 if (error != null) {
-                    $("#"+index).attr("rel", "popover");
-                    $("#"+index).attr("title", "Erro");
-                    $("#"+index).attr("data-content", error);
-                    $("#"+index).attr("html", "true");
-                    $("#"+index).popover();
-                    $("#"+index).addClass("input-with-error");
+                    $("#"+index+"Div").attr("rel", "popover");
+                    $("#"+index+"Div").attr("title", "Erro");
+                    $("#"+index+"Div").attr("data-content", error);
+                    $("#"+index+"Div").attr("html", "true");
+                    $("#"+index+"Div").popover();
+                    $("#"+index+"Div").removeClass("success");
+                    $("#"+index+"Div").addClass("error");
                 }
                 else {
-                    $("#"+index).removeClass("input-with-error");
+                    $("#"+index+"Div").removeClass("error");
+                    $("#"+index+"Div").addClass("success");
                 }
             });
         }
@@ -35,7 +37,8 @@ function Home() {
         var data = {
             name: $("#name").val(),
             email: $("#email").val(),
-            twitter: $("#twitter").val(),
+            account: $("#account").val(),
+            accountType: $("#accountType").val(),
             username: $("#username").val(),
             password: $("#password").val()
         };
