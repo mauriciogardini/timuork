@@ -3,7 +3,7 @@ html, body {
 }
 
 body {
-    padding-top: 20px;
+    padding-top: 40px;
 }
 
 .container > footer p {
@@ -13,8 +13,7 @@ body {
 /* The white background content wrapper */
 .content {
     background-color: #fff;
-    padding: 20px;
-    margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+    margin: 0 0;
     -webkit-border-radius: 0 0 6px 6px;
     -moz-border-radius: 0 0 6px 6px;
     border-radius: 0 0 6px 6px;
@@ -24,8 +23,18 @@ body {
 }
 
 /*Centers the content*/
-.center {
+.center70 {
     margin-left:auto;
     margin-right:auto;
     width:70%;
+}
+
+.center85 {
+    margin-left:auto;
+    margin-right:auto;
+    width:85%;
+}
+
+.footer {
+    padding-top:5px;
 }

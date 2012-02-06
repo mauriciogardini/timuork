@@ -7,6 +7,7 @@ function Home() {
             $.each(data.errors, function(index, error) {
                 if (error != null) {
                     $("#"+index+"Div").attr("rel", "popover");
+                    $("#"+index+"Div").attr("placement", "left");
                     $("#"+index+"Div").attr("title", "Erro");
                     $("#"+index+"Div").attr("data-content", error);
                     $("#"+index+"Div").attr("html", "true");
