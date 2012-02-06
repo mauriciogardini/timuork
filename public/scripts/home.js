@@ -1,7 +1,4 @@
 function Home() {
-    var addUserUrl = "/users/add/";
-    var loginUrl = "/login";
-
     var addUserCallback = function(data) {
         if (data.errors) {
             $.each(data.errors, function(index, error) {

@@ -62,7 +62,7 @@
             else {
                 $sql = "INSERT INTO notification_accounts
                     (id, value, type, user_id)
-                    VALUES(NULL, ?, ?, SELECT last_row_id() FROM users)";
+                    VALUES(NULL, ?, ?, (SELECT last_insert_rowid() FROM users))";
                 $values = array($accountInfo->value, $accountInfo->type);
 
             }

@@ -17,9 +17,6 @@
         $url_values['id'] = isset($index_values[0]) ? $index_values[0] : $array_tmp_uri[2];
     }
     
-    //echo nl2br("</br>");
-    //echo $url_values['controller'] . " | " . $url_values['action'] . " | " . $url_values['id'];
-    
     require_once("application/Application.php");
 
     //Special cases: login e logout
