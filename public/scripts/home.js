@@ -3,21 +3,16 @@ function Home() {
     var loginUrl = "/login";
 
     var addUserCallback = function(data) {
-        if(data.errors) {
+        if (data.errors) {
             $.each(data.errors, function(index, error) {
-                if (error != null) {
-                    $("#"+index+"Div").attr("rel", "popover");
-                    $("#"+index+"Div").attr("placement", "left");
-                    $("#"+index+"Div").attr("title", "Erro");
-                    $("#"+index+"Div").attr("data-content", error);
-                    $("#"+index+"Div").attr("html", "true");
-                    $("#"+index+"Div").popover();
-                    $("#"+index+"Div").removeClass("success");
-                    $("#"+index+"Div").addClass("error");
+                var div = $("input[name=" + index + "]").parent();
+                if (error) {
+                    div.popover({ placement: "left", title: "Erro",
+                        "content": error });
+                    div.removeClass("success").addClass("error");
                 }
                 else {
-                    $("#"+index+"Div").removeClass("error");
-                    $("#"+index+"Div").addClass("success");
+                    div.removeClass("error").addClass("success");
                 }
             });
         }
