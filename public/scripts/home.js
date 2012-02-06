@@ -29,20 +29,15 @@ function Home() {
         console.log(arguments);
     };
 
-    self.addUser = function() {
-        var data = {
-            name: $("#name").val(),
-            email: $("#email").val(),
-            account: $("#account").val(),
-            accountType: $("#accountType").val(),
-            username: $("#username").val(),
-            password: $("#password").val()
-        };
-        $.post(addUserUrl, data, addUserCallback, "json").error(errorCallback);
+    self.addUser = function(form) {
+        var form = $(form);
+        var action = form.attr("action");
+        var data = form.serialize();
+        $.post(action, data, addUserCallback, "json").error(errorCallback);
     }
 
     $("#addUser").submit(function(e) {
         e.preventDefault();
-        self.addUser();
+        self.addUser(this);
     });
 }

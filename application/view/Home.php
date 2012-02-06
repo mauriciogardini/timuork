@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="span5 div-register">
-                    <form id="addUser" method="post" class="center70">
+                    <form id="addUser" method="post" class="center70" action="/users/add">
                         <h3>Novo aqui? Junte-se à nós!</h3>
                         <div id="nameDiv" class="control-group">
                                 <input class="input-xlarge" id="name" name="name"
