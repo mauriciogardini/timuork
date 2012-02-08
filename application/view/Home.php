@@ -13,7 +13,7 @@
     <!--TODO Fav Icon -->
     <link rel="shortcut icon" href="images/favicon.ico">
 </head>
-<body class="home-body">
+<body>
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
@@ -92,7 +92,7 @@
             </div>
         </div>
         <footer id="bottom" class="footer">
-            <p>&copy; Company 2011</p>
+            <p>&copy; Maurício Gardini - Alguns Direitos Reservados</p>
         </footer>
     </div>
 <script src="/scripts/jquery.min.js" type="text/javascript"></script>

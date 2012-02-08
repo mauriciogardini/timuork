@@ -19,15 +19,30 @@
             return true;
         }
 
-        function loadView($view,$vars="")
+        public function loadView($view,$vars="")
         {
             if(is_array($vars) && count($vars) > 0) {
                 extract($vars, EXTR_PREFIX_SAME, "wddx");
             }
-            require_once('application/view/'.$view.'.php');
+
+            if ($view == "Home") {    
+                require_once('application/view/'.$view.'.php');
+            }
+            else {
+                $contentForLayout = $this->renderView('application/view/'.$view.'.php', $vars);
+                require_once('application/view/BaseView.php');
+            }
+
         }
 
-        function loadModel($model)
+        public function renderView($filename, $data = array()) {
+            extract($data);
+            ob_start();
+            require($filename);
+            return ob_get_clean();
+        }
+
+        public function loadModel($model)
         {
             require_once('application/model/'.$model.'.php');
             $this->$model = new $model;
