@@ -51,3 +51,10 @@
 .div-register {
     padding: 10% 0 10% 0;
 }
+
+#addUser div {
+    margin-bottom: 0px;
+}
+
+#registerButtonDiv button {
+}

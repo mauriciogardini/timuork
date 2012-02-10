@@ -37,26 +37,25 @@
         <h3>Novo Projeto</h3>
     </div>
     <div class="modal-body">
-        <form id="newProject">
+        <form class="modal-form form-horizontal" id="newProject">
             <fieldset>
                 <div class="modal-body">
-                    <div class="clearfix">
-                        <label for="title">Título</label>
-                        <div class="input">
-                            <input id="title" class="large" size="30" 
-                                type="text">
+                    <div id="titleDiv" class="control-group">
+                        <label class="control-label" for="title">Título</label>
+                        <div class="controls">
+                            <input id="title" name="title" class="span5" type="text">
+                            <p class="help-block">Esta informação poderá ser exibida publicamente.</p>
                         </div>
                     </div> 
-                    <div class="clearfix">
-                        <label for="description">Descrição</label>
-                        <div class="input">
-                            <textarea id="description"></textarea>
+                    <div id="descriptionDiv" class="control-group">
+                        <label for="control-group">Descrição</label>
+                        <div class="controls">
+                            <textarea class="span5" name="description" id="description"></textarea>
                         </div>
                     </div>                   
                 </div>
                 <div class="modal-footer">
-                    <a href="#" type="submit" class="btn btn-primary">Criar</a>
-                    <a href="#" class="btn">Fechar</a>
+                    <input type="submit" class="btn btn-primary" text="Criar" />
                 </div>
             </fieldset>
         </form>
@@ -67,6 +66,7 @@
 <script src="/scripts/bootstrap-twipsy.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-popover.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-modal.js" type="text/javascript"></script>
+<script src="/scripts/mustache.js" type="text/javascript"></script>
 <script src="/scripts/dashboard.js" type="text/javascript"></script>
 <script>
     var dashboard = new Dashboard(<?php echo $user->getId() ?>);

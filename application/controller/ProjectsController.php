@@ -18,7 +18,6 @@
             if($this->Projects->isValidProject($projectInfo)) {
                 $this->Projects->createProject($projectInfo);
             }
-
             else {
                 $errors = $this->Projects->getProjectValidationErrors($projectInfo);
                 $log = array("errors" => $errors);
@@ -27,15 +26,41 @@
             echo json_encode($log);
         }
 
-        public function updateProjects() {
+        public function updateMyProjects() {
             $log = array();
             $projects = array();
             $sessionUser = $this->SessionUser;
-            $this->Projects->listProjectsByUserId(function($item) use(
+            $this->Projects->listMyProjectsByUserId(function($item) use(
                 &$projects) {
                 $projects[] = $item;
             }, $sessionUser->getId());
-            $log['projects'] = $projects;
+            $log['myProjects'] = $projects;
+
+            echo json_encode($log);
+        }
+
+        public function updateOtherProjects() {
+            $log = array();
+            $projects = array();
+            $sessionUser = $this->SessionUser;
+            $this->Projects->listOtherProjectsByUserId(function($item) use(
+                &$projects) {
+                $projects[] = $item;
+            }, $sessionUser->getId());
+            $log['otherProjects'] = $projects;
+
+            echo json_encode($log);
+        }
+
+        public function updateNotifications() {
+            $log = array();
+            $notifications = array();
+            $sessionUser = $this->SessionUser;
+            $this->Projects->listNotificationsByUserId(function($item) use(
+                &$notifications) {
+                $notifications[] = $item;
+            }, $sessionUser->getId());
+            $log['notifications'] = $notifications;
 
             echo json_encode($log);
         }

@@ -84,15 +84,28 @@
                 $values));
         }
 
-        public function listProjectsByUserId($fn, $userId) {
+        public function listMyProjectsByUserId($fn, $userId) {
+            $sql = "SELECT projects.id as id,
+                projects.title as title,
+                projects.description as description,
+                projects.admin_user_id as admin_user_id
+                FROM projects
+                WHERE projects.admin_user_id = ?";
+            $values = array($userId); 
+            $this->database->iterateDB($this->database->executeQueryDB($sql, 
+                $values), $fn);
+        }
+
+        public function listOtherProjectsByUserId($fn, $userId) {
             $sql = "SELECT projects.id as id,
                 projects.title as title,
                 projects.description as description,
                 projects.admin_user_id as admin_user_id
                 FROM projects
                 JOIN projects_users ON projects.id = projects_users.project_id
-                WHERE projects_users.user_id = ?";
-            $values = array($userId); 
+                WHERE projects_users.user_id = ?
+                AND projects.admin_user_id != ?";
+            $values = array($userId, $userId); 
             $this->database->iterateDB($this->database->executeQueryDB($sql, 
                 $values), $fn);
         }
@@ -140,7 +153,7 @@
             else {
                 $sql = "INSERT INTO projects_users
                     (id, project_id, user_id)
-                    VALUES(NULL, SELECT last_insert_rowid() from projects, ?)";
+                    VALUES(NULL, (SELECT last_insert_rowid() FROM projects), ?)";
                 $values = array($userId);
             }    
             return (bool) $this->database->executeQueryDB($sql, $values)->
@@ -162,10 +175,11 @@
                     (id, project_id, user_id)
                     VALUES(NULL, ?, ?)";
                 $values = array($projectId, $userId);
-
+            }
+            else {
                 $sql = "INSERT INTO chats
                     (id, project_id, user_id)
-                    VALUES(NULL, SELECT last_insert_rowid() from projects, ?)";
+                    VALUES(NULL, (SELECT last_insert_rowid() FROM projects), ?)";
                 $values = array($userId);
             }
             return (bool) $this->database->executeQueryDB($sql, $values)->
@@ -348,6 +362,24 @@
                 $sql, $values)->rowCount()) {
                 return false;
             }
+        }
+
+        public function listNotificationsByUserId($fn, $userId) {
+            $sql = "SELECT notifications_users.notification_id AS id,
+                notifications.title AS title,
+                notifications.description AS description,
+                notifications.sender_user_id AS sender_user_id,
+                users.name AS sender_user_name,
+                notifications.project_id AS project_id,
+                projects.title AS project_title
+                FROM notifications_users
+                JOIN notifications ON notifications_users.notification_id = notifications.id
+                JOIN users ON notifications.sender_user_id = users.id
+                JOIN projects ON notifications.project_id = projects.id
+                WHERE notifications_users.user_id = ?";
+            $values = array($userId);
+            $this->database->iterateDB($this->database->executeQueryDB($sql, 
+                $values), $fn);
         }
 
         public function createLink($linkInfo) {

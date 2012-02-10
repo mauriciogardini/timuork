@@ -1,71 +1,93 @@
 function Dashboard(userId) {
     var addProjectUrl = "/projects/add/";
-    var updateProjectsUrl = "/projects/updateProjects/";
+    var updateMyProjectsUrl = "/projects/updateMyProjects/";
+    var updateOtherProjectsUrl = "/projects/updateOtherProjects/";
+    var updateNotificationsUrl = "/projects/updateNotifications/";
 
+    var projectLinkTemplate = '<a href="/projects/overview/{{projectId}}">{{caption}}</a><br />';
+    var modalLinkTemplate = '<p id="new-project-link"><a data-toggle="modal" href="{{modalId}}">{{caption}}</a></p>';
+    var projectPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.</div>';
+    var notificationPlaceholderTemplate = '<div class="notification-placeholder">Não há notificações a serem exibidas.</div>';
+ 
     var addProjectCallback = function(data) {
         if(data.errors) {
             $.each(data.errors, function(index, error) {
-                if (error != null) {
-                    $("#"+index).attr("rel", "popover");
-                    $("#"+index).attr("title", "Erro");
-                    $("#"+index).attr("data-content", error);
-                    $("#"+index).attr("html", "true");
-                    $("#"+index).popover();
-                    $("#"+index).addClass("input-with-error");
+                var div = $("input[name=" + index + "]").parent().parent();
+                if (error) {
+                    div.popover({ placement: "left", title: "Erro",
+                        "content": error });
+                    div.removeClass("success").addClass("error");
                 }
                 else {
-                    $("#"+index).removeClass("input-with-error");
+                    div.removeClass("error").addClass("success");
                 }
             });
         }
         else {
             console.log("Sem erros");
-            $(".input").removeClass("input-with-error");
-            $('.modal-body .input-with-error').removeClass('input-with-error')
-            $("#title").popover("hide");
-            $("#description").popover("hide");
+            //TODO - Os popovers precisam ser removidos para que, caso queira-se incluir mais de um
+            //projeto, não sejam apresentadas informações referentes à validação de caráter 
+            //duvidoso.
+            //$(".success, .error").popover("hide");
+            $(".modal-body .control-group").removeClass("error").removeClass("success");
             $("#modalProject").modal("hide");
             $("#title").val("");
             $("#description").val("");
         }
     }
 
-    var updateProjectsCallback = function(data) {
-        if(data.projects && data.projects.length) {
-            $("#myProjects").empty();
-            $.each(data.projects, function(index, project) {
-                console.log(project.title);
-                var a = $("<a href=\"/projects/overview/"+project.id+"\"/><br />").text(project.title);
-                $("#myProjects").append(a);
-                var newProject = $("<p id=\"new-project-link\"><a data-toggle=\"modal\" href=\"#modalProject\">Novo Projeto</a></p>");
-                $("#myProjects").append(newProject);
-                var placeholder2 = $("<div class=\"project-placeholder\">Não há projetos a serem exibidos.</div>");
-                var placeholder3 = $("<div class=\"notification-placeholder\">Não há notificações a serem exibidas.</div>");
-                $("#otherProjects").empty();
-                $("#notifications").empty();
-                $("#otherProjects").append(placeholder2);
-                $("#notifications").append(placeholder3);
+    var updateNotificationsCallback = function(data) {
+        $("#notifications").empty();
+        if(data.notifications && data.notifications.length) {
+            $.each(data.notifications, function(index, notification) {
+                console.log("Notificações - "+notification.title);
+                var a = $("<a href=\"/notifications/view/"+notification.id+"\">"+notification.title+"</a><br />");
+                $("#notifications").append(a);
             });
         }
         else {
-            $("#myProjects").empty();
-            $("#otherProjects").empty();
-            $("#notifications").empty();
-            var placeholder = $("<div class=\"project-placeholder\">Não há projetos a serem exibidos. <a data-toggle=\"modal\" href=\"#modalProject\">Crie um novo</a>.</div>");
-            var placeholder2 = $("<div class=\"project-placeholder\">Não há projetos a serem exibidos.</div>");
-            var placeholder3 = $("<div class=\"notification-placeholder\">Não há notificações a serem exibidas.</div>");
-            //TODO - GetMyProjects method
-            $("#myProjects").append(placeholder);
-            //TODO - GetOtherProjects method
-            $("#otherProjects").append(placeholder2);
-            //TODO - GetNotifications methos
-            $("#notifications").append(placeholder3);
+            var placeholder = Mustache.render(notificationPlaceholderTemplate, {});
+            $("#notifications").append(placeholder);
         }
 
-        setTimeout(self.getProjects, 5000);
+        setTimeout(self.getNotifications, 5000);
     }
 
+    var updateOtherProjectsCallback = function(data) {
+        $("#otherProjects").empty();
+        if(data.otherProjects && data.otherProjects.length) {
+            $.each(data.otherProjects, function(index, project) {
+                console.log("Outros projetos - "+project.title);
+                var a = Mustache.render(projectLinkTemplate, {projectId: project.id, caption: project.title});
+                $("#otherProjects").append(a);
+            });
+        }
+        else {
+            var placeholder = Mustache.render(projectPlaceholderTemplate, {});
+            $("#otherProjects").append(placeholder);
+        }
 
+        setTimeout(self.getOtherProjects, 5000);
+    }
+
+    var updateMyProjectsCallback = function(data) {
+        $("#myProjects").empty();
+        if(data.myProjects && data.myProjects.length) {
+            $.each(data.myProjects, function(index, project) {
+                console.log("Meus projetos - "+project.title);
+                var a = Mustache.render(projectLinkTemplate, {projectId: project.id, caption: project.title});
+                $("#myProjects").append(a);
+            });
+            var newProject = Mustache.render(modalLinkTemplate, {modalId: "#modalProject", caption: "Novo Projeto"});
+            $("#myProjects").append(newProject);
+        }
+        else {
+            var placeholder = Mustache.render(projectPlaceholderTemplate, {});
+            $("#myProjects").append(placeholder);
+        }
+
+        setTimeout(self.getMyProjects, 5000);
+    }
 
     var errorCallback = function(xhr, status, error) {
         console.log(arguments);
@@ -82,16 +104,28 @@ function Dashboard(userId) {
             .error(errorCallback);
     }
 
-    self.getProjects = function() {
-        $.getJSON(updateProjectsUrl).success(updateProjectsCallback)
+    self.getMyProjects = function() {
+        $.getJSON(updateMyProjectsUrl).success(updateMyProjectsCallback)
+            .error(errorCallback);
+    }
+    
+    self.getOtherProjects = function() {
+        $.getJSON(updateOtherProjectsUrl).success(updateOtherProjectsCallback)
+            .error(errorCallback);
+    }
+   
+    self.getNotifications = function() {
+        $.getJSON(updateNotificationsUrl).success(updateNotificationsCallback)
             .error(errorCallback);
     }
 
-    self.getProjects();
-
+    self.getMyProjects();
+    self.getOtherProjects();
+    self.getNotifications();
+    
     $("#newProject").submit(function(e) {
-        console.log("Projeto");
         e.preventDefault();
+        console.log("Projeto");
         self.addProject();
     });
 }

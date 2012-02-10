@@ -70,7 +70,7 @@ div.div-sidebar div hr {
 }
 
 .project-placeholder {
-    padding: 31.9% 0 31.9% 0;
+    padding: 10% 0 10% 0;
 }
 
 #notifications {
@@ -78,7 +78,7 @@ div.div-sidebar div hr {
 }
 
 .notification-placeholder {
-    padding: 36.7% 0 36.7% 0;
+    padding: 10% 0 10% 0;
 }
 
 #new-project-link {
@@ -92,7 +92,8 @@ div.div-sidebar div hr {
 footer.footer p {
     font-weight: bold;
 }
-.div-content, .div-sidebar {
+
+.div-sidebar {
     background-color: #FCFCFB;
     -webkit-border-radius: 0 0 6px 6px;
     -moz-border-radius: 0 0 6px 6px;
@@ -100,6 +101,10 @@ footer.footer p {
     -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
     box-shadow: 0 1px 2px rgba(0,0,0,.15);
+}
+
+.div-sidebar, .div-sidebar h3, .div-content, .div-content h2 {
+    color: #606060;
 }
 
 .div-content {
@@ -111,8 +116,6 @@ footer.footer p {
 }
 
 .div-sidebar {
-    min-height: 100%;
-    position: relative;
     margin-top: 6px;
     margin-bottom: 6px;
     margin-left: 4px;
@@ -120,7 +123,7 @@ footer.footer p {
     padding: 3% 0 3% 0;
 }
 
-div.modal-footer a.btn-primary {
+div.modal-footer input.btn-primary {
     background-color: #2C2C2C;
     background-image: -moz-linear-gradient(center top, #333333, #2F2F2F);
     background-image: -webkit-linear-gradient(top, #333333, #2F2F2F); 
@@ -130,14 +133,40 @@ div.modal-body {
     background-color: #FCFCFB;
 }
 
+form.modal-form {
+    margin: 0;
+}
+
+div.modal-body div.control-group {
+    margin-left: -50px;
+}
+
+div.controls p.help-block {
+    margin: 0;
+}
+
+div.modal-body div.control-group label {
+    font-weight: bold;
+}
+
 div.modal-header {
     background-color: #2C2C2C;
-    -moz-linear-gradient(center top , #333333, #222222);
+    background-image: -moz-linear-gradient(top, #333333, #222222);
+    background-image: -ms-linear-gradient(top, #333333, #222222);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#333333), to(#222222));
+    background-image: -webkit-linear-gradient(top, #333333, #222222);
+    background-image: -o-linear-gradient(top, #333333, #222222);
+    background-image: linear-gradient(top, #333333, #222222);
+    background-repeat: repeat-x;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
 div.modal-header h3 {
-    color: #000000;
+    color: #FFFFFF;
 }
+
 div.modal-footer {
     border-top-width: 1;
     border-top-color: #E2A70E;

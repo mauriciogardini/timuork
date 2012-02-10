@@ -12,13 +12,19 @@
         public function index() {
             $sessionUser = $this->SessionUser;
             if ($sessionUser->getId()) {   
-                $projects = array();
-                $this->Projects->listProjectsByUserId(function($item) use(
-                    &$projects) {
-                    $projects[] = $item;
+                $myProjects = array();
+                $otherProjects = array();
+                $this->Projects->listMyProjectsByUserId(function($item) use(
+                    &$myProjects) {
+                    $myProjects[] = $item;
+                }, $sessionUser->getId());
+                $this->Projects->listOtherProjectsByUserId(function($item) use(
+                    &$otherProjects) {
+                    $otherProjects[] = $item;
                 }, $sessionUser->getId());
                 $data['user'] = $sessionUser;
-                $data['projects'] = $projects;
+                $data['myProjects'] = $myProjects;
+                $data['otherProjects'] = $otherProjects;
                 $this->loadView('Dashboard', $data);
             }
             else {

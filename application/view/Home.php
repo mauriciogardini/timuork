@@ -85,7 +85,7 @@
                                     size="30" type="password" placeholder="Senha" />
                         </div>
                         <div>
-                            <button class="btn">Registrar</button>
+                            <button id="registerButtonDiv" class="btn">Registrar</button>
                         </div>
                     </form>
                 </div>

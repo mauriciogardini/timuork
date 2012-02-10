@@ -4,3 +4,4 @@
 2:Make logo (Beta)
 2:Fix Popover position in "Add Link" modal
 2:Remove "twitter" from Users' table and create notification_accounts table (id, value, notification_account_type, user_id)
+2:Add "Micro-queries" (i.e.: "SELECT name FROM users WHERE id = ?") instead of using large queries with JOINs
