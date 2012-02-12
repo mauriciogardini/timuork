@@ -21,15 +21,7 @@ CREATE TABLE projects (
     admin_user_id INTEGER
 );
 
-CREATE TABLE projects_users (
-    id INTEGER PRIMARY KEY ASC,
-    project_id INTEGER,
-    user_id INTEGER,
-    FOREIGN KEY(project_id) REFERENCES projects(id),
-    FOREIGN KEY(user_id) REFERENCES users(id)
-);
-
-CREATE TABLE chats (
+CREATE TABLE allowances (
     id INTEGER PRIMARY KEY ASC,
     project_id INTEGER,
     user_id INTEGER,
@@ -40,19 +32,19 @@ CREATE TABLE chats (
 CREATE TABLE messages (
     id INTEGER PRIMARY KEY ASC,
     text TEXT,
-    date_time INTEGER,
-    chat_id INTEGER,
+    timestamp INTEGER,
+    project_id INTEGER,
     user_id INTEGER,
-    FOREIGN KEY(chat_id) REFERENCES chats(id),
+    FOREIGN KEY(project_id) REFERENCES projects(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
-CREATE TABLE online_users (
+CREATE TABLE statuses (
     id INTEGER PRIMARY KEY ASC,
     user_id INTEGER,
-    chat_id INTEGER,
+    project_id INTEGER,
     last_seen_at INTEGER,
-    FOREIGN KEY(chat_id) REFERENCES chats(id),
+    FOREIGN KEY(project_id) REFERENCES projects(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
@@ -62,6 +54,7 @@ CREATE TABLE notifications (
     description TEXT,
     sender_user_id INTEGER, 
     project_id INTEGER,
+    FOREIGN KEY(sender_user_id) REFERENCES users(id),
     FOREIGN KEY(project_id) REFERENCES projects(id)
 );
 
@@ -69,8 +62,8 @@ CREATE TABLE notifications_users (
     id INTEGER PRIMARY KEY ASC,
     notification_id INTEGER,
     user_id INTEGER,
-    FOREIGN KEY(user_id) REFERENCES users(id)
     FOREIGN KEY(notification_id) REFERENCES notifications(id)
+    FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
 CREATE TABLE links (

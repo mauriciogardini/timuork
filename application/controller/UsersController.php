@@ -49,13 +49,19 @@
                 $sessionUser->setId($this->authenticatedUser->id);
                 $sessionUser->setName($this->authenticatedUser->name);
                 $sessionUser->setUsername($this->authenticatedUser->username);
-                $projects = array();
-                $this->Projects->listProjectsByUserId(function($item) use(
-                    &$projects) {
-                    $projects[] = $item;
+                $myProjects = array();
+                $otherProjects = array();
+                $this->Projects->listMyProjectsByUserId(function($item) use(
+                    &$myProjects) {
+                    $myProjects[] = $item;
                 }, $sessionUser->getId());
+                $this->Projects->listOtherProjectsByUserId(function($item) use(
+                    &$otherProjects) {
+                    $otherProjects[] = $item;
+                }, $sessionUser->getId());
+                $data['myProjects'] = $myProjects;
+                $data['otherProjects'] = $otherProjects;
                 $data['user'] = $sessionUser;                
-                $data['projects'] = $projects;
                 if (isset($_SESSION["flash"])) {
                     $data['flash'] = $_SESSION["flash"];
                     $_SESSION["flash"] = NULL;

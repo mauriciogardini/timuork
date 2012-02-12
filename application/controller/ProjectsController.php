@@ -16,7 +16,7 @@
             $projectInfo = (object) array('userId' => $userId,
                 'title' => $title, 'description' => $description);
             if($this->Projects->isValidProject($projectInfo)) {
-                $this->Projects->createProject($projectInfo);
+                $this->Projects->createProjectAndDependencies($projectInfo);
             }
             else {
                 $errors = $this->Projects->getProjectValidationErrors($projectInfo);
@@ -65,16 +65,16 @@
             echo json_encode($log);
         }
 
-        public function updateChatMessages($chatId) {
+        public function updateProjectMessages($projectId) {
             $log = array();
             $timestamp = isset($_GET['timestamp']) ? $_GET['timestamp'] : NULL;
             $messages = array();
             $sessionUser = $this->SessionUser;
-            $this->Projects->listMessagesByChatId(function($item) use(
+            $this->Projects->listMessagesByProjectId(function($item) use(
                 &$messages) {
                 $messages[] = $item;
-            }, $chatId, $timestamp);
-            $statusInfo = (object) array("chatId" => $chatId, 
+            }, $projectId, $timestamp);
+            $statusInfo = (object) array("projectId" => $projectId, 
                 "userId" => $sessionUser->getId());       
             $this->Projects->manageStatus($statusInfo);
             $log['messages'] = $messages; 
@@ -97,8 +97,8 @@
         public function sendMessage() {
             $text = $_POST['text'];
             $userId = $_POST['userId'];
-            $chatId = $_POST['chatId'];
-            $message = (object) array("text" => $text, "chatId" => $chatId, 
+            $projectId = $_POST['projectId'];
+            $message = (object) array("text" => $text, "projectId" => $projectId, 
                 "userId" => $userId);
             $this->Projects->createMessage($message);
         }
@@ -120,7 +120,6 @@
             $projectUsers = array();
             $sessionUser = $this->SessionUser;
             $project = $this->Projects->getProjectById($id);
-            $chat = $this->Projects->getChatByProjectId($id);
             $this->Projects->listOnlineUsersWithAdminFieldByProjectId(function(
                 $item) use(&$onlineUsers) {
                 $onlineUsers[] = $item;                    
@@ -131,7 +130,6 @@
             }, $id);
 
             $data['project'] = $project;
-            $data['chat'] = $chat;
             $data['user'] = $sessionUser;
             $data['onlineUsers'] = $onlineUsers;
             $data['projectUsers'] = $projectUsers;

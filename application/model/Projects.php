@@ -6,6 +6,14 @@
         public function __construct() {
             $this->database = BaseModel::getInstance();
         }
+        
+        public function createProjectAndDependencies($projectInfo) {
+            $self = $this;
+            $function = function() use($projectInfo, $self) { 
+                $self->createProject($projectInfo); 
+            };
+            $this->database->executeTransaction($function); 
+        }
 
         public function createProject($projectInfo) {
             $sql = "INSERT INTO projects
@@ -16,13 +24,10 @@
             $result = (bool) $this->database->executeQueryDB($sql, 
                 $values)->rowCount();
             if ($result) {
-                $result = $this->createChat(NULL, -1);
-                if ($result) {        
-                    return $this->allowUser(NULL, $projectInfo->userId);
-                }
-                else {
-                    return false;
-                }    
+                return $this->allowUser(NULL, $projectInfo->userId);
+            }
+            else {
+                return false;
             }
         }
 
@@ -102,8 +107,8 @@
                 projects.description as description,
                 projects.admin_user_id as admin_user_id
                 FROM projects
-                JOIN projects_users ON projects.id = projects_users.project_id
-                WHERE projects_users.user_id = ?
+                JOIN allowances ON projects.id = allowances.project_id
+                WHERE allowances.user_id = ?
                 AND projects.admin_user_id != ?";
             $values = array($userId, $userId); 
             $this->database->iterateDB($this->database->executeQueryDB($sql, 
@@ -121,7 +126,7 @@
 
         public function existsProjectAllowance($projectId, $userId) {
             $sql = "SELECT COUNT(*) AS count
-                FROM projects_users
+                FROM allowances
                 WHERE project_id = ?
                 AND user_id = ?";
             $values = array($projectId, $userId);
@@ -136,8 +141,8 @@
                 users.email as email,
                 users.username as username
                 FROM users
-                JOIN projects_users ON users.id = projects_users.user_id
-                WHERE projects_users.project_id = ?";
+                JOIN allowances ON users.id = allowances.user_id
+                WHERE allowances.project_id = ?";
             $values = array($projectId);
             $this->database->iterateDB($this->database->executeQueryDB(
                 $sql, $values), $fn);
@@ -145,13 +150,13 @@
 
         public function allowUser($projectId, $userId) {
             if (isset($projectId)) { 
-                $sql = "INSERT INTO projects_users
+                $sql = "INSERT INTO allowances
                     (id, project_id, user_id)
                     VALUES(NULL, ?, ?)";
                 $values = array($projectId, $userId);
             }
             else {
-                $sql = "INSERT INTO projects_users
+                $sql = "INSERT INTO allowances
                     (id, project_id, user_id)
                     VALUES(NULL, (SELECT last_insert_rowid() FROM projects), ?)";
                 $values = array($userId);
@@ -161,89 +166,52 @@
         }
 
         public function disallowUser($projectId, $userId) {
-            $sql = "DELETE FROM projects_users
+            $sql = "DELETE FROM allowances
                 WHERE project_id = ?
                 AND user_id = ?";
             $values = array($projectId, $userId);
             return (bool) $this->database->executeQueryDB($sql, $values)->
                 rowCount();
-        }
-
-        public function createChat($projectId, $userId) {
-            if(isset($projectId)) {
-                $sql = "INSERT INTO chats
-                    (id, project_id, user_id)
-                    VALUES(NULL, ?, ?)";
-                $values = array($projectId, $userId);
-            }
-            else {
-                $sql = "INSERT INTO chats
-                    (id, project_id, user_id)
-                    VALUES(NULL, (SELECT last_insert_rowid() FROM projects), ?)";
-                $values = array($userId);
-            }
-            return (bool) $this->database->executeQueryDB($sql, $values)->
-                rowCount();
-        }
-
-        public function getChatByProjectId($projectId) {
-            $sql = "SELECT *
-                FROM chats
-                WHERE project_id = ?
-                AND user_id = -1";
-            $values = array($projectId);
-            return $this->database->fetchDB($this->database->executeQueryDB(
-                $sql, $values));
-        }
-
-        public function getChatByProjectIdAndUserId($projectId, $userId) {
-            $sql = "SELECT *
-                FROM chats
-                WHERE project_id = ?
-                AND user_id = ?";
-            $values = array($projectId, $userId);
-            return $this->database->fetchDB($this->database->executeQueryDB(
-                $sql, $values));
         }
 
         public function createMessage($message) {
             $sql = "INSERT INTO messages
-                (id, text, date_time, chat_id, user_id)
+                (id, text, timestamp, project_id, user_id)
                 VALUES(NULL, ?, strftime('%s', 'now'), ?, ?)";
-            $values = array($message->text, $message->chatId, $message->userId);
+            $values = array($message->text, $message->projectId, $message->userId);
             return (bool) $this->database->executeQueryDB($sql, $values)->
                 rowCount();
         }
 
-        public function listMessagesByChatId($fn, $chatId, $date_time) {
-            if ($date_time == NULL) {
+        public function listMessagesByProjectId($fn, $projectId, $timestamp) {
+            if ($timestamp == NULL) {
                 $sql = "SELECT messages.id as message_id,
                     messages.text as message_text,
-                    messages.date_time as message_date_time,
-                    messages.chat_id as message_chat_id,
+                    messages.timestamp as message_timestamp,
+                    messages.project_id as message_project_id,
                     users.id as user_id,
                     users.name as user_name,
                     users.username as user_username,
                     users.email as user_email
                     FROM users
                     JOIN messages ON users.id = messages.user_id
-                    WHERE chat_id = ?";
-                $values = array($chatId);
+                    WHERE project_id = ?";
+                $values = array($projectId);
             }
             else {
                  $sql = "SELECT messages.id as message_id,
                     messages.text as message_text,
-                    messages.date_time as message_date_time,
-                    messages.chat_id as message_chat_id,
+                    messages.timestamp as message_timestamp,
+                    messages.project_id as message_project_id,
                     users.id as user_id,
                     users.name as user_name,
                     users.username as user_username,
                     users.email as user_email
                     FROM users
                     JOIN messages ON users.id = messages.user_id
-                    WHERE chat_id = ?
-                    AND date_time > ?";
-                $values = array($chatId, $date_time); 
+                    WHERE project_id = ?
+                    AND timestamp > ?";
+                $values = array($projectId, $timestamp); 
             }    
             $this->database->iterateDB($this->database->executeQueryDB($sql, 
                 $values), $fn);
@@ -259,30 +227,30 @@
         }
 
         private function updateStatus($statusInfo) {
-            $sql = "UPDATE online_users
+            $sql = "UPDATE statuses
                 SET last_seen_at = strftime('%s', 'now')
                 WHERE user_id = ?
-                AND chat_id = ?";
-            $values = array($statusInfo->userId, $statusInfo->chatId);
+                AND project_id = ?";
+            $values = array($statusInfo->userId, $statusInfo->projectId);
             return (bool) $this->database->executeQueryDB($sql, $values)->
                 rowCount();
         }
 
         private function createStatus($statusInfo) {
-            $sql = "INSERT INTO online_users
-                (id, chat_id, user_id, last_seen_at)
+            $sql = "INSERT INTO statuses
+                (id, project_id, user_id, last_seen_at)
                 VALUES(NULL, ?, ?, strftime('%s', 'now'))";
-            $values = array($statusInfo->chatId, $statusInfo->userId);
+            $values = array($statusInfo->projectId, $statusInfo->userId);
             return (bool) $this->database->executeQueryDB($sql, $values)->
                 rowCount();    
         }
 
         private function existsStatus($statusInfo) {
             $sql = "SELECT COUNT(*) AS count
-                FROM online_users
-                WHERE chat_id = ?
+                FROM statuses
+                WHERE project_id = ?
                 AND user_id = ?";
-            $values = array($statusInfo->chatId, $statusInfo->userId);
+            $values = array($statusInfo->projectId, $statusInfo->userId);
             $count = $this->database->fetchDB($this->database->executeQueryDB(
                 $sql, $values))->count;
             return $count;
@@ -314,21 +282,20 @@
                 users.email as email,
                 users.username as username
                 FROM users
-                JOIN online_users ON users.id = online_users.user_id
-                JOIN chats ON online_users.chat_id = chats.id
-                WHERE chats.project_id = ?
-                AND chats.user_id = -1
-                AND (strftime('%s', 'now') - online_users.last_seen_at) < 10";
+                JOIN statuses ON users.id = statuses.user_id
+                WHERE statuses.project_id = ?
+                AND (strftime('%s', 'now') - statuses.last_seen_at) < 10";
             $values = array($projectId);
             $this->database->iterateDB($this->database->executeQueryDB($sql, 
                 $values), $fn);
         }
 
+        //TODO - Remodelate as createProject
         public function createNotification($notificationInfo) {
             $allowedUsers = array();
             $sql = "INSERT INTO notifications
                 (id, title, description, sender_user_id, project_id)
-                VALUES(NULL, ?, ?, ?)";
+                VALUES(NULL, ?, ?, ?, ?)";
             $values = array($notificationInfo->title, 
                 $notificationInfo->description, $notificationInfo->senderUserId, 
                 $notificationInfo->projectId);

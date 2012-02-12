@@ -6,8 +6,9 @@ function Dashboard(userId) {
 
     var projectLinkTemplate = '<a href="/projects/overview/{{projectId}}">{{caption}}</a><br />';
     var modalLinkTemplate = '<p id="new-project-link"><a data-toggle="modal" href="{{modalId}}">{{caption}}</a></p>';
-    var projectPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.</div>';
-    var notificationPlaceholderTemplate = '<div class="notification-placeholder">Não há notificações a serem exibidas.</div>';
+    var otherProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.</div>';
+    var myProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.<p><a data-toggle="modal" href="{{modalId}}">{{caption}}</a></p></div>'
+    var notificationsPlaceholderTemplate = '<div class="notification-placeholder">Não há notificações a serem exibidas.</div>';
  
     var addProjectCallback = function(data) {
         if(data.errors) {
@@ -46,7 +47,7 @@ function Dashboard(userId) {
             });
         }
         else {
-            var placeholder = Mustache.render(notificationPlaceholderTemplate, {});
+            var placeholder = Mustache.render(notificationsPlaceholderTemplate, {});
             $("#notifications").append(placeholder);
         }
 
@@ -63,7 +64,7 @@ function Dashboard(userId) {
             });
         }
         else {
-            var placeholder = Mustache.render(projectPlaceholderTemplate, {});
+            var placeholder = Mustache.render(otherProjectsPlaceholderTemplate, {});
             $("#otherProjects").append(placeholder);
         }
 
@@ -82,7 +83,7 @@ function Dashboard(userId) {
             $("#myProjects").append(newProject);
         }
         else {
-            var placeholder = Mustache.render(projectPlaceholderTemplate, {});
+            var placeholder = Mustache.render(myProjectsPlaceholderTemplate, {modalId: "#modalProject", caption: "Crie um novo."});
             $("#myProjects").append(placeholder);
         }
 

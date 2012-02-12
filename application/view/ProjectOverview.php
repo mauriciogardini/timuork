@@ -12,6 +12,7 @@
             </div>
             <div class="span4 div-sidebar">
                 <div class="center90">
+                <a href="#modalEdit" data-toggle="modal">Editar</a>
                     <h3>Usuários participantes</h3>
                     <ul class="unstyled">
                         <?php foreach ($allowedUsers as $allowedUser) { ?>
@@ -23,3 +24,50 @@
         </div>
     </div>
 </div>
+<div id="modalEdit" class="modal fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h3>Editar Projeto</h3>
+    </div>
+    <div class="modal-body">
+        <form class="modal-form form-horizontal" id="editProject">
+            <fieldset>
+                <div class="modal-body">
+                    <div id="usersDiv" class="control-group">
+                        <label class="control-label" for="users">Usuários</label>
+                        <div class="controls">
+                            <input type="text" class="span4" id="addUser" placeholder="Digite o nome do usuário a ser adicionado." data-provide="typeahead">
+                            <input type="submit" class="btn" value="Adicionar" />
+                            <select multiple="multiple" class="span5" id="users">
+                                <?php foreach ($allowedUsers as $allowedUser) { ?>
+                                <option id="<?php echo $allowedUser->id ?>"><?php echo $allowedUser->name ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="titleDiv" class="control-group">
+                        <label class="control-label" for="title">Título</label>
+                        <div class="controls">
+                            <input id="title" name="title" class="span5" type="text">
+                            <p class="help-block">Esta informação poderá ser exibida publicamente.</p>
+                        </div>
+                    </div> 
+                    <div id="descriptionDiv" class="control-group">
+                        <label for="description">Descrição</label>
+                        <div class="controls">
+                            <textarea class="span5" name="description" id="description"></textarea>
+                        </div>
+                    </div>                   
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="Confirmar" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+<script src="/scripts/jquery.min.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-twipsy.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-popover.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-modal.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-typeahead.js" type="text/javascript"></script>

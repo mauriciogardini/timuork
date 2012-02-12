@@ -1,22 +1,23 @@
-function Chat(projectId, chatId, userId) {
+function Chat(projectId, userId) {
     var self = this;
 
     var timestamp = "";
 
-    var sendMessageUrl = "/projects/sendMessage/" + chatId;
-    var updateChatMessagesUrl = "/projects/updateChatMessages/" + chatId;
+    var sendMessageUrl = "/projects/sendMessage/" + projectId;
+    var updateProjectMessagesUrl = "/projects/updateProjectMessages/" + projectId;
     var updateOnlineUsersUrl = "/projects/updateOnlineUsers/" + projectId;
     var updateLinksUrl = "/projects/updateLinks/" + projectId;
-    var createInteractionUrl = "/projects/createInteraction/";
+    var createNotificationUrl = "/projects/createNotification/";
     var createLinkUrl = "/projects/createLink/";
 
-    var updateChatMessagesCallback = function(data) {
+    var updateProjectMessagesCallback = function(data) {
         if(data.messages && data.messages.length) {
             $.each(data.messages, function(index, message) {
                 $("#chat").append($("<p data-controls-modal=\"modalInteraction\" data-backdrop=\"true\" data-keyboard=\"true\" class=\"chat-paragraph\"><span class=\"chat-username\"><b>"+ message.user_name + "</b></span></br><span class=\"chat-text\">" + message.message_text +"</span></p>"));             
             });
             
-            timestamp = data.messages[data.messages.length - 1].message_date_time;
+            timestamp = data.messages[data.messages.length - 1].message_timestamp;
+            console.log(timestamp);
         }
 
         setTimeout(self.update, 5000);
@@ -52,7 +53,7 @@ function Chat(projectId, chatId, userId) {
         setTimeout(self.getLinks, 5000);
     }
 
-    var createInteractionCallback = function(){};
+    var createNotificationCallback = function(){};
  
     var sendMessageCallback = function(){
         $("#message").val("");
@@ -88,14 +89,14 @@ function Chat(projectId, chatId, userId) {
     };
 
     self.update = function() {
-        $.getJSON(updateChatMessagesUrl, {timestamp: timestamp}).success(updateChatMessagesCallback)
+        $.getJSON(updateProjectMessagesUrl, {timestamp: timestamp}).success(updateProjectMessagesCallback)
             .error(errorCallback);
     };
 
     self.sendMessage = function() {
         var data = {
             text: $("#message").val(),
-            chatId: chatId,
+            projectId: projectId,
             userId: userId
         };
         $.post(sendMessageUrl, data).success(sendMessageCallback)
@@ -112,17 +113,16 @@ function Chat(projectId, chatId, userId) {
             .error(errorCallback);
     }
 
-    self.createInteraction = function() {
-        var usersTemp = new Array();
-        usersTemp[0] = $("#normalSelect").find('option:selected').attr('id');
-        users = usersTemp.toString();
+    self.createNotification = function() {
+        users = $("#userSelect :selected").attr('id');
+        console.log(users);
         var data = {
             projectId: projectId,
             users: users,
             title: $("#title").val(),
             description: $("#description").val()
         };
-        $.post(createInteractionUrl, data).success(createInteractionCallback)
+        $.post(createNotificationUrl, data).success(createNotificationCallback)
             .error(errorCallback);
     } 
 
@@ -147,9 +147,9 @@ function Chat(projectId, chatId, userId) {
         e.preventDefault();
     });
     
-    $("#newInteraction").submit(function(e) {
-        console.log("Interação");
-        self.createInteraction();
+    $("#newNotification").submit(function(e) {
+        console.log("Notificação");
+        self.createNotification();
         e.preventDefault();
     }); 
 

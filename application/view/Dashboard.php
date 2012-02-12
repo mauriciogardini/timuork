@@ -48,7 +48,7 @@
                         </div>
                     </div> 
                     <div id="descriptionDiv" class="control-group">
-                        <label for="control-group">Descrição</label>
+                        <label for="description">Descrição</label>
                         <div class="controls">
                             <textarea class="span5" name="description" id="description"></textarea>
                         </div>
