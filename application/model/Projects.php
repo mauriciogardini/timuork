@@ -57,17 +57,32 @@
             $values = array($projectTitle, $userId);
             $result = (bool) $this->database->fetchDB($this->database->executeQueryDB(
                 $sql, $values))->count;
-           return ($result ? false : true); 
+            return ($result ? false : true); 
         } 
 
-        public function updateProject($projectInfo) {
+        public function editProject($projectInfo) {
             $sql = "UPDATE projects
                 SET title = ?, description = ?
                 WHERE id = ?";
             $values = array($projectInfo->title, $projectInfo->description, 
                 $projectInfo->id);
-            return (bool) $this->database->executeQueryDB($sql, 
-                $values)->rowCount();
+            $result = (bool) $this->database->executeQueryDB($sql, $values)->rowCount();
+            if ($result) {
+                $this->listAllowedUsersByProjectId(function($item) use(
+                    $notificationId, &$allowedUsers) {
+                    $allowedUsers[] = $item;
+                    }, $projectInfo->id);
+                foreach($allowedUsers as $user) {
+                    $this->disallowUser($projectInfo->id, $user->id);
+                }
+                $usersIds = explode(',', $users);
+                foreach($usersIds as $userId) {
+                    $this->allowUser($projectInfo->id, $userId);
+                }
+            }
+            else {
+                return false;
+            }
         }
 
         public function getProjectById($projectId) {
@@ -142,7 +157,8 @@
                 users.username as username
                 FROM users
                 JOIN allowances ON users.id = allowances.user_id
-                WHERE allowances.project_id = ?";
+                WHERE allowances.project_id = ?
+                ORDER BY id";
             $values = array($projectId);
             $this->database->iterateDB($this->database->executeQueryDB(
                 $sql, $values), $fn);

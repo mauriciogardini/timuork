@@ -262,5 +262,15 @@
             $hasher = new PasswordHash(STRETCHING_TIMES, PORTABLE_HASH);
             return ($hasher->CheckPassword($word, $wordHash));
         }
+
+        public function listUsersExcludingListed($fn, $searchString, $excludeList) {
+            $sql = sprintf("SELECT id, name
+                FROM users
+                WHERE name LIKE ?
+                AND id NOT IN (%s)", rtrim(str_repeat('?,', count($excludeList)), ','));
+            $values = array_merge((array)($searchString . "%"), $excludeList);
+            return $this->database->iterateDB($this->database->executeQueryDB($sql,
+                $values), $fn);
+        }
     }
 ?>

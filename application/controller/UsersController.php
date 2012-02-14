@@ -36,6 +36,20 @@
             $this->loadView("UserAdd", NULL);
         }
 
+        public function refreshUsers() {
+            $searchString = $_POST['searchString'];
+            $excludeListString = $_POST['excludeList'];
+            $excludeList = explode(',', $excludeListString);
+            $users = array();
+            $this->Users->listUsersExcludingListed(function($item) use(
+                &$users) {
+                $users[] = $item;
+            }, $searchString, $excludeList);
+            $log['users'] = $users;
+
+            echo json_encode($log);
+        }
+
         public function login() {
             $username = $_POST["username"];
             $password = $_POST["password"];
@@ -77,7 +91,7 @@
             $this->Sessions->destroySession();
             $this->loadView('Home', NULL);
         }
-
+ 
         protected function requiresAuth() {
             return $this->currentAction != 'login';
         }

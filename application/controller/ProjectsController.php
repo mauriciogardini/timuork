@@ -150,11 +150,15 @@
             $this->loadView('ProjectOverview', $data);
         }
 
-        public function edit($id) {
-            $project = $this->Projects->getProjectById($id);
-            $data['project'] = $project;
-            $data['user'] = $this->SessionUser;
-            $this->loadView('ProjectEdit', $data);
+        public function edit() {
+            $projectId = $_POST['projectId'];
+            $users = $_POST['users'];
+            $title = $_POST['title'];
+            $description = $_POST['description'];
+            $projectInfo = (object) array("id" => $projectId,
+                "title" => $title, "description" => $description,
+                "usersIds" => $users);
+            $this->Projects->editProject($projectIndo);
         }
 
         public function createNotification() {
