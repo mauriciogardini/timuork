@@ -37,8 +37,9 @@
         }
 
         public function refreshUsers() {
-            $searchString = $_POST['searchString'];
-            $excludeListString = $_POST['excludeList'];
+            header('Content-type: application/json');
+            $searchString = $_GET['searchString'];
+            $excludeListString = $_GET['excludeList'];
             $excludeList = explode(',', $excludeListString);
             $users = array();
             $this->Users->listUsersExcludingListed(function($item) use(

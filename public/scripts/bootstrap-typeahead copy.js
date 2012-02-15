@@ -64,42 +64,30 @@
       return this
     }
 
-    , lookup: function (event) {
-        var that = this
+  , lookup: function (event) {
+      var that = this
         , items
         , q
 
-        this.query = this.$element.val()
+      this.query = this.$element.val()
 
-        if (!this.query) {
-            return this.shown ? this.hide() : this
-        }
+      if (!this.query) {
+        return this.shown ? this.hide() : this
+      }
 
-        var isFunction = function (object) {
-            var getClass = {}.toString
-            return object && getClass.call(object) == "[object Function]"
-        }
+      items = $.grep(this.source, function (item) {
+        if (that.matcher(item)) return item
+      })
 
-        var callback = function (items) {
-        var items = that.sorter(items)
+      items = this.sorter(items)
 
-        if (!items.length) {
-            return that.shown ? that.hide() : that
-        }
+      if (!items.length) {
+        return this.shown ? this.hide() : this
+      }
 
-        return that.render(items.slice(0, that.options.items)).show()
-        }
-
-        if (isFunction(this.source)) {
-            this.source(this.query, callback)
-        } 
-        else {
-            callback($.grep(this.source, function (item) {
-                if (that.matcher(item)) return item
-            }))
-        }
+      return this.render(items.slice(0, this.options.items)).show()
     }
-    
+
   , matcher: function (item) {
       return ~item.toLowerCase().indexOf(this.query.toLowerCase())
     }

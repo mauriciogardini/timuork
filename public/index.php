@@ -10,7 +10,8 @@
         $url_values['controller'] = $array_tmp_uri[0];
     }
     if (isset($array_tmp_uri[1])) { 
-        $url_values['action'] = $array_tmp_uri[1];
+        $index_values = explode('?', $array_tmp_uri[1]);
+        $url_values['action'] = isset($index_values[0]) ? $index_values[0] : $array_tmp_uri[1];
     }    
     if (isset($array_tmp_uri[2])) {
         $index_values = explode('?', $array_tmp_uri[2]);

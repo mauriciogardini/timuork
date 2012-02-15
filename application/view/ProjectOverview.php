@@ -57,7 +57,7 @@
                     <div id="titleDiv" class="control-group">
                         <label class="control-label" for="title">Título</label>
                         <div class="controls">
-                            <input id="title" name="title" class="span4"
+                            <input id="title" name="title" class="span5"
                                 type="text">
                             <p class="help-block">
                                 Esta informação poderá ser exibida publicamente.

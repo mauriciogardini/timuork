@@ -32,25 +32,6 @@ function Edit() {
             .error(errorCallback);
     }
 
-    self.refreshUsers = function() {
-        var excludeList = [];
-        var userId = $("#userId").attr("id");
-        var index = 0;
-        $("#users option").each(function() {
-            excludeList[index] = $(this).attr("id"); 
-            index++;
-        });
-        excludeList[index] = userId;
-        var excludeListString = excludeList.toString(); 
-        console.log(excludeListString);
-        var data = {
-            excludeList : excludeListString,
-            searchString : $("#newUser").val()
-        };
-        $.post(refreshUsersUrl, data, refreshUsersCallback, "json")
-            .error(errorCallback);
-    }
-
     self.addUser = function() {
         var user = $("#newUser").val();
         $("#users").append($("<option />", { value : user, text : user }));
@@ -61,39 +42,6 @@ function Edit() {
         $('#users :selected').each(function(i, selected) {
             $(selected).remove();
         });
-    }
-
-    self.refreshUsers = function(val, timestamp) {
-        var refreshUsersUrl = $("#newUser").data("search-url");
-        var excludeList = [];
-        var index = 0;
-        $("#users option").each(function() {
-            excludeList[index] = $(this).attr("id"); 
-            index++;
-        });
-        var excludeListString = excludeList.toString(); 
-        $.post(refreshUsersUrl, {searchString: val, excludeList: excludeListString}, function(data) {
-            if(timestamp > currentTimestamp) {
-                currentTimestamp = timestamp;
-                var loadedUsers = [];
-                var loadedUsersIds = [];
-                var x = 0;
-                if (data.users && data.users.length) {
-                    $.each(data.users, function(index, user) {
-                        loadedUsers[x] = user.name;
-                        loadedUsersIds[x] = user.id;
-                        x++;
-                    });
-                    console.log("Usuários:");
-                    console.log(JSON.stringify(loadedUsers));
-                    $("#newUser").typeahead({ source : loadedUsers });
-                    console.log("Typeahead inicializado.");
-                }
-                else {
-                    console.log("Informação descartada.");
-                }
-            }
-        }, "json").error(errorCallback);
     }
 
     $("#editProject").submit(function(e) {
@@ -112,8 +60,33 @@ function Edit() {
         self.removeUser(); 
     });
 
-    $("#newUser").keyup(function(e) {
-        console.log("Atualizar lista");
-        self.refreshUsers($(this).val(), e.timeStamp);
+    $("#newUser").typeahead({
+        source: function(query, callback) {
+            var refreshUsersUrl = $("#newUser").data("search-url");
+            console.log(refreshUsersUrl);
+            var excludeList = [];
+            var index = 0;
+            $("#users option").each(function() {
+                excludeList[index] = $(this).attr("id"); 
+                index++;
+            });
+            var excludeListString = excludeList.toString(); 
+            $.get(refreshUsersUrl, { searchString: query, excludeList: excludeListString }, function(response) {
+                var loadedUsers = [];
+                var loadedUsersIds = [];
+                var x = 0;
+                if (response.users && response.users.length) {
+                    $.each(response.users, function(index, user) {
+                        loadedUsers[x] = user.name;
+                        console.log(user.name);
+                        loadedUsersIds[x] = user.id;
+                        x++;
+                    });
+                    console.log("Usuários:");
+                    console.log(JSON.stringify(loadedUsers));
+                }    
+                callback(loadedUsers);
+            });
+        }
     });
 }
