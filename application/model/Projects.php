@@ -61,6 +61,9 @@
         } 
 
         public function editProject($projectInfo) {
+            $allowedUsers = array();
+            $removedUsers = array();
+            $addedUsers = array();
             $sql = "UPDATE projects
                 SET title = ?, description = ?
                 WHERE id = ?";
@@ -69,14 +72,13 @@
             $result = (bool) $this->database->executeQueryDB($sql, $values)->rowCount();
             if ($result) {
                 $this->listAllowedUsersByProjectId(function($item) use(
-                    $notificationId, &$allowedUsers) {
-                    $allowedUsers[] = $item;
+                    &$allowedUsers) {
+                    $allowedUsers[] = $item->id;
                     }, $projectInfo->id);
-                foreach($allowedUsers as $user) {
-                    $this->disallowUser($projectInfo->id, $user->id);
-                }
-                $usersIds = explode(',', $users);
-                foreach($usersIds as $userId) {
+                $removedUsers = array_diff($allowedUsers, $projectInfo->usersIds);
+                $addedUsers = array_diff($projectInfo->usersIds, $allowedUsers);
+                $this->disallowUsers($projectInfo->id, $removedUsers);
+                foreach($addedUsers as $userId) {
                     $this->allowUser($projectInfo->id, $userId);
                 }
             }
@@ -186,6 +188,15 @@
                 WHERE project_id = ?
                 AND user_id = ?";
             $values = array($projectId, $userId);
+            return (bool) $this->database->executeQueryDB($sql, $values)->
+                rowCount();
+        }
+
+        public function disallowUsers($projectId, $usersIds) {
+            $sql = sprintf("DELETE FROM allowances
+                WHERE project_id = ?
+                AND user_id IN (%s)", rtrim(str_repeat('?,', count($usersIds)), ','));
+            $values = array_merge((array)($projectId), $usersIds);
             return (bool) $this->database->executeQueryDB($sql, $values)->
                 rowCount();
         }

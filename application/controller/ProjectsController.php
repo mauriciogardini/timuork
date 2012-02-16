@@ -158,7 +158,7 @@
             $projectInfo = (object) array("id" => $projectId,
                 "title" => $title, "description" => $description,
                 "usersIds" => $users);
-            $this->Projects->editProject($projectIndo);
+            $this->Projects->editProject($projectInfo);
         }
 
         public function createNotification() {

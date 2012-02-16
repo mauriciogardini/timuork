@@ -35,8 +35,8 @@
         <form class="modal-form form-horizontal" id="editProject">
             <fieldset>
                 <div class="modal-body">
-                    <div id="usersDiv" class="control-group">
-                        <label class="control-label" for="users">Usuários</label>
+                    <div id="newUserDiv" class="control-group">
+                        <label class="control-label" for="newUser"></label>
                         <div class="controls">
                             <input type="text" class="span4" id="newUser" 
                                 data-search-url="/users/refreshUsers" placeholder=
@@ -44,11 +44,17 @@
                                 data-provide="typeahead" />
                             <input type="button" id="addUser" class="btn" 
                                 value="Adicionar" />
+                        </div>
+                    </div>
+                    <div id="usersDiv" class="control-group">
+                        <label class="control-label" for="users">Usuários</label>
+                        <div class="controls">
                             <select multiple="multiple" class="span4" id="users">
                                 <?php foreach ($allowedUsers as $allowedUser) { ?>
-                                <option id="<?php echo $allowedUser->id ?>">
+                                <?php if ($allowedUser->id != $user->getId()) { ?> 
+                                <option value="<?php echo $allowedUser->id ?>">
                                 <?php echo $allowedUser->name ?></option>
-                                <?php } ?>
+                                <?php } }?>
                             </select>
                             <input type="button" id="removeUser" class="btn"
                                 value="Remover" />
@@ -58,7 +64,7 @@
                         <label class="control-label" for="title">Título</label>
                         <div class="controls">
                             <input id="title" name="title" class="span5"
-                                type="text">
+                            type="text" value="<?php echo $project->title ?>">
                             <p class="help-block">
                                 Esta informação poderá ser exibida publicamente.
                             </p>
@@ -68,7 +74,7 @@
                         <label for="description">Descrição</label>
                         <div class="controls">
                             <textarea class="span5" name="description" 
-                                id="description"></textarea>
+                            id="description"><?php echo $project->description ?></textarea>
                         </div>
                     </div>                   
                 </div>
@@ -80,7 +86,7 @@
     </div>
 </div>
 <script src="/scripts/jquery.min.js" type="text/javascript"></script>
-<script src="/scripts/bootstrap-twipsy.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-tooltip.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-popover.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-modal.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-typeahead.js" type="text/javascript"></script>

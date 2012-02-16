@@ -1,9 +1,10 @@
 function Edit() {
-
+    var loadedUsers = {};
     var currentTimestamp = 0;
     var editProjectUrl = "/projects/edit/";
 
-    var editProjectCallback = function(){
+    var editProjectCallback = function(data){
+        var temp = data;
         //Close modal
         //Refresh page
     };
@@ -14,16 +15,14 @@ function Edit() {
     };
 
     self.editProject = function() {
-        var projectId = $("#projectId").CSS("id");
-        var index = 0;
+        var projectId = $("#projectId").attr("value");
         var users = [];
         $("#users option").each(function() {
-            users[index] = $(this).attr("id"); 
-            index++;
+            users.push($(this).attr("value")); 
         });
-        var usersString = users.toString();
+        users.push($("#userId").attr("value"));
         var data = {
-            users : usersString,
+            users : users,
             projectId : projectId,
             title : $("#title").val(),
             description : $("#description").val()
@@ -34,7 +33,17 @@ function Edit() {
 
     self.addUser = function() {
         var user = $("#newUser").val();
-        $("#users").append($("<option />", { value : user, text : user }));
+        if(loadedUsers[user]) {
+            $("#users").append($("<option />", { value : loadedUsers[user], text : user }));
+            $("#newUserDiv").popover("hide");
+            $("#newUserDiv").removeClass("error");
+            $("#newUser").val("");
+        }
+        else {
+            $("#newUserDiv").popover({ placement: "right", title: "Erro",
+                "content": "Usuário inexistente."});
+            $("#newUserDiv").addClass("error");
+        }
     }
 
     self.removeUser = function() {
@@ -63,29 +72,21 @@ function Edit() {
     $("#newUser").typeahead({
         source: function(query, callback) {
             var refreshUsersUrl = $("#newUser").data("search-url");
-            console.log(refreshUsersUrl);
             var excludeList = [];
-            var index = 0;
             $("#users option").each(function() {
-                excludeList[index] = $(this).attr("id"); 
-                index++;
+                excludeList.push($(this).attr("value")); 
             });
-            var excludeListString = excludeList.toString(); 
-            $.get(refreshUsersUrl, { searchString: query, excludeList: excludeListString }, function(response) {
-                var loadedUsers = [];
-                var loadedUsersIds = [];
-                var x = 0;
+            excludeList.push($("#userId").attr("value"));
+            console.log(excludeList);
+            $.get(refreshUsersUrl, { searchString: query, excludeList: excludeList }, function(response) {
+                var users = [];
                 if (response.users && response.users.length) {
                     $.each(response.users, function(index, user) {
-                        loadedUsers[x] = user.name;
-                        console.log(user.name);
-                        loadedUsersIds[x] = user.id;
-                        x++;
+                        loadedUsers[user.name] = user.id;
+                        users.push(user.name);
                     });
-                    console.log("Usuários:");
-                    console.log(JSON.stringify(loadedUsers));
                 }    
-                callback(loadedUsers);
+                callback(users);
             });
         }
     });
