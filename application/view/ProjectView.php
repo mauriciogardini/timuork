@@ -75,7 +75,20 @@
             <p>&copy; Maurício Gardini - Alguns Direitos Reservados</p> 
         </footer> 
      </div>
-    
+
+    <!-- MICRODATA -->
+    <div itemscope id="projectItemscope">
+        <span itemprop="id"><?php echo $project->id ?></span>
+        <span itemprop="name"><?php echo $project->name ?></span>
+        <span itemprop="description"><?php echo $project->description ?></span>
+        <span itemprop="adminUserId"><?php echo $project->adminUserId ?></span>
+        <div id="projectUsersItemscope">
+            <?php foreach ($projectUsers as $projectUser) { ?>
+            <p itemscope><span itemprop="id"><?php echo $projectUser->id ?></span><span itemprop="name"><?php echo $projectUser->name ?></span></p>
+            <?php } ?>
+        </div>
+    </div>
+
     <!-- MODALS -->
     <div id="modalNotification" class="modal fade">
         <div class="modal-header">
@@ -150,7 +163,53 @@
             </form>
         </div>
     </div>
-
+   <div id="modalSettings" class="modal fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h3>Configurações<h3>
+    </div>
+    <div class="modal-body">
+        <form class="modal-form form-horizontal" id="settings">
+            <fieldset>
+                <div class="modal-body">
+                    <div id="nameDiv" class="control-group">
+                        <label class="control-label" for="name">Nome Completo</label>
+                        <div class="controls">
+                            <input type="text" class="span4" id="name" /> 
+                        </div>
+                    </div>
+                    <div id="emailDiv" class="control-group">
+                        <label class="control-label" for="email">E-mail</label>
+                        <div class="controls">
+                            <input type="text" class="span4" id="email" /> 
+                        </div>
+                    </div>
+                    <div id="accountDiv" class="control-group">
+                        <label class="control-label" for="account">Twitter</label>
+                        <div class="controls">
+                            <input type="text" class="span4" id="account" /> 
+                        </div>
+                    </div>
+                    <div id="usernameDiv" class="control-group">
+                        <label class="control-label" for="username">Username</label>
+                        <div class="controls">
+                            <input type="text" class="span4" id="username" /> 
+                        </div>
+                    </div>
+                    <div id="passwordDiv" class="control-group">
+                        <label class="control-label" for="password">Senha</label>
+                        <div class="controls">
+                            <input type="password" class="span4" id="password" /> 
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" text="Criar" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+ 
     <script src="/scripts/jquery.min.js" type="text/javascript"></script>
     <script src="/scripts/bootstrap-twipsy.js" type="text/javascript"></script>
     <script src="/scripts/bootstrap-popover.js" type="text/javascript"></script>

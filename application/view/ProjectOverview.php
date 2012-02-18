@@ -1,24 +1,22 @@
 <div class="container">
     <div class="content">
         <div class="row">
-            <div class="span8 div-content">
-                <div class="center90"> 
-                <input type="hidden" id="projectId"
-                    value="<?php echo $project->id ?>"/>
-                <input type="hidden" id="userId"
-                    value="<?php echo $user->getId() ?>"/>
-                <h1><?php echo $project->title ?></h1>
-                <p><?php echo $project->description ?></p>
+        <div class="span8 div-content" data-project-id="<?php echo $project->id ?>"
+            data-admin-user-id="<?php echo $project->admin_user_id ?>">
+            <div class="center90"> 
+                <h1 id="projectTitle"><?php echo $project->title ?></h1>
+                <p id="projectDescription"><?php echo $project->description ?></p>
                 <a href="/projects/view/<?php echo $project->id ?>">Ir para o projeto</a>
                 </div>
             </div>
             <div class="span4 div-sidebar">
-                <div class="center90">
+            <div class="center90">
                 <a href="#modalEdit" data-toggle="modal">Editar</a>
                     <h3>Usuários participantes</h3>
                     <ul class="unstyled">
                         <?php foreach ($allowedUsers as $allowedUser) { ?>
-                        <li><?php echo $allowedUser->name ?></li>
+                        <li data-allowed-user-id="<?php echo $allowedUser->id ?>">
+                        <?php echo $allowedUser->name ?></li>
                         <?php } ?>
                     </ul>
                 </div>
@@ -26,13 +24,16 @@
         </div>
     </div>
 </div>
+
+<!-- MODALS -->
 <div id="modalEdit" class="modal fade">
     <div class="modal-header">
         <a class="close" data-dismiss="modal">&times;</a>
         <h3>Editar Projeto</h3>
     </div>
     <div class="modal-body">
-        <form class="modal-form form-horizontal" id="editProject">
+        <form class="modal-form form-horizontal" id="editProject"
+            data-edit-project-url="/projects/edit/">
             <fieldset>
                 <div class="modal-body">
                     <div id="newUserDiv" class="control-group">
@@ -52,7 +53,7 @@
                             <select multiple="multiple" class="span4" id="users">
                                 <?php foreach ($allowedUsers as $allowedUser) { ?>
                                 <?php if ($allowedUser->id != $user->getId()) { ?> 
-                                <option value="<?php echo $allowedUser->id ?>">
+                                <option data-select-user-id="<?php echo $allowedUser->id ?>">
                                 <?php echo $allowedUser->name ?></option>
                                 <?php } }?>
                             </select>

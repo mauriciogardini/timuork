@@ -20,8 +20,9 @@
                     <li><a href="#contact">Contact</a></li>
                 </ul>
                 <p class="pull-right logged-in">Logado como 
-                    <a href="#"><?php echo $user->getName() ?></a> | 
-                    <a href="/logout">Sair</a>
+                    <a data-toggle="modal" href="#modalSettings"
+                        data-user-id="<?php echo $user->getId() ?>"><?php
+                        echo $user->getName() ?></a> | <a href="/logout">Sair</a>
                 </p>
             </div>
         </div>

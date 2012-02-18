@@ -12,9 +12,11 @@
             $log = array();
             $title = $_POST['title'];
             $description = $_POST['description'];
-            $userId = $_POST['userId'];
-            $projectInfo = (object) array('userId' => $userId,
-                'title' => $title, 'description' => $description);
+            $adminUserId = $_POST['userId'];
+            $allowedUsers = isset($_POST['allowedUsers']) ? $_POST['allowedUsers'] : NULL;
+            $projectInfo = (object) array('adminUserId' => $adminUserId,
+                'title' => $title, 'description' => $description, "id" => NULL,
+                'allowedUsersIds' => $allowedUsers);
             if($this->Projects->isValidProject($projectInfo)) {
                 $this->Projects->createProjectAndDependencies($projectInfo);
             }
@@ -151,14 +153,24 @@
         }
 
         public function edit() {
+            $log = array();
             $projectId = $_POST['projectId'];
             $users = $_POST['users'];
             $title = $_POST['title'];
+            $adminUserId = $_POST['adminUserId'];
             $description = $_POST['description'];
             $projectInfo = (object) array("id" => $projectId,
                 "title" => $title, "description" => $description,
-                "usersIds" => $users);
-            $this->Projects->editProject($projectInfo);
+                "usersIds" => $users, "adminUserId" => $adminUserId);
+            if($this->Projects->isValidProject($projectInfo)) {
+                $this->Projects->editProject($projectInfo);
+            }
+            else {
+                $errors = $this->Projects->getProjectValidationErrors($projectInfo);
+                $log["errors"] = $errors;
+            }
+            $log["project"] = array("title" => $title, "description" => $description);
+            echo json_encode($log);
         }
 
         public function createNotification() {

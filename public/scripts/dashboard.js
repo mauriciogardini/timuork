@@ -1,11 +1,8 @@
-function Dashboard(userId) {
-    var addProjectUrl = "/projects/add/";
-    var updateMyProjectsUrl = "/projects/updateMyProjects/";
-    var updateOtherProjectsUrl = "/projects/updateOtherProjects/";
-    var updateNotificationsUrl = "/projects/updateNotifications/";
+function Dashboard() {
+    var loadedUsers = {};
 
     var projectLinkTemplate = '<a href="/projects/overview/{{projectId}}">{{caption}}</a><br />';
-    var modalLinkTemplate = '<p id="new-project-link"><a data-toggle="modal" href="{{modalId}}">{{caption}}</a></p>';
+    var modalLinkTemplate = '<p id="new-project-link"><a data-add-project-url="/projects/add" data-toggle="modal" href="{{modalId}}">{{caption}}</a></p>';
     var otherProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.</div>';
     var myProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.<p><a data-toggle="modal" href="{{modalId}}">{{caption}}</a></p></div>'
     var notificationsPlaceholderTemplate = '<div class="notification-placeholder">Não há notificações a serem exibidas.</div>';
@@ -15,10 +12,7 @@ function Dashboard(userId) {
             $.each(data.errors, function(index, error) {
                 var div = $("input[name=" + index + "]").parent().parent();
                 if (error) {
-                    div.popover({ placement: "left", title: "Erro",
-                        "content": error });
-                    div.removeClass("success").addClass("error");
-                }
+                    div.popover({ placement: "left", title: "Erro", "content": error }); div.removeClass("success").addClass("error"); }
                 else {
                     div.removeClass("error").addClass("success");
                 }
@@ -26,10 +20,7 @@ function Dashboard(userId) {
         }
         else {
             console.log("Sem erros");
-            //TODO - Os popovers precisam ser removidos para que, caso queira-se incluir mais de um
-            //projeto, não sejam apresentadas informações referentes à validação de caráter 
-            //duvidoso.
-            //$(".success, .error").popover("hide");
+            $(".success, .error").popover("hide");
             $(".modal-body .control-group").removeClass("error").removeClass("success");
             $("#modalProject").modal("hide");
             $("#title").val("");
@@ -94,8 +85,38 @@ function Dashboard(userId) {
         console.log(arguments);
     }
 
+    self.addUser = function() {
+        var user = $("#newUser").val();
+        if(loadedUsers[user]) {
+            var userOption = $("<option />").attr("data-select-user-id", loadedUsers[user]).text(user);
+            $("#users").append(userOption);
+            $("#newUserDiv").popover("hide");
+            $("#newUserDiv").removeClass("error");
+            $("#newUser").val("");
+        }
+        else {
+            $("#newUserDiv").popover({ placement: "right", title: "Erro",
+                "content": "Usuário inexistente."});
+            $("#newUserDiv").addClass("error");
+        }
+    }
+
+    self.removeUser = function() {
+        var index = $("#users")
+        $('#users :selected').each(function(i, selected) {
+            $(selected).remove();
+        });
+    }
+   
     self.addProject = function() {
+        var allowedUsers = [];
+        var addProjectUrl = $("[data-add-project-url]").data("add-project-url");
+        var userId = $("[data-user-id]").data("user-id");
+        $("#users option").each(function() {
+            allowedUsers.push($(this).data("select-user-id")); 
+        });
         var data = {
+            allowedUsers: allowedUsers,
             title: $("#title").val(),
             description: $("#description").val(),
             userId: userId 
@@ -106,16 +127,19 @@ function Dashboard(userId) {
     }
 
     self.getMyProjects = function() {
+        updateMyProjectsUrl = $("[data-update-my-projects-url]").data("update-my-projects-url");
         $.getJSON(updateMyProjectsUrl).success(updateMyProjectsCallback)
             .error(errorCallback);
     }
     
     self.getOtherProjects = function() {
+        updateOtherProjectsUrl = $("[data-update-other-projects-url]").data("update-other-projects-url");
         $.getJSON(updateOtherProjectsUrl).success(updateOtherProjectsCallback)
             .error(errorCallback);
     }
    
     self.getNotifications = function() {
+        updateNotificationsUrl = $("[data-update-notifications-url]").data("update-notifications-url");
         $.getJSON(updateNotificationsUrl).success(updateNotificationsCallback)
             .error(errorCallback);
     }
@@ -128,5 +152,38 @@ function Dashboard(userId) {
         e.preventDefault();
         console.log("Projeto");
         self.addProject();
+    });
+
+    $("#addUser").click(function(e) {
+        console.log("Adicionar usuário");
+        self.addUser();
+    });
+
+    $("#removeUser").click(function(e) {
+        console.log("Remover usuário");
+        self.removeUser(); 
+    });
+
+    $("#newUser").typeahead({
+        source: function(query, callback) {
+            var adminUserId = $("[data-user-id]").data("user-id");
+            var refreshUsersUrl = $("[data-search-url]").data("search-url");
+            var excludeList = [];
+            $("[data-select-user-id]").each(function() {
+                excludeList.push($(this).data("select-user-id")); 
+            });
+            excludeList.push(adminUserId);
+            console.log(excludeList);
+            $.get(refreshUsersUrl, { searchString: query, excludeList: excludeList }, function(response) {
+                var users = [];
+                if (response.users && response.users.length) {
+                    $.each(response.users, function(index, user) {
+                        loadedUsers[user.name] = user.id;
+                        users.push(user.name);
+                    });
+                }    
+                callback(users);
+            });
+        }
     });
 }

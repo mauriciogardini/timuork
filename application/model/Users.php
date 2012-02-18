@@ -264,11 +264,19 @@
         }
 
         public function listUsersExcludingListed($fn, $searchString, $excludeList) {
-            $sql = sprintf("SELECT id, name
-                FROM users
-                WHERE name LIKE ?
-                AND id NOT IN (%s)", rtrim(str_repeat('?,', count($excludeList)), ','));
-            $values = array_merge((array)($searchString . "%"), $excludeList);
+            if (isset($excludeList)) {
+                $sql = sprintf("SELECT id, name
+                    FROM users
+                    WHERE name LIKE ?
+                    AND id NOT IN (%s)", rtrim(str_repeat('?,', count($excludeList)), ','));
+                $values = array_merge((array)($searchString . "%"), $excludeList);
+            }
+            else {
+                $sql = "SELECT id, name
+                    FROM users
+                    WHERE name LIKE ?";
+                $values = array($searchString . "%");
+            }
             return $this->database->iterateDB($this->database->executeQueryDB($sql,
                 $values), $fn);
         }

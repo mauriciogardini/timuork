@@ -1,12 +1,26 @@
 function Edit() {
     var loadedUsers = {};
     var currentTimestamp = 0;
-    var editProjectUrl = "/projects/edit/";
 
     var editProjectCallback = function(data){
-        var temp = data;
-        //Close modal
-        //Refresh page
+        if(data.errors) {
+            $.each(data.errors, function(index, error) {
+                var div = $("input[name=" + index + "]").parent().parent();
+                if (error) {
+                    div.popover({ placement: "left", title: "Erro", "content": error }); div.removeClass("success").addClass("error"); }
+                else {
+                    div.removeClass("error").addClass("success");
+                }
+            });
+        }
+        else {
+            console.log("Sem erros");
+            $(".success, .error").popover("hide");
+            $(".modal-body .control-group").removeClass("error").removeClass("success");
+            $("#modalEdit").modal("hide");
+            $("#projectTitle").text(data.project.title);
+            $("#projectDescription").text(data.project.description);
+        }
     };
 
     var errorCallback = function(xhr, status, error) {
@@ -15,26 +29,35 @@ function Edit() {
     };
 
     self.editProject = function() {
-        var projectId = $("#projectId").attr("value");
+        var projectId = $("[data-project-id]").data("project-id");
+        var adminUserId = $("[data-admin-user-id]").data("admin-user-id");
+        var editProjectUrl = $("[data-edit-project-url]").data("edit-project-url");
         var users = [];
-        $("#users option").each(function() {
-            users.push($(this).attr("value")); 
+        $("[data-select-user-id]").each(function() {
+            users.push($(this).data("select-user-id")); 
         });
-        users.push($("#userId").attr("value"));
+        users.push(adminUserId);
         var data = {
             users : users,
             projectId : projectId,
             title : $("#title").val(),
-            description : $("#description").val()
+            description : $("#description").val(),
+            adminUserId : adminUserId
         };
-        $.post(editProjectUrl, data).success(editProjectCallback)
+        $.post(editProjectUrl, data, editProjectCallback, "json")
             .error(errorCallback);
+    }
+
+    self.fillEditProjectModal = function() {
+        //Fazer post p/ pegar os dados do modal ou pegar de 
+        //alguma forma no HTML?
     }
 
     self.addUser = function() {
         var user = $("#newUser").val();
         if(loadedUsers[user]) {
-            $("#users").append($("<option />", { value : loadedUsers[user], text : user }));
+            var userOption = $("<option />").attr("data-select-user-id", loadedUsers[user]).text(user);
+            $("#users").append(userOption);
             $("#newUserDiv").popover("hide");
             $("#newUserDiv").removeClass("error");
             $("#newUser").val("");
@@ -59,6 +82,12 @@ function Edit() {
         e.preventDefault();
     });
 
+    $("#editProject").on("show", function() {
+        e.preventDefault();
+        console.log("Preenchendo modal");
+        self.fillEditProjectModal();
+    });
+
     $("#addUser").click(function(e) {
         console.log("Adicionar usuário");
         self.addUser();
@@ -71,12 +100,14 @@ function Edit() {
 
     $("#newUser").typeahead({
         source: function(query, callback) {
-            var refreshUsersUrl = $("#newUser").data("search-url");
+            var projectId = $("[data-project-id]").data("project-id");
+            var adminUserId = $("[data-admin-user-id]").data("admin-user-id");
+            var refreshUsersUrl = $("[data-search-url]").data("search-url");
             var excludeList = [];
-            $("#users option").each(function() {
-                excludeList.push($(this).attr("value")); 
+            $("[data-select-user-id]").each(function() {
+                excludeList.push($(this).data("select-user-id")); 
             });
-            excludeList.push($("#userId").attr("value"));
+            excludeList.push(adminUserId);
             console.log(excludeList);
             $.get(refreshUsersUrl, { searchString: query, excludeList: excludeList }, function(response) {
                 var users = [];

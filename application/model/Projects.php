@@ -20,15 +20,28 @@
                 (id, title, description, admin_user_id)
                 VALUES(NULL, ?, ?, ?)";
             $values = array($projectInfo->title, $projectInfo->description, 
-                $projectInfo->userId);
+                $projectInfo->adminUserId);
             $result = (bool) $this->database->executeQueryDB($sql, 
                 $values)->rowCount();
             if ($result) {
-                return $this->allowUser(NULL, $projectInfo->userId);
+                $projectId = $this->getLastInsertedId();
+                if(isset($projectInfo->allowedUsersIds)) { 
+                    foreach($projectInfo->allowedUsersIds as $allowedUserId) {
+                        $this->allowUser($projectId, $allowedUserId);
+                    }
+                }
+                $this->allowUser($projectId, $projectInfo->adminUserId);
             }
             else {
                 return false;
             }
+        }
+
+        public function getLastInsertedId() {
+            $sql = "SELECT last_insert_rowid() AS id";
+            $result = $this->database->fetchDB($this->database->executeQueryDB(
+                $sql));
+            return $result->id;
         }
 
         public function isValidProject($projectInfo) {
@@ -43,18 +56,29 @@
 
         public function getProjectValidationErrors($projectInfo) {
             $validationErrors = array("title" => NULL);
-            if(!$this->validateProjectTitle($projectInfo->title, $projectInfo->userId)) {
+            if(!$this->validateProjectTitle($projectInfo->title, $projectInfo->id,
+                $projectInfo->adminUserId)) {
                 $validationErrors["title"] = "Já existe um projeto com este título.";
             }
             return $validationErrors;
         }
 
-        public function validateProjectTitle($projectTitle, $userId) {
-            $sql = "SELECT COUNT(*) AS count
-                FROM projects
-                WHERE LOWER(title) = LOWER(?)
-                AND admin_user_id = ?";
-            $values = array($projectTitle, $userId);
+        public function validateProjectTitle($projectTitle, $projectId, $adminUserId) {
+            if (isset($projectId)) { 
+                $sql = "SELECT COUNT(*) AS count
+                    FROM projects
+                    WHERE LOWER(title) = LOWER(?)
+                    AND admin_user_id = ?
+                    AND id != ?";
+                $values = array($projectTitle, $adminUserId, $projectId);
+            }
+            else {
+                $sql = "SELECT COUNT(*) AS count
+                    FROM projects
+                    WHERE LOWER(title) = LOWER(?)
+                    AND admin_user_id = ?";
+                $values = array($projectTitle, $adminUserId);
+            }
             $result = (bool) $this->database->fetchDB($this->database->executeQueryDB(
                 $sql, $values))->count;
             return ($result ? false : true); 
@@ -75,6 +99,8 @@
                     &$allowedUsers) {
                     $allowedUsers[] = $item->id;
                     }, $projectInfo->id);
+                var_dump($allowedUsers);
+                var_dump($projectInfo->usersIds);
                 $removedUsers = array_diff($allowedUsers, $projectInfo->usersIds);
                 $addedUsers = array_diff($projectInfo->usersIds, $allowedUsers);
                 $this->disallowUsers($projectInfo->id, $removedUsers);
