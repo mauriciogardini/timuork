@@ -95,42 +95,58 @@
         <h3>Configurações<h3>
     </div>
     <div class="modal-body">
-        <form class="modal-form form-horizontal" id="settings">
+        <form class="modal-form form-horizontal" id="settings"
+            data-edit-settings-url="/users/edit">
             <fieldset>
                 <div class="modal-body">
                     <div id="nameDiv" class="control-group">
-                        <label class="control-label" for="name">Nome Completo</label>
+                        <label class="control-label" for="name">Nome</label>
                         <div class="controls">
-                            <input type="text" class="span4" id="name" /> 
+                            <input type="text" class="span5" id="name" name="name"/> 
                         </div>
                     </div>
                     <div id="emailDiv" class="control-group">
                         <label class="control-label" for="email">E-mail</label>
                         <div class="controls">
-                            <input type="text" class="span4" id="email" /> 
+                            <input type="text" class="span5" id="email" id="email" /> 
                         </div>
                     </div>
-                    <div id="accountDiv" class="control-group">
-                        <label class="control-label" for="account">Twitter</label>
+                    <div id="accountValueDiv" class="control-group">
+                        <label class="control-label" for="accountValue">Twitter</label>
                         <div class="controls">
-                            <input type="text" class="span4" id="account" /> 
+                            <input type="text" class="span5" id="accountValue" name="accountValue" /> 
+                        </div>
+                    </div> 
+                    <div hidden="hidden" id="accountTypeDiv" class="control-group">
+                        <label class="control-label" for="accountType">Tipo</label>
+                        <div class="controls">
+                            <select class="span5" id="accountType" name="accountType">
+                                <option selected="selected" value="Twitter">Twitter</option>
+                            </select>
+                        </div> 
+                    </div>
+                    <div id="newPasswordDiv" class="control-group">
+                        <label class="control-label" for="newPassword">Nova Senha</label>
+                        <div class="controls">
+                            <input type="password" class="span5" id="newPassword" name="newPassword"/> 
+                            <p class="help-block">
+                                Deixe este campo em branco caso queira manter a senha atual.
+                            </p>
                         </div>
                     </div>
-                    <div id="usernameDiv" class="control-group">
-                        <label class="control-label" for="username">Username</label>
+                    <hr />
+                    <div id="oldPasswordDiv" class="control-group">
+                        <label class="control-label" for="oldPassword">Senha Antiga</label>
                         <div class="controls">
-                            <input type="text" class="span4" id="username" /> 
-                        </div>
-                    </div>
-                    <div id="passwordDiv" class="control-group">
-                        <label class="control-label" for="password">Senha</label>
-                        <div class="controls">
-                            <input type="password" class="span4" id="password" /> 
+                            <input type="password" class="span5" id="oldPassword" name="oldPassword"/> 
+                            <p class="help-block">
+                                Informação necessária para a alteração dos dados.
+                            </p> 
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-primary" text="Criar" />
+                    <input type="submit" class="btn btn-primary" value="Confirmar" />
                 </div>
             </fieldset>
         </form>

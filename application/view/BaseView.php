@@ -21,7 +21,13 @@
                 </ul>
                 <p class="pull-right logged-in">Logado como 
                     <a data-toggle="modal" href="#modalSettings"
-                        data-user-id="<?php echo $user->getId() ?>"><?php
+                    data-user-id="<?php echo $user->getId() ?>"
+                    data-user-name="<?php echo $user->getName() ?>"
+                    data-user-email="<?php echo $user->getEmail() ?>"
+                    data-user-username="<?php echo $user->getUsername() ?>"
+                    data-user-account-id="<?php echo $user->getAccountId() ?>"
+                    data-user-account-type="<?php echo $user->getAccountType() ?>"
+                    data-user-account-value="<?php echo $user->getAccountValue() ?>" ><?php
                         echo $user->getName() ?></a> | <a href="/logout">Sair</a>
                 </p>
             </div>

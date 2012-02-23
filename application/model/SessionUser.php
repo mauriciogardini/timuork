@@ -6,6 +6,10 @@ class SessionUser {
     protected $id;
     protected $name;
     protected $username;
+    protected $email;
+    protected $accountId;
+    protected $accountValue;
+    protected $accountType;
     protected $Sessions;
 
     public function __construct() {
@@ -38,5 +42,41 @@ class SessionUser {
 
     public function setUsername($value) {
         $this->Sessions->write("username", $value);
+    }
+
+    public function getEmail() {
+        $this->email = $this->email ? $this->email : $this->Sessions->read("email");
+        return $this->email;
+    }
+   
+    public function setEmail($value) {
+        $this->Sessions->write("email", $value);
+    }
+
+    public function getAccountId() {
+        $this->accountId = $this->accountId ? $this->accountId : $this->Sessions->read("accountId");
+        return $this->accountId;
+    }
+   
+    public function setAccountId($value) {
+        $this->Sessions->write("accountId", $value);
+    }
+    
+    public function getAccountValue() {
+        $this->accountValue = $this->accountValue ? $this->accountValue : $this->Sessions->read("accountValue");
+        return $this->accountValue;
+    }
+   
+    public function setAccountValue($value) {
+        $this->Sessions->write("accountValue", $value);
+    }
+    
+    public function getAccountType() {
+        $this->accountType = $this->accountType ? $this->accountType : $this->Sessions->read("accountType");
+        return $this->accountType;
+    }
+   
+    public function setAccountType($value) {
+        $this->Sessions->write("accountType", $value);
     }
 }

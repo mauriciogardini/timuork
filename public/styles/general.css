@@ -179,7 +179,10 @@ div.modal-footer {
     background-color: #E2C90E;
 }
 
-
 #newUserDiv {
     margin-bottom: 2px;
+}
+
+#oldPasswordDiv {
+    padding-top: 20px;
 }

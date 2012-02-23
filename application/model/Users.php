@@ -82,7 +82,7 @@
             $sql = "UPDATE notification_accounts
                 SET value = ?
                 WHERE id = ?";
-            $values = array($accountInfo->value, $accountInfo->userId);
+            $values = array($accountInfo->value, $accountInfo->id);
             return (bool) $this->database->executeQueryDB($sql, 
                 $values)->rowCount();
         }
@@ -104,6 +104,95 @@
                 }
             }
             return true;
+        }
+
+        public function editUserAndDependencies($userEditInfo) {
+            $self = $this;
+            $function = function() use($userEditInfo, $self) { 
+                $self->editUser($userEditInfo); 
+            };
+            $this->database->executeTransaction($function); 
+        }
+
+        public function editUser($userEditInfo) {
+            if ($userEditInfo->newPassword != "") {
+                $cryptedPassword = $this->cryptPassword($userEditInfo->newPassword); 
+            }
+            else {
+                $cryptedPassword = $this->cryptPassword($userEditInfo->oldPassword);
+            } 
+            if ($cryptedPassword != NULL) {
+                $userEditInfo->newPassword = $cryptedPassword;
+            }
+            else { 
+                return false;
+            }
+            $sql = "UPDATE users 
+                SET name = ?, email = ?, password = ? 
+                WHERE id = ?";
+            $values = array($userEditInfo->name, $userEditInfo->email, 
+                $userEditInfo->newPassword, $userEditInfo->id);
+            $result = ((bool) $this->database->executeQueryDB($sql, 
+                $values)->rowCount());
+            if ($result) {
+                if(isset($userEditInfo->accountId)) {
+                    $accountInfo = (object) array("value" => $userEditInfo->accountValue, 
+                        "type" => $userEditInfo->accountType, "id" => $userEditInfo->accountId);
+                }
+                else {
+                    $accountInfo = (object) array("value" => $userEditInfo->accountValue, 
+                        "type" => $userEditInfo->accountType);
+                }
+                return $this->manageNotificationAccount($accountInfo); 
+            }
+            else {
+                return false;
+            }
+        }
+
+        public function isValidUserEdit($userEditInfo) {
+            $validationErrors = $this->getUserEditValidationErrors($userEditInfo);
+            foreach($validationErrors as $error) {
+                if ($error != NULL) {
+                    return false;
+                }
+            }
+            return true;    
+        }
+
+        public function getUserEditValidationErrors($userEditInfo) {
+            $validationErrors = array("name" => NULL,
+                "email" => NULL, "account" => NULL,
+                "oldPassword" => NULL, "newPassword" => NULL);
+            $user = $this->getUserByUsername($userEditInfo->username);
+            if ($this->comparePasswords($userEditInfo->oldPassword, 
+                $user->password)) {
+                if(!$this->validateName($userEditInfo->username)) {
+                    $validationErrors["name"] =  
+                        "O nome só pode conter letras, números e '_'";
+                }
+                if(!$this->validatePassword($userEditInfo->newPassword)) {
+                    if($userEditInfo->newPassword != "") {
+                        $validationErrors["newPassword"] = 
+                            "O password deve ter entre 6 e 24 caracteres.";
+                    }
+                }
+                if(!$this->validateEmail($userEditInfo->email)) {
+                    $validationErrors["email"] = 
+                        "E-mail inválido.";
+                }
+                if(!$this->validateAccount($userEditInfo->accountValue, 
+                    $userEditInfo->accountType)) {
+                    if($userEditInfo->accountType == "Twitter") {
+                        $validationErrors["accountValue"] = "Twitter inválido";
+                    }
+                }
+            }
+            else {
+                return array("oldPassword" => "Senha incorreta.");
+            }
+
+            return $validationErrors;
         }
 
         public function getUserValidationErrors($userInfo) {
@@ -159,8 +248,16 @@
         }
 
         public function getUserByUsername($username) {
-            $sql = "SELECT * 
-                FROM users 
+            $sql = "SELECT users.id AS id,
+                users.name AS name,
+                users.email AS email,
+                users.username AS username,
+                users.password AS password,
+                notification_accounts.id AS account_id,
+                notification_accounts.value AS account_value,
+                notification_accounts.type AS account_type 
+                FROM users
+                JOIN notification_accounts ON users.id = notification_accounts.user_id
                 WHERE username = ?";
             $values = array($username);
             return $this->database->fetchDB($this->database->executeQueryDB(
@@ -168,8 +265,16 @@
         }
 
         public function getUserById($userId) {
-            $sql = "SELECT * 
-                FROM users 
+            $sql = "SELECT users.id AS id,
+                users.name AS name,
+                users.email AS email,
+                users.username AS username,
+                users.password AS password,
+                notification_accounts.id AS account_id,
+                notification_accounts.value AS account_value,
+                notification_accounts.type AS account_type 
+                FROM users
+                JOIN notification_accounts ON users.id = notification_accounts.user_id
                 WHERE id = ?";
             $values = array($userId);
             return $this->database->fetchDB($this->database->executeQueryDB(

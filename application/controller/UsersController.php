@@ -32,6 +32,35 @@
             echo json_encode($log);    
         }
 
+        public function edit() {
+            header('Content-type: application/json');
+            $log = array();  
+            $id = $_POST['id'];
+            $name = $_POST['name'];
+            $email = $_POST['email'];
+            $username = $_POST['username'];
+            $accountValue = $_POST['accountValue'];
+            $accountId = $_POST['accountId'];
+            $accountType = $_POST['accountType'];
+            $newPassword = $_POST['newPassword'];
+            $oldPassword = $_POST['oldPassword'];
+            $userEditInfo = (object) array("name" => $name, "email" => $email,
+                "accountValue" => $accountValue, "newPassword" => $newPassword,
+                "oldPassword" => $oldPassword, "username" => $username,
+                "id" => $id, "accountId" => $accountId,
+                "accountType" => $accountType); 
+            if ($this->Users->isValidUserEdit($userEditInfo)) {
+                $this->Users->editUserAndDependencies($userEditInfo);
+            }
+            else {
+                $errors = $this->Users->getUserEditValidationErrors($userEditInfo);
+                $log = array("errors" => $errors);
+            }
+
+            echo json_encode($log);
+
+        }
+
         public function success() {
             $this->loadView("UserAdd", NULL);
         }
@@ -63,6 +92,10 @@
                 $sessionUser->setId($this->authenticatedUser->id);
                 $sessionUser->setName($this->authenticatedUser->name);
                 $sessionUser->setUsername($this->authenticatedUser->username);
+                $sessionUser->setEmail($this->authenticatedUser->email);
+                $sessionUser->setAccountId($this->authenticatedUser->account_id);
+                $sessionUser->setAccountValue($this->authenticatedUser->account_value);
+                $sessionUser->setAccountType($this->authenticatedUser->account_type); 
                 $myProjects = array();
                 $otherProjects = array();
                 $this->Projects->listMyProjectsByUserId(function($item) use(
