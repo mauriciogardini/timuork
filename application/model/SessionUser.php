@@ -11,72 +11,44 @@ class SessionUser {
     protected $accountValue;
     protected $accountType;
     protected $Sessions;
+    protected $reflection;
 
     public function __construct() {
         $this->Sessions = new Sessions;
         $this->Sessions->startSession();
     }
 
-    public function getId() {
-        $this->id = $this->id ? $this->id : $this->Sessions->read("userId");
-        return $this->id;
+    public function __call($name, $arguments) {
+        $this->reflection = new ReflectionClass(get_class($this)); 
+        if(preg_match('/^get(\w+)/', $name, $results)) {
+            $attribute = lcfirst($results[1]);
+            return $this->getAttribute($attribute);
+        }
+        else if(preg_match('/^set(\w+)/', $name, $results)) {
+            $attribute = lcfirst($results[1]);
+            return $this->setAttribute($attribute, $arguments[0]);
+        }
     }
 
-    public function setId($value) {
-        $this->Sessions->write("userId", $value);
+    public function setAttribute($attribute, $value) {
+        if($this->reflection->hasProperty($attribute)) { 
+            $this->{$attribute} = $value;
+        }
     }
 
-    public function getName() {
-        $this->name = $this->name ? $this->name : $this->Sessions->read("name");
-        return $this->name;
-    }
-   
-    public function setName($value) {
-        $this->Sessions->write("name", $value);
+    public function getProperty($attribute) {
+        if($this->reflection->hasProperty($attribute)) { 
+            return $this->{$attribute};
+        }
     }
 
-    public function getUsername() {
-        $this->username = $this->username ? $this->username : $this->Sessions->read("username");
-        return $this->username;
+    public function set($sessionUser) {
+        foreach($sessionUser as $attribute => $value) {
+            $this->setAttribute($attribute, $value);
+        } 
     }
 
-    public function setUsername($value) {
-        $this->Sessions->write("username", $value);
-    }
-
-    public function getEmail() {
-        $this->email = $this->email ? $this->email : $this->Sessions->read("email");
-        return $this->email;
-    }
-   
-    public function setEmail($value) {
-        $this->Sessions->write("email", $value);
-    }
-
-    public function getAccountId() {
-        $this->accountId = $this->accountId ? $this->accountId : $this->Sessions->read("accountId");
-        return $this->accountId;
-    }
-   
-    public function setAccountId($value) {
-        $this->Sessions->write("accountId", $value);
-    }
-    
-    public function getAccountValue() {
-        $this->accountValue = $this->accountValue ? $this->accountValue : $this->Sessions->read("accountValue");
-        return $this->accountValue;
-    }
-   
-    public function setAccountValue($value) {
-        $this->Sessions->write("accountValue", $value);
-    }
-    
-    public function getAccountType() {
-        $this->accountType = $this->accountType ? $this->accountType : $this->Sessions->read("accountType");
-        return $this->accountType;
-    }
-   
-    public function setAccountType($value) {
-        $this->Sessions->write("accountType", $value);
+    public function isDefined() {
+        return isset($this->id);
     }
 }

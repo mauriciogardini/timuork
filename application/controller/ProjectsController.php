@@ -186,8 +186,9 @@
             $description = $_POST['description'];
             $notificationInfo = (object) array("title" => $title, 
                 "description" => $description, "projectId" => $projectId, 
-                "senderUserId" => $sessionUser->getId(), "users" => $users);
-            $this->Projects->createNotification($notificationInfo);
+                "senderUserId" => $sessionUser->getId(),
+                "senderUserName" => $sessionUser->getName(), "users" => $users);
+            $this->Projects->createNotificationAndDependencies($notificationInfo);
         }
 
         public function createLink() {

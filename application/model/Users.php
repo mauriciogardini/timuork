@@ -1,4 +1,3 @@
-
 <?php
     require_once("BaseModel.php");    
     require_once("lib/PasswordHash.php");
@@ -258,7 +257,7 @@
                 notification_accounts.type AS account_type 
                 FROM users
                 JOIN notification_accounts ON users.id = notification_accounts.user_id
-                WHERE username = ?";
+                WHERE users.username = ?";
             $values = array($username);
             return $this->database->fetchDB($this->database->executeQueryDB(
                 $sql, $values));
@@ -275,7 +274,7 @@
                 notification_accounts.type AS account_type 
                 FROM users
                 JOIN notification_accounts ON users.id = notification_accounts.user_id
-                WHERE id = ?";
+                WHERE users.id = ?";
             $values = array($userId);
             return $this->database->fetchDB($this->database->executeQueryDB(
                 $sql, $values));

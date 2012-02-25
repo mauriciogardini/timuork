@@ -11,6 +11,7 @@
         
         public function index() {
             $sessionUser = $this->SessionUser;
+            var_dump($sessionUser->getId()); 
             if ($sessionUser->getId()) {   
                 $myProjects = array();
                 $otherProjects = array();

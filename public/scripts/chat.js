@@ -53,7 +53,9 @@ function Chat(projectId, userId) {
         setTimeout(self.getLinks, 5000);
     }
 
-    var createNotificationCallback = function(){};
+    var createNotificationCallback = function(data){
+        console.log(data); 
+    };
  
     var sendMessageCallback = function(){
         $("#message").val("");

@@ -1,10 +1,14 @@
 <?php
     require_once("BaseModel.php");
+    require_once("lib/twitterOAuth/twitterOAuth.php");
+    require_once("Users.php");
 
     class Projects {
         private $database; 
+        private $users; 
         public function __construct() {
             $this->database = BaseModel::getInstance();
+            $this->users = new Users; 
         }
         
         public function createProjectAndDependencies($projectInfo) {
@@ -179,11 +183,15 @@
         }
 
         public function listAllowedUsersByProjectId($fn, $projectId) {
-            $sql = "SELECT users.id as id,
-                users.name as name,
-                users.email as email,
-                users.username as username
+            $sql = "SELECT users.id AS id,
+                users.name AS name,
+                users.email AS email,
+                users.username AS username,
+                notification_accounts.id AS account_id,
+                notification_accounts.value AS account_value,
+                notification_accounts.type AS account_type
                 FROM users
+                JOIN notification_accounts ON users.id = notification_accounts.user_id
                 JOIN allowances ON users.id = allowances.user_id
                 WHERE allowances.project_id = ?
                 ORDER BY id";
@@ -343,9 +351,17 @@
                 $values), $fn);
         }
 
-        //TODO - Remodelate as createProject
+        public function createNotificationAndDependencies($notificationInfo) {
+            $self = $this;
+            $function = function() use($notificationInfo, $self) { 
+                $self->createNotification($notificationInfo); 
+            };
+            $this->database->executeTransaction($function); 
+        }
+
         public function createNotification($notificationInfo) {
             $allowedUsers = array();
+            $project = $this->getProjectById($notificationInfo->projectId);
             $sql = "INSERT INTO notifications
                 (id, title, description, sender_user_id, project_id)
                 VALUES(NULL, ?, ?, ?, ?)";
@@ -354,21 +370,37 @@
                 $notificationInfo->projectId);
             $result = (bool) $this->database->executeQueryDB(
                 $sql, $values)->rowCount();
+            echo("Notificação criada."); 
             if ($result) {
-                $notificationId = $this->database->fetchDB(
-                    $this->database->executeQueryDB(
-                    "SELECT last_insert_rowid() AS id", array()))->id;
+                $notificationId = $this->getLastInsertedId();
                 if ($notificationInfo->users == NULL) {
                     $this->listAllowedUsersByProjectId(function($item) use(
                         $notificationId, &$allowedUsers) {
-                        $allowedUsers[] = $item;
+                            $allowedUsers[] = $item;
+                            echo($item->id . " - " . $item->account_value);
                         }, $notificationInfo->projectId);
                 }
+                else {
+                    foreach($notificationInfo->users as $userId) {
+                        $allowedUsers[] = $this->users->getUserById($userId);
+                    }
+                }
                 foreach($allowedUsers as $user) {
-                    $this->createNotificationAssociation($notificationId, $user->id);
-                }    
+                    $result = $this->createNotificationAssociation($notificationId, $user->id);
+                    echo("Associação para o usuário " . $user->id . " criada."); 
+                    if ($user->account_type == "Twitter") {
+                        echo ("Conta do Twitter"); 
+                        $message = "O usuário " . $notificationInfo->senderUserName . 
+                            " lhe enviou uma notificação intitulada \"" . $notificationInfo->title . 
+                            "\" no projeto \"" . $project->title . "\"."; 
+                        $this->tweet($user->account_value, $message);
+                        echo("Tweet para o usuário " . $user->id . " enviado.");
+                    }
+                    else { echo("Não é conta do Twitter."); }
+                }
             }
             else {
+                echo("Falhou");
                 return false;
             }
         }
@@ -452,6 +484,25 @@
             else {
                 return false;
             }
+        }
+
+        public function tweet($twitterUsername, $message) {
+            $twitterCredentials = $this->getTwitterCredentials();
+            $oAuth = new TwitterOAuth($twitterCredentials->consumer_key,
+                $twitterCredentials->consumer_secret,
+                $twitterCredentials->access_token,
+                $twitterCredentials->access_token_secret);
+            //$credentials = $oAuth->get("account/verify_credentials");
+            $oAuth->post("statuses/update", array(
+                "status" => "@" . $twitterUsername . " " . $message));
+        }
+
+        private function getTwitterCredentials() {
+            $sql = "SELECT *
+                FROM twitter_credentials
+                LIMIT 1";
+            return $this->database->fetchDB($this->database->executeQueryDB(
+                $sql));
         }
     }
 ?>
