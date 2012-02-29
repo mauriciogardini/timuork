@@ -6,13 +6,16 @@ function Dashboard() {
     var otherProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.</div>';
     var myProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.<p><a data-toggle="modal" href="{{modalId}}">{{caption}}</a></p></div>'
     var notificationsPlaceholderTemplate = '<div class="notification-placeholder">Não há notificações a serem exibidas.</div>';
- 
+    var notificationLinkTemplate = '<a class="notificationLink" href="#" data-notification-id="{{notificationId}}" data-notification-title="{{notificationTitle}}" data-notification-description="{{notificationDescription}}" data-notification-sender-id="{{notificationSenderId}}" data-notification-sender-name="{{notificationSenderName}}" data-notification-project-id="{{notificationProjectId}}" data-notification-project-title="{{notificationProjectTitle}}">{{notificationTitle}}</a><br />';
+    var notificationProjectLinkTemplate = '<a href="/projects/view/{{projectId}}">{{caption}}</a>';
+
     var addProjectCallback = function(data) {
         if(data.errors) {
             $.each(data.errors, function(index, error) {
                 var div = $("input[name=" + index + "]").parent().parent();
                 if (error) {
-                    div.popover({ placement: "left", title: "Erro", "content": error }); div.removeClass("success").addClass("error"); }
+                    div.popover({ placement: "right", title: "Erro", content: error });
+                    div.removeClass("success").addClass("error"); }
                 else {
                     div.removeClass("error").addClass("success");
                 }
@@ -23,8 +26,6 @@ function Dashboard() {
             $(".success, .error").popover("hide");
             $(".modal-body .control-group").removeClass("error").removeClass("success");
             $("#modalProject").modal("hide");
-            $("#title").val("");
-            $("#description").val("");
         }
     }
 
@@ -33,7 +34,13 @@ function Dashboard() {
         if(data.notifications && data.notifications.length) {
             $.each(data.notifications, function(index, notification) {
                 console.log("Notificações - "+notification.title);
-                var a = $("<a href=\"/notifications/view/"+notification.id+"\">"+notification.title+"</a><br />");
+                var a = Mustache.render(notificationLinkTemplate, {modalId : "#modalViewNotification", 
+                    notificationId : notification.id, notificationTitle : notification.title, 
+                    notificationDescription : notification.description, 
+                    notificationSenderId : notification.sender_user_id, 
+                    notificationSenderName : notification.sender_user_name,
+                    notificationProjectId : notification.project_id,
+                    notificationProjectTitle : notification.project_title });
                 $("#notifications").append(a);
             });
         }
@@ -122,13 +129,11 @@ function Dashboard() {
     }
 
     self.removeUser = function() {
-        var index = $("#users")
         $('#users :selected').each(function(i, selected) {
             $(selected).remove();
         });
     }
   
-
     self.editSettings = function() {
         var editSettingsUrl = $("[data-edit-settings-url]").data("edit-settings-url");
         var username = $("[data-user-username]").data("user-username"); 
@@ -186,6 +191,12 @@ function Dashboard() {
             .error(errorCallback);
     }
 
+    if($("#modalWelcome").length) {
+        $("#modalWelcome").modal("show");
+        setTimeout(function() {
+            $("#modalWelcome").modal("hide")
+        }, 3000);
+    } 
     self.getMyProjects();
     self.getOtherProjects();
     self.getNotifications();
@@ -212,10 +223,32 @@ function Dashboard() {
         self.editSettings();
     });
 
+    $("#modalProject").on("show", function() {
+        $("#title").val("");
+        $("#description").val("");
+        $("#users option").each(function(i, selected) {
+            $(selected).remove();
+        });
+        $(".modal-body .control-group").removeClass("error").removeClass("success");
+        $(".modal-body .control-group").popover("hide");
+    });
+
     $("#modalSettings").on("show", function() {
+        console.log($("[data-user-name]").data("user-name"));
         $("#name").val($("[data-user-name]").data("user-name"));
         $("#email").val($("[data-user-email]").data("user-email"));
         $("#accountValue").val($("[data-user-account-value]").data("user-account-value"));
+    });
+
+    $(".div-content").on("click", ".notificationLink", function(e) {
+        $("#viewNotificationModalHeaderTitle").text($(this).attr("data-notification-title"));
+        var projectId = $(this).attr("data-notification-project-id");
+        var a = Mustache.render(notificationProjectLinkTemplate, {projectId: projectId, caption: "Ir para o projeto"});
+        $("#notificationTitle").text($(this).attr("data-notification-title"));
+        $("#notificationSender").text($(this).attr("data-notification-sender-name"));
+        $("#notificationDescription").text($(this).attr("data-notification-description"));
+        $("#notificationProjectLink").append(a);
+        $("#modalViewNotification").modal("show");
     });
 
     $("#newUser").typeahead({

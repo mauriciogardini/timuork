@@ -22,7 +22,8 @@
                 "username" => $username, "password" => $password);
             if ($this->Users->isValidUser($userInfo)) {
                 $this->Users->createUserAndDependencies($userInfo);
-                //$_SESSION["flash"] = "Teste";
+                $sessionUser = $this->SessionUser;
+                $sessionUser->setAttribute("flash", array("welcome" => "Seja bem-vindo ao Timuork!"));
             }
             else {
                 $errors = $this->Users->getUserValidationErrors($userInfo);
@@ -69,40 +70,23 @@
         }
 
         public function login() {
-            $username = $_POST["username"];
-            $password = $_POST["password"];
+            $username = $_POST["loginUsername"];
+            $password = $_POST["loginPassword"];
             $authenticationUser = (object) array("username" => $username, 
                 "password" => $password);
             $this->authenticatedUser = $this->Users->authenticateUser(
                 $authenticationUser);
             if ($this->authenticatedUser != NULL) {
-                $this->Sessions->startSession();
                 $sessionUser = $this->SessionUser;
-                $sessionUser->setId($this->authenticatedUser->id);
-                $sessionUser->setName($this->authenticatedUser->name);
-                $sessionUser->setUsername($this->authenticatedUser->username);
-                $sessionUser->setEmail($this->authenticatedUser->email);
-                $sessionUser->setAccountId($this->authenticatedUser->account_id);
-                $sessionUser->setAccountValue($this->authenticatedUser->account_value);
-                $sessionUser->setAccountType($this->authenticatedUser->account_type); 
-                $myProjects = array();
-                $otherProjects = array();
-                $this->Projects->listMyProjectsByUserId(function($item) use(
-                    &$myProjects) {
-                    $myProjects[] = $item;
-                }, $sessionUser->getId());
-                $this->Projects->listOtherProjectsByUserId(function($item) use(
-                    &$otherProjects) {
-                    $otherProjects[] = $item;
-                }, $sessionUser->getId());
-                $data['myProjects'] = $myProjects;
-                $data['otherProjects'] = $otherProjects;
-                $data['user'] = $sessionUser;                
-                if (isset($_SESSION["flash"])) {
-                    $data['flash'] = $_SESSION["flash"];
-                    $_SESSION["flash"] = NULL;
-                }
-                $this->loadView('Dashboard', $data);
+                $properties = array("id" => $this->authenticatedUser->id,
+                    "name" => $this->authenticatedUser->name, 
+                    "username" => $this->authenticatedUser->username,
+                    "email" => $this->authenticatedUser->email,
+                    "accountId" => $this->authenticatedUser->account_id,
+                    "accountValue" => $this->authenticatedUser->account_value,
+                    "accountType" => $this->authenticatedUser->account_type);
+                $sessionUser->set($properties);
+                header('Location: /');
             }
             else {
                 $this->loadView('Home', NULL);

@@ -186,3 +186,16 @@ div.modal-footer {
 #oldPasswordDiv {
     padding-top: 20px;
 }
+
+#modalWelcome .modal-body h1 {
+    text-align: center;
+}
+
+#modalWelcome .modal-body{
+    -webkit-border-radius: 6px 6px 6px 6px;
+    -moz-border-radius: 6px 6px 6px 6px;
+    border-radius: 6px 6px 6px 6px;
+}
+
+#modalWelcome {
+}

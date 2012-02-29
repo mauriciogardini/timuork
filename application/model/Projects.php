@@ -60,14 +60,31 @@
 
         public function getProjectValidationErrors($projectInfo) {
             $validationErrors = array("title" => NULL);
-            if(!$this->validateProjectTitle($projectInfo->title, $projectInfo->id,
+            if(!$this->validateProjectTitle($projectInfo->title)) {
+                $validationErrors["title"] = 
+                    "O nome do projeto só pode conter letras, números e '_', e entre 3 e 30 caracteres.";
+            }
+            else if($this->existsProjectTitle($projectInfo->title, $projectInfo->id,
                 $projectInfo->adminUserId)) {
                 $validationErrors["title"] = "Já existe um projeto com este título.";
             }
+            if($projectInfo->title == "") {
+                $validationErrors[$property] = "Campo obrigatório.";
+            }
+
             return $validationErrors;
         }
 
-        public function validateProjectTitle($projectTitle, $projectId, $adminUserId) {
+        public function validateProjectTitle($title) {
+            if (preg_match('/^[a-zA-Z0-9_]{3,20}$/', $title)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        public function existsProjectTitle($projectTitle, $projectId, $adminUserId) {
             if (isset($projectId)) { 
                 $sql = "SELECT COUNT(*) AS count
                     FROM projects
@@ -83,9 +100,8 @@
                     AND admin_user_id = ?";
                 $values = array($projectTitle, $adminUserId);
             }
-            $result = (bool) $this->database->fetchDB($this->database->executeQueryDB(
-                $sql, $values))->count;
-            return ($result ? false : true); 
+            return (bool) $this->database->fetchDB($this->database->executeQueryDB(
+                $sql, $values))->count; 
         } 
 
         public function editProject($projectInfo) {

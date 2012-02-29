@@ -55,6 +55,7 @@ function Chat(projectId, userId) {
 
     var createNotificationCallback = function(data){
         console.log(data); 
+        $("#modalNotification").modal("hide");
     };
  
     var sendMessageCallback = function(){

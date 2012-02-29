@@ -9,6 +9,7 @@
         }
 
         public function add() {
+            header('Content-type: application/json');
             $log = array();
             $title = $_POST['title'];
             $description = $_POST['description'];
@@ -29,6 +30,7 @@
         }
 
         public function updateMyProjects() {
+            header('Content-type: application/json');
             $log = array();
             $projects = array();
             $sessionUser = $this->SessionUser;
@@ -42,6 +44,7 @@
         }
 
         public function updateOtherProjects() {
+            header('Content-type: application/json'); 
             $log = array();
             $projects = array();
             $sessionUser = $this->SessionUser;

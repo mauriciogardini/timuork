@@ -11,7 +11,13 @@
         
         public function index() {
             $sessionUser = $this->SessionUser;
-            var_dump($sessionUser->getId()); 
+            $flash = $sessionUser->getAttribute("flash");
+            if($flash) {
+                if(array_key_exists("welcome", $flash)) { 
+                    $data["welcome"] = $flash["welcome"];
+                    $sessionUser->setAttribute("flash", NULL);
+                } 
+            }      
             if ($sessionUser->getId()) {   
                 $myProjects = array();
                 $otherProjects = array();

@@ -3,15 +3,9 @@
 require_once("Sessions.php");
 
 class SessionUser {
-    protected $id;
-    protected $name;
-    protected $username;
-    protected $email;
-    protected $accountId;
-    protected $accountValue;
-    protected $accountType;
     protected $Sessions;
-    protected $reflection;
+    protected $attributes = array("id", "name", "username", "email",
+        "accountId", "accountValue", "accountType", "flash");
 
     public function __construct() {
         $this->Sessions = new Sessions;
@@ -19,7 +13,6 @@ class SessionUser {
     }
 
     public function __call($name, $arguments) {
-        $this->reflection = new ReflectionClass(get_class($this)); 
         if(preg_match('/^get(\w+)/', $name, $results)) {
             $attribute = lcfirst($results[1]);
             return $this->getAttribute($attribute);
@@ -31,14 +24,14 @@ class SessionUser {
     }
 
     public function setAttribute($attribute, $value) {
-        if($this->reflection->hasProperty($attribute)) { 
-            $this->{$attribute} = $value;
+        if(in_array($attribute, $this->attributes)) { 
+            $this->Sessions->write($attribute, $value); 
         }
     }
 
-    public function getProperty($attribute) {
-        if($this->reflection->hasProperty($attribute)) { 
-            return $this->{$attribute};
+    public function getAttribute($attribute) {
+        if(in_array($attribute, $this->attributes)) {
+            return $this->Sessions->read($attribute); 
         }
     }
 
@@ -46,9 +39,5 @@ class SessionUser {
         foreach($sessionUser as $attribute => $value) {
             $this->setAttribute($attribute, $value);
         } 
-    }
-
-    public function isDefined() {
-        return isset($this->id);
     }
 }

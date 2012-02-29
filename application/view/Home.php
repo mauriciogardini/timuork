@@ -27,9 +27,9 @@
                 <div class="pull-right">
                     <form class="form-search" style="margin-bottom: 6px" id="login" action="/login" method="post"> 
                         <fieldset>
-                            <input class="input-small" id="loginUsername" name="username"
-                                type="text" placeholder="Username" />
-                            <input class="input-small" id="loginPassword" name="password"
+                            <input class="input-small" id="loginUsername" name="loginUsername"
+                                type="text" placeholder="Username" maxlength="20" />
+                            <input class="input-small" id="loginPassword" name="loginPassword"
                                 type="password" placeholder="Senha" />
                             <button type="submit" class="btn">Entrar</button>
                         </fieldset>
@@ -52,8 +52,14 @@
                     <div class="center85">
                     <h3><span>Timuork é a solução para você, que precisa fazer um
                     trabalho de escola/faculdade, mas não quer ver a 
-                    caixa de entrada do seu e-mail lotada por causa disso.
-                    </span></h3>
+                    caixa de entrada do seu e-mail lotada por causa disso.</span></h3>
+                    <h4><span>Ao criar um projeto, você e seus colegas de trabalho tem 
+                    à sua disposição um chat persistente para discutir o que for
+                    necessário, bem como a opção de adicionar links pertinentes
+                    ao assunto discutido. E, caso nem todos os membros do grupo
+                    estejam online no momento, pode-se enviar notificações via
+                    Twitter para os participantes ausentes. 
+                    </span></h4>
                     </div>
                 </div>
                 <div class="span5 div-register">
@@ -61,15 +67,18 @@
                         <h3>Novo aqui? Junte-se à nós!</h3>
                         <div id="nameDiv" class="control-group">
                                 <input class="input-xlarge" id="name" name="name"
-                                    size="30" type="text" placeholder="Nome completo" />
+                                    size="30" type="text" placeholder="Nome completo" 
+                                    maxlength="20" />
                             </div>
                         <div id="emailDiv" class="control-group">
                                 <input class="input-xlarge" id="email" name="email"
-                                    size="30" type="text" placeholder="E-mail" />
+                                    size="30" type="text" placeholder="E-mail" 
+                                    maxlength="20" />
                             </div>
                         <div id="accountDiv" class="control-group">
                                 <input class="input-xlarge" id="account"name="account"
-                                    size="30" type="text" placeholder="Twitter" />
+                                    size="30" type="text" placeholder="Twitter"
+                                    maxlength="15" />
                             </div>
                         <div hidden="hidden" id="accountTypeDiv">
                                 <select class="input-xlarge" id="accountType" name="accountType">
@@ -78,7 +87,8 @@
                         </div>
                         <div id="usernameDiv" class="control-group">
                                 <input class="input-xlarge" id="username" name="username" 
-                                    size="30" type="text" placeholder="Username" />
+                                    size="30" type="text" placeholder="Username" 
+                                    maxlength="20" />
                         </div>
                         <div id="passwordDiv" class="control-group">
                                 <input class="input-xlarge" id="password" name="password"

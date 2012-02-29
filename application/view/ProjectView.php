@@ -76,19 +76,6 @@
         </footer> 
      </div>
 
-    <!-- MICRODATA -->
-    <div itemscope id="projectItemscope">
-        <span itemprop="id"><?php echo $project->id ?></span>
-        <span itemprop="name"><?php echo $project->name ?></span>
-        <span itemprop="description"><?php echo $project->description ?></span>
-        <span itemprop="adminUserId"><?php echo $project->adminUserId ?></span>
-        <div id="projectUsersItemscope">
-            <?php foreach ($projectUsers as $projectUser) { ?>
-            <p itemscope><span itemprop="id"><?php echo $projectUser->id ?></span><span itemprop="name"><?php echo $projectUser->name ?></span></p>
-            <?php } ?>
-        </div>
-    </div>
-
     <!-- MODALS -->
     <div id="modalNotification" class="modal fade">
         <div class="modal-header">

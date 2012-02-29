@@ -168,7 +168,7 @@
                 $user->password)) {
                 if(!$this->validateName($userEditInfo->username)) {
                     $validationErrors["name"] =  
-                        "O nome só pode conter letras, números e '_'";
+                        "O nome só pode conter letras, números e '_', e entre 3 e 20 caracteres.";
                 }
                 if(!$this->validatePassword($userEditInfo->newPassword)) {
                     if($userEditInfo->newPassword != "") {
@@ -183,7 +183,7 @@
                 if(!$this->validateAccount($userEditInfo->accountValue, 
                     $userEditInfo->accountType)) {
                     if($userEditInfo->accountType == "Twitter") {
-                        $validationErrors["accountValue"] = "Twitter inválido";
+                        $validationErrors["accountValue"] = "O username do Twitter deve conter entre 3 e 15 caracteres.";
                     }
                 }
             }
@@ -200,11 +200,11 @@
                 "account" => NULL, "password" => NULL);
             if(!$this->validateName($userInfo->username)) {
                 $validationErrors["name"] =  
-                    "O nome só pode conter letras, números e '_'";
+                    "O nome só pode conter letras, números e '_', e entre 3 e 20 caracteres.";
             }
             if(!$this->validateUsername($userInfo->username)) {
                 $validationErrors["username"] =  
-                    "O username só pode conter letras, números e '_'";
+                    "O username só pode conter letras, números e '_', e entre 3 e 20 caracteres.";
             }
             else if($this->existsUser($userInfo->username)) {
                 $validationErrors["username"] = 
@@ -212,7 +212,7 @@
             }
             if(!$this->validatePassword($userInfo->password)) {
                 $validationErrors["password"] = 
-                    "O password deve ter entre 6 e 24 caracteres.";
+                    "O password deve conter entre 6 e 24 caracteres.";
             }
             if(!$this->validateEmail($userInfo->email)) {
                 $validationErrors["email"] = 
@@ -221,7 +221,12 @@
             if(!$this->validateAccount($userInfo->account, 
                 $userInfo->accountType)) {
                 if($userInfo->accountType == "Twitter") {
-                    $validationErrors["account"] = "Twitter inválido";
+                    $validationErrors["account"] = "O username do Twitter deve conter entre 3 e 15 caracteres.";
+                }
+            }
+            foreach($userInfo as $property => $value) {
+                if(trim($value) == "") {
+                    $validationErrors[$property] = "Campo obrigatório";
                 }
             }
             return $validationErrors;     
@@ -298,7 +303,7 @@
         }
 
         public function validateName($name) {
-            if (preg_match('/^[a-zA-Z0-9_]{3,15}$/', $name)) {
+            if (preg_match('/^[a-zA-Z0-9_]{3,20}$/', $name)) {
                 return true;
             }
             else {
@@ -307,7 +312,7 @@
         }
 
         public function validateUsername($username) {
-            if (preg_match('/^[a-zA-Z0-9_]{3,15}$/', $username)) {
+            if (preg_match('/^[a-zA-Z0-9_]{3,20}$/', $username)) {
                 return true;
             }
             else {
