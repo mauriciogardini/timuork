@@ -129,7 +129,7 @@
                                 value="Remover" />
                         </div>
                     </div>
-                    <div id="titleDiv" class="control-group" rel="popover">
+                    <div id="titleDiv" class="control-group">
                         <label class="control-label" for="title">Título</label>
                         <div class="controls">
                             <input id="title" name="title" class="span5"
@@ -168,8 +168,8 @@
         <form class="modal-form form-horizontal" id="viewNotification">
             <fieldset>
                 <div class="modal-body">
-                    <p>Enviada por: <span id="notificationSender"></span></p>
-                    <h3 id="notificationTitle"></h3>
+                    <p id="notificationTimestamp"></p> 
+                    <p id="notificationSender"></p>
                     <p><span id="notificationDescription"></span></p>
                     <p id="notificationProjectLink"></p> 
                 </div>
@@ -181,9 +181,9 @@
     </div>
 </div>
 <script src="/scripts/jquery.min.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-modal.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-tooltip.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-popover.js" type="text/javascript"></script>
-<script src="/scripts/bootstrap-modal.js" type="text/javascript"></script>
 <script src="/scripts/mustache.js" type="text/javascript"></script>
 <script src="/scripts/dashboard.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-typeahead.js" type="text/javascript"></script>

@@ -52,6 +52,7 @@ CREATE TABLE notifications (
     id INTEGER PRIMARY KEY ASC,
     title TEXT,
     description TEXT,
+    timestamp INTEGER,
     sender_user_id INTEGER, 
     project_id INTEGER,
     FOREIGN KEY(sender_user_id) REFERENCES users(id),

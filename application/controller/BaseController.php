@@ -25,7 +25,7 @@
                 extract($vars, EXTR_PREFIX_SAME, "wddx");
             }
 
-            if (($view == "Home")||($view == "ProjectView")) {    
+            if ($view == "Home") {    
                 require_once('application/view/'.$view.'.php');
             }
             else {

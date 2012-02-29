@@ -379,10 +379,10 @@
             $allowedUsers = array();
             $project = $this->getProjectById($notificationInfo->projectId);
             $sql = "INSERT INTO notifications
-                (id, title, description, sender_user_id, project_id)
-                VALUES(NULL, ?, ?, ?, ?)";
+                (id, title, description, timestamp, sender_user_id, project_id)
+                VALUES(NULL, ?, ?, strftime('%s', 'now'), ?, ?)";
             $values = array($notificationInfo->title, 
-                $notificationInfo->description, $notificationInfo->senderUserId, 
+                $notificationInfo->description, $notificationInfo->senderUserId,
                 $notificationInfo->projectId);
             $result = (bool) $this->database->executeQueryDB(
                 $sql, $values)->rowCount();
@@ -437,6 +437,7 @@
                 notifications.title AS title,
                 notifications.description AS description,
                 notifications.sender_user_id AS sender_user_id,
+                notifications.timestamp AS timestamp, 
                 users.name AS sender_user_name,
                 notifications.project_id AS project_id,
                 projects.title AS project_title

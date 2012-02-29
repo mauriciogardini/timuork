@@ -6,7 +6,7 @@ function Dashboard() {
     var otherProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.</div>';
     var myProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.<p><a data-toggle="modal" href="{{modalId}}">{{caption}}</a></p></div>'
     var notificationsPlaceholderTemplate = '<div class="notification-placeholder">Não há notificações a serem exibidas.</div>';
-    var notificationLinkTemplate = '<a class="notificationLink" href="#" data-notification-id="{{notificationId}}" data-notification-title="{{notificationTitle}}" data-notification-description="{{notificationDescription}}" data-notification-sender-id="{{notificationSenderId}}" data-notification-sender-name="{{notificationSenderName}}" data-notification-project-id="{{notificationProjectId}}" data-notification-project-title="{{notificationProjectTitle}}">{{notificationTitle}}</a><br />';
+    var notificationLinkTemplate = '<a class="notificationLink" href="#" data-notification-id="{{notificationId}}" data-notification-title="{{notificationTitle}}" data-notification-description="{{notificationDescription}}" data-notification-timestamp="{{notificationTimestamp}}" data-notification-sender-id="{{notificationSenderId}}" data-notification-sender-name="{{notificationSenderName}}" data-notification-project-id="{{notificationProjectId}}" data-notification-project-title="{{notificationProjectTitle}}">{{notificationTitle}} - {{notificationProjectTitle}}</a><br />';
     var notificationProjectLinkTemplate = '<a href="/projects/view/{{projectId}}">{{caption}}</a>';
 
     var addProjectCallback = function(data) {
@@ -37,6 +37,7 @@ function Dashboard() {
                 var a = Mustache.render(notificationLinkTemplate, {modalId : "#modalViewNotification", 
                     notificationId : notification.id, notificationTitle : notification.title, 
                     notificationDescription : notification.description, 
+                    notificationTimestamp : notification.timestamp, 
                     notificationSenderId : notification.sender_user_id, 
                     notificationSenderName : notification.sender_user_name,
                     notificationProjectId : notification.project_id,
@@ -241,9 +242,13 @@ function Dashboard() {
     });
 
     $(".div-content").on("click", ".notificationLink", function(e) {
+        var timestamp = new Date(($(this).attr("data-notification-timestamp"))*1000);
+        var date = timestamp.getDate() + '/' + timestamp.getMonth() + '/' + timestamp.getYear() + 
+            " " + timestamp.getHours() + ':' + timestamp.getMinutes() + ':' + timestamp.getSeconds();
         $("#viewNotificationModalHeaderTitle").text($(this).attr("data-notification-title"));
         var projectId = $(this).attr("data-notification-project-id");
         var a = Mustache.render(notificationProjectLinkTemplate, {projectId: projectId, caption: "Ir para o projeto"});
+        $("#notificationTimestamp").text(date); 
         $("#notificationTitle").text($(this).attr("data-notification-title"));
         $("#notificationSender").text($(this).attr("data-notification-sender-name"));
         $("#notificationDescription").text($(this).attr("data-notification-description"));

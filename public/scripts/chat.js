@@ -1,25 +1,23 @@
-function Chat(projectId, userId) {
+function Chat() {
     var self = this;
-
     var timestamp = "";
 
-    var sendMessageUrl = "/projects/sendMessage/" + projectId;
-    var updateProjectMessagesUrl = "/projects/updateProjectMessages/" + projectId;
-    var updateOnlineUsersUrl = "/projects/updateOnlineUsers/" + projectId;
-    var updateLinksUrl = "/projects/updateLinks/" + projectId;
-    var createNotificationUrl = "/projects/createNotification/";
-    var createLinkUrl = "/projects/createLink/";
+    var messageTemplate = '<p href="#modalNotification" data-toggle="modal" class="chat-paragraph"><span class="chat-username"><b>{{messageUserName}}</b></span></br><span class="chat-text">{{messageText}}</span></p>';
+    var adminUserTemplate = '<p class="admin-online-users-row">{{userName}}</p>';
+    var userTemplate = '<p class="online-users-row">{{userName}}</p>';
+    var linkTemplate = '<a href="{{linkUrl}}">{{linkCaption}}</a><br />';
 
     var updateProjectMessagesCallback = function(data) {
         if(data.messages && data.messages.length) {
             $.each(data.messages, function(index, message) {
-                $("#chat").append($("<p data-controls-modal=\"modalInteraction\" data-backdrop=\"true\" data-keyboard=\"true\" class=\"chat-paragraph\"><span class=\"chat-username\"><b>"+ message.user_name + "</b></span></br><span class=\"chat-text\">" + message.message_text +"</span></p>"));             
+                var a = Mustache.render(messageTemplate, {messageUserName : message.user_name,
+                    messageText : message.message_text}); 
+                $("#chat").append(a); 
             });
             
             timestamp = data.messages[data.messages.length - 1].message_timestamp;
             console.log(timestamp);
         }
-
         setTimeout(self.update, 5000);
     };
 
@@ -28,15 +26,14 @@ function Chat(projectId, userId) {
             $("#onlineUsers").empty();
             $.each(data.onlineUsers, function(index, user) { 
                 if(user.admin) {
-                    var p = $("<p class=\"admin-online-users-row\" />").text(user.name);
+                    var p = Mustache.render(adminUserTemplate, {userName : user.name});
                 }
                 else {
-                    var p = $("<p class=\"online-users-row\" />").text(user.name);
+                    var p = Mustache.render(userTemplate, {userName : user.name});
                 }
                 $("#onlineUsers").append(p);
             });
         }
-
         setTimeout(self.getUsers, 5000);
     };
 
@@ -44,12 +41,10 @@ function Chat(projectId, userId) {
         if(data.links && data.links.length) {
             $("#links").empty();
             $.each(data.links, function(index, link) {
-                console.log(link.url);
-                var a = $("<a href=\""+link.url+"\"/><br />").text(link.caption);
+                var a = Mustache.render(linkTemplate, {linkUrl : link.url, linkCaption : link.caption});
                 $("#links").append(a);
             });
         }
-
         setTimeout(self.getLinks, 5000);
     }
 
@@ -92,11 +87,16 @@ function Chat(projectId, userId) {
     };
 
     self.update = function() {
+        var updateProjectMessagesUrl = $("[data-update-project-messages-url]").data("update-project-messages-url") + 
+            $("[data-project-id]").data("project-id");
         $.getJSON(updateProjectMessagesUrl, {timestamp: timestamp}).success(updateProjectMessagesCallback)
             .error(errorCallback);
     };
 
     self.sendMessage = function() {
+        var sendMessageUrl = $("[data-send-message-url]").data("send-message-url"); 
+        var projectId = $("[data-project-id]").data("project-id"); 
+        var userId = $("[data-user-id]").data("user-id"); 
         var data = {
             text: $("#message").val(),
             projectId: projectId,
@@ -107,16 +107,21 @@ function Chat(projectId, userId) {
     }
 
     self.getUsers = function() {
+        var updateOnlineUsersUrl = $("[data-update-online-users-url]").data("update-online-users-url") + 
+            $("[data-project-id]").data("project-id");
         $.getJSON(updateOnlineUsersUrl).success(updateOnlineUsersCallback)
             .error(errorCallback);
     }
 
     self.getLinks = function()  {
+        var updateLinksUrl = $("[data-update-links-url]").data("update-links-url") + 
+            $("[data-project-id]").data("project-id");
         $.getJSON(updateLinksUrl).success(updateLinksCallback)
             .error(errorCallback);
     }
 
     self.createNotification = function() {
+        createNotificationUrl = $("[data-create-notification-url]").data("create-notification-url");
         users = $("#userSelect :selected").attr('id');
         console.log(users);
         var data = {
@@ -130,6 +135,7 @@ function Chat(projectId, userId) {
     } 
 
     self.createLink = function() { 
+        var createLinkUrl = $("[data-create-link-url]").data("create-link-url");
         var data = {
             projectId: projectId,
             caption: $("#caption").val(),
