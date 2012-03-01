@@ -8,8 +8,7 @@
         quer ver a caixa de entrada do seu e-mail lotada por causa disso.">
     <meta name="author" content="Maurício Gardini">
     <link rel="stylesheet" href="/styles/bootstrap.css">
-    <link rel="stylesheet" href="/styles/general.css">
-    <link rel="stylesheet" href="/styles/home.css">
+    <link rel="stylesheet" href="/styles/timuork.css">
     <!--TODO Fav Icon -->
     <link rel="shortcut icon" href="images/favicon.ico">
 </head>
@@ -24,7 +23,7 @@
                     <li><a href="#contact">Contato</a></li>
                 </ul>
                 </div>
-                <div class="pull-right">
+                <div id="loginDiv" class="pull-right">
                     <form class="form-search" style="margin-bottom: 6px" id="login" action="/login" method="post"> 
                         <fieldset>
                             <input class="input-small" id="loginUsername" name="loginUsername"
@@ -108,8 +107,8 @@
 <script src="/scripts/jquery.min.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-tooltip.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-popover.js" type="text/javascript"></script>
-<script src="/scripts/home.js" type="text/javascript"></script>
-<script>
+<script src="/scripts/timuork-home.js" type="text/javascript"></script>
+<script type="text/javascript">
     var home = new Home();
 </script>
 </body>

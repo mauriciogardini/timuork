@@ -487,7 +487,10 @@
         }
 
         public function getValidationErrors($linkInfo) {
-            $validationErrors = array("url" => NULL);
+            $validationErrors = array("url" => NULL, "caption" => NULL);
+            if(!$this->validateCaption($linkInfo->caption)) {
+                $validationErrors["caption"] = "O nome do projeto só pode conter letras, números e '_', e entre 3 e 20 caracteres.";
+            } 
             if(!$this->validateUrl($linkInfo->url)) {
                 $validationErrors["url"] = "URL inválida.";
             }
@@ -496,6 +499,15 @@
 
         private function validateUrl($url) {
             if (filter_var($url, FILTER_VALIDATE_URL) == $url) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        private function validateCaption($caption) {
+            if (preg_match('/^[a-zA-Z0-9_]{3,20}$/', $caption)) {
                 return true;
             }
             else {

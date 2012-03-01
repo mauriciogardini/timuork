@@ -6,7 +6,7 @@
     <meta name="description" content="Timuork">
     <meta name="author" content="Maurício Gardini">
     <link rel="stylesheet" href="/styles/bootstrap.css">
-    <link rel="stylesheet" href="/styles/general.css">    
+    <link rel="stylesheet" href="/styles/timuork.css">    
     <!--TODO Fav Icon -->
     <link rel="shortcut icon" href="images/favicon.ico">
 </head>
@@ -16,7 +16,7 @@
             <div class="container">
                 <a class="brand" href="/">Timuork</a>
                 <ul class="nav" id="navigationLinks">
-                    <li><a href="#about">Sobre</a></li>
+                    <li><a href="#modalAbout" data-toggle="modal">Sobre</a></li>
                     <li><a href="#contact">Contato</a></li>
                 </ul>
                 <p class="pull-right logged-in">Logado como 

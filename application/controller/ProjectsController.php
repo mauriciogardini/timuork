@@ -202,11 +202,9 @@
             $url = $this->Projects->prependScheme($url);
             $linkInfo = (object) array("projectId" => $projectId,
                 "caption" => $caption, "url" => $url);
-
             if ($this->Projects->isValidLink($linkInfo)) {
                 $this->Projects->createLink($linkInfo);
             }
-
             else {
                 $errors = $this->Projects->getValidationErrors($linkInfo);
                 $log = array("errors" => $errors);

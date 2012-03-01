@@ -180,13 +180,92 @@
         </form>
     </div>
 </div>
+<div id="modalAbout" class="modal fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h3 id="modalAboutHeader">Sobre</h3>
+    </div>
+    <div class="modal-body">
+        <form class="modal-form form-horizontal" id="about">
+            <fieldset>
+                <div class="modal-body">
+                    <div id="aboutText">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#project">O Projeto</a>
+                            </li>
+                            <li>
+                                <a href="#author">O Autor</a>
+                            </li>
+                            <li>
+                                <a href="#thanks">Agradecimentos</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="project">
+                                <p><span>Timuork é um projeto feito com o 
+                                objetivo de tentar solucionar um problema 
+                                frequente para quem é estudante: a falta de um 
+                                ambiente/ferramenta adequada para a realização 
+                                dos já costumeiros trabalhos em grupo que
+                                vivem nos propondo ao longo de nossa vida
+                                estudantil/acadêmica.
+                                </span></p>
+                                <p><span>Como este é o primeiro desenvolvimento web
+                                feito pelo autor, espera-se que hajam erros, bugs e
+                                afins, afinal este recém começou a aventurar nesta
+                                área. Todavia, quaisquer críticas (Desde que coerentes e
+                                bem-educadas), sugestões e elogios serão aceitos de bom 
+                                grado.
+                                </span></p>
+                            </div>
+                            <div class="tab-pane" id="author">
+                                <p><span>Meu nome é Maurício Gardini, tenho 24 
+                                anos e atualmente curso Ciências da Computação 
+                                na Universidade de Caxias do Sul.
+                                </span></p>
+                                <p><span>Minha experiência com programação web
+                                ainda é pequena, e o Timuork foi o resultado
+                                dos meus estudos, experimentações e esforços
+                                para tentar assimilar a maior parte de 
+                                conhecimento deste ainda novo mundo para mim.
+                                </span></p>
+                                <p><ul class="unstyled">
+                                    <li><a href="http://twitter.com/mauriciogardini">Twitter</a></li>
+                                    <li><a href="http://www.linkedin.com/in/mauriciogardini">LinkedIn</a></li>
+                                    <li><a href="https://github.com/mauriciogardini/">Github</a></li> 
+                                    <li><a href="http://www.last.fm/user/Guitar_Otoko">Last.fm</a></li>
+                                    <li><a href="http://goodreads.com/mauriciogardini">GoodReads</a></li>
+                                </ul></p>
+                            </div>
+                            <div class="tab-pane" id="thanks">
+                                <p><span>Um agradecimento enorme à Julio Greff,
+                                    que acompanhou todo o processo de 
+                                    desenvolvimento do projeto e que, sempre que
+                                    requisitado, dispôs do seu parco tempo livre para
+                                    sugerir, corrigir, ensinar e dar soluções.
+                                </span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input data-dismiss="modal" type="submit" class="btn btn-primary" value="Fechar" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
 <script src="/scripts/jquery.min.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-modal.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-tooltip.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-popover.js" type="text/javascript"></script>
-<script src="/scripts/mustache.js" type="text/javascript"></script>
-<script src="/scripts/dashboard.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-typeahead.js" type="text/javascript"></script>
-<script>
+<script src="/scripts/bootstrap-tab.js" type="text/javascript"></script>
+<script src="/scripts/mustache.js" type="text/javascript"></script>
+<script src="/scripts/timuork-dashboard.js" type="text/javascript"></script>
+<script src="/scripts/timuork-general.js" type="text/javascript"></script>
+<script type="text/javascript">
     var dashboard = new Dashboard();
 </script>

@@ -49,39 +49,37 @@ function Chat() {
     }
 
     var createNotificationCallback = function(data){
-        console.log(data); 
         $("#modalNotification").modal("hide");
     };
  
     var sendMessageCallback = function(){
         $("#message").val("");
+        //TODO: Focus no #message
     };
 
     var createLinkCallback = function(data) {
         if(data.errors) {
             $.each(data.errors, function(index, error) {
-                if (error != null) {
-                    $("#"+index).attr("rel", "popover");
-                    $("#"+index).attr("title", "Erro");
-                    $("#"+index).attr("data-content", error);
-                    $("#"+index).attr("html", "true");
-                    $("#"+index).popover();
-                    $("#"+index).addClass("input-with-error");
+                var div = $("input[name=" + index + "]").parent().parent();
+                if (error) {
+                    div.popover({ placement: "right", title: "Erro", content: error });
+                    div.removeclass("success").addClass("error");
                 }
                 else {
-                    $("#"+index).removeClass("input-with-error");
+                    div.removeClass("error").addClass("success");
                 }
             });
         }
         else {
             console.log("Sem erros");
             $("#modalLink").modal("hide");
+            $(".success, .error").popover("hide");
             $("#caption").val("");
             $("#url").val("");
         }
     };
 
-    var errorCallback = function(xhr, status, error) {
+        var errorCallback = function(xhr, status, error) {
         console.log("Erro");
         console.log(arguments);
     };
@@ -123,6 +121,7 @@ function Chat() {
     self.createNotification = function() {
         createNotificationUrl = $("[data-create-notification-url]").data("create-notification-url");
         users = $("#userSelect :selected").attr('id');
+        var projectId = $("[data-project-id]").data("project-id"); 
         console.log(users);
         var data = {
             projectId: projectId,
@@ -136,12 +135,12 @@ function Chat() {
 
     self.createLink = function() { 
         var createLinkUrl = $("[data-create-link-url]").data("create-link-url");
+        var projectId = $("[data-project-id]").data("project-id"); 
         var data = {
             projectId: projectId,
             caption: $("#caption").val(),
             url: $("#url").val()
         };
-
         $.post(createLinkUrl, data, createLinkCallback, "json")
             .error(errorCallback);
     } 

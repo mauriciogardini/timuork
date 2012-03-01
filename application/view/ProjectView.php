@@ -104,13 +104,14 @@
                     <div id="captionDiv" class="control-group">
                         <label class="control-label" for="caption">Título</label>
                         <div class="controls">
-                            <input id="caption" title="caption" class="span5" type="text">
+                            <input id="caption" name="caption" class="span5"
+                                maxlength="20" type="text" />
                         </div>
                     </div> 
                     <div id="urlDiv" class="control-group">
                         <label class="control-label" for="url">URL</label>
                         <div class="controls">
-                            <input id="url" name="url" class="span5" type="text">
+                            <input id="url" name="url" class="span5" type="text" />
                         </div>
                     </div>                   
                 </div>
@@ -122,58 +123,78 @@
     </div>
 </div>
 <div id="modalSettings" class="modal fade">
-<div class="modal-header">
-    <a class="close" data-dismiss="modal">&times;</a>
-    <h3>Configurações<h3>
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h3>Configurações<h3>
+    </div>
+    <div class="modal-body">
+        <form class="modal-form form-horizontal" id="settings"
+            data-edit-settings-url="/users/edit">
+            <fieldset>
+                <div class="modal-body">
+                    <div id="nameDiv" class="control-group">
+                        <label class="control-label" for="name">Nome</label>
+                        <div class="controls">
+                            <input type="text" class="span5" id="name"
+                                maxlength="20" name="name"/> 
+                        </div>
+                    </div>
+                    <div id="emailDiv" class="control-group">
+                        <label class="control-label" for="email">E-mail</label>
+                        <div class="controls">
+                            <input type="text" class="span5" id="email" id="email" /> 
+                        </div>
+                    </div>
+                    <div id="accountValueDiv" class="control-group">
+                        <label class="control-label" for="accountValue">Twitter</label>
+                        <div class="controls">
+                            <input type="text" class="span5" id="accountValue"
+                                maxlength="15" name="accountValue" /> 
+                        </div>
+                    </div> 
+                    <div hidden="hidden" id="accountTypeDiv" class="control-group">
+                        <label class="control-label" for="accountType">Tipo</label>
+                        <div class="controls">
+                            <select class="span5" id="accountType" name="accountType">
+                                <option selected="selected" value="Twitter">Twitter</option>
+                            </select>
+                        </div> 
+                    </div>
+                    <div id="newPasswordDiv" class="control-group">
+                        <label class="control-label" for="newPassword">Nova Senha</label>
+                        <div class="controls">
+                            <input type="password" class="span5" id="newPassword" name="newPassword"/> 
+                            <p class="help-block">
+                                Deixe este campo em branco caso queira manter a senha atual.
+                            </p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div id="oldPasswordDiv" class="control-group">
+                        <label class="control-label" for="oldPassword">Senha</label>
+                        <div class="controls">
+                            <input type="password" class="span5" id="oldPassword" name="oldPassword"/> 
+                            <p class="help-block">
+                                Informação necessária para a alteração dos dados.
+                            </p> 
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="Confirmar" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
 </div>
-<div class="modal-body">
-    <form class="modal-form form-horizontal" id="settings">
-        <fieldset>
-            <div class="modal-body">
-                <div id="nameDiv" class="control-group">
-                    <label class="control-label" for="name">Nome Completo</label>
-                    <div class="controls">
-                        <input type="text" class="span4" id="name" /> 
-                    </div>
-                </div>
-                <div id="emailDiv" class="control-group">
-                    <label class="control-label" for="email">E-mail</label>
-                    <div class="controls">
-                        <input type="text" class="span4" id="email" /> 
-                    </div>
-                </div>
-                <div id="accountDiv" class="control-group">
-                    <label class="control-label" for="account">Twitter</label>
-                    <div class="controls">
-                        <input type="text" class="span4" id="account" /> 
-                    </div>
-                </div>
-                <div id="usernameDiv" class="control-group">
-                    <label class="control-label" for="username">Username</label>
-                    <div class="controls">
-                        <input type="text" class="span4" id="username" /> 
-                    </div>
-                </div>
-                <div id="passwordDiv" class="control-group">
-                    <label class="control-label" for="password">Senha</label>
-                    <div class="controls">
-                        <input type="password" class="span4" id="password" /> 
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" text="Criar" />
-            </div>
-        </fieldset>
-    </form>
-</div>
-
 <script src="/scripts/jquery.min.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-modal.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-twipsy.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-popover.js" type="text/javascript"></script>
-<script src="/scripts/bootstrap-modal.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-typeahead.js" type="text/javascript"></script>
 <script src="/scripts/mustache.js" type="text/javascript"></script>
-<script src="/scripts/chat.js" type="text/javascript"></script>
-    <script>
+<script src="/scripts/timuork-projectView.js" type="text/javascript"></script>
+<script src="/scripts/timuork-general.js" type="text/javascript"></script>
+<script type="text/javascript">
     var chat = new Chat();
 </script>
