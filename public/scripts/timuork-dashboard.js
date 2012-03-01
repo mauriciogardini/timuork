@@ -191,8 +191,8 @@ function Dashboard() {
     $(".div-content").on("click", ".notificationLink", function(e) {
         //TODO - Arrumar a data para ser exibida no formato correto 
         var timestamp = new Date(($(this).attr("data-notification-timestamp"))*1000);
-        var date = timestamp.getDate() + '/' + timestamp.getMonth() + '/' + timestamp.getYear() + 
-            " " + timestamp.getHours() + ':' + timestamp.getMinutes() + ':' + timestamp.getSeconds();
+        var date = timestamp.getDate() + '/' + (timestamp.getMonth() + 1) + '/' + timestamp.getFullYear() + 
+            " " + timestamp.getHours() + ':' + timestamp.getMinutes().replace(/^(\d)$/, "0$1");
         $("#viewNotificationModalHeaderTitle").text($(this).attr("data-notification-title"));
         var projectId = $(this).attr("data-notification-project-id");
         var a = Mustache.render(notificationProjectLinkTemplate, {projectId: projectId, caption: "Ir para o projeto"});
