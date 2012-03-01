@@ -189,7 +189,8 @@
 </div>
 <script src="/scripts/jquery.min.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-modal.js" type="text/javascript"></script>
-<script src="/scripts/bootstrap-twipsy.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-tab.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-tooltip.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-popover.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-typeahead.js" type="text/javascript"></script>
 <script src="/scripts/mustache.js" type="text/javascript"></script>
