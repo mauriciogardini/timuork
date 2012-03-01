@@ -69,7 +69,7 @@
                 $validationErrors["title"] = "Já existe um projeto com este título.";
             }
             if($projectInfo->title == "") {
-                $validationErrors[$property] = "Campo obrigatório.";
+                $validationErrors['title'] = "Campo obrigatório.";
             }
 
             return $validationErrors;

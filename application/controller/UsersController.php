@@ -35,12 +35,21 @@
 
         public function edit() {
             header('Content-type: application/json');
-            $attributes = array('id', 'name', 'username', 'accountValue',
+            $attributes = array('id', 'name', 'email', 'username', 'accountValue',
                 'accountId', 'accountType', 'newPassword', 'oldPassword');
             $userEditInfo = (object) array_intersect_key($_POST, array_flip($attributes));  
             $log = array();  
             if ($this->Users->isValidUserEdit($userEditInfo)) {
                 $this->Users->editUserAndDependencies($userEditInfo);
+                $sessionUser = $this->SessionUser;
+                $properties = array("id" => $userEditInfo->id,
+                    "name" => $userEditInfo->name, 
+                    "username" => $userEditInfo->username,
+                    "email" => $userEditInfo->email,
+                    "accountId" => $userEditInfo->accountId,
+                    "accountValue" => $userEditInfo->accountValue,
+                    "accountType" => $userEditInfo->accountType);
+                $sessionUser->set($properties);
             }
             else {
                 $errors = $this->Users->getUserEditValidationErrors($userEditInfo);

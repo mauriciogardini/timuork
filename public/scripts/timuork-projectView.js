@@ -54,7 +54,7 @@ function Chat() {
  
     var sendMessageCallback = function(){
         $("#message").val("");
-        //TODO: Focus no #message
+        $("#message").focus();
     };
 
     var createLinkCallback = function(data) {

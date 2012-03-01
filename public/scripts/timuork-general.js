@@ -12,11 +12,13 @@ var editSettingsCallback = function(data) {
     }
     else {
         console.log("Sem erros");
+        $("[data-user-name]").data("user-name", $("#name").val());
+        $("[data-user-email]").data("user-email", $("#email").val());
+        $("[data-user-account-value]").data("user-account-value", $("#accountValue").val());
         $(".success, .error").popover("hide");
         $(".modal-body .control-group").removeClass("error").removeClass("success");
         $("#modalSettings").modal("hide");
     }
-
 }
 
 var errorCallback = function(xhr, status, error) {
@@ -52,12 +54,15 @@ $("#settings").submit(function(e) {
 
 $("#modalSettings").on("show", function() {
     console.log($("[data-user-name]").data("user-name"));
-    //TODO - Remover o Popover 
     $(".success, .error").popover("hide");
+    $(".success, .error").popover("disable");
+    $(".popover").remove();
     $(".modal-body .control-group").removeClass("error").removeClass("success");
     $("#name").val($("[data-user-name]").data("user-name"));
     $("#email").val($("[data-user-email]").data("user-email"));
     $("#accountValue").val($("[data-user-account-value]").data("user-account-value"));
+    $("#newPassword").val("");
+    $("#oldPassword").val("");
 });
 
 $(function () {

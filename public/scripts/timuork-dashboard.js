@@ -13,8 +13,10 @@ function Dashboard() {
         if(data.errors) {
             $.each(data.errors, function(index, error) {
                 var div = $("input[name=" + index + "]").parent().parent();
+                var input = $("input[name=" + index + "]");
                 if (error) {
-                    div.popover({ placement: "right", title: "Erro", content: error });
+                    input.popover({ placement: "right", title: "Erro", content: error });
+                    input.popover("enable"); 
                     div.removeClass("success").addClass("error");
                 }
                 else {
@@ -178,21 +180,24 @@ function Dashboard() {
         self.removeUser(); 
     });
 
-    $("#modalProject").on("show", function() {
+    $("#modalProject").on("hide", function() { 
         $("#title").val("");
         $("#description").val("");
         $("#users option").each(function(i, selected) {
             $(selected).remove();
         });
         $(".modal-body .control-group").removeClass("error").removeClass("success");
-        $(".modal-body .control-group").popover("hide");
+        $(".controls > input").popover("disable");
     });
 
     $(".div-content").on("click", ".notificationLink", function(e) {
         //TODO - Arrumar a data para ser exibida no formato correto 
         var timestamp = new Date(($(this).attr("data-notification-timestamp"))*1000);
-        var date = timestamp.getDate() + '/' + (timestamp.getMonth() + 1) + '/' + timestamp.getFullYear() + 
-            " " + timestamp.getHours() + ':' + timestamp.getMinutes().replace(/^(\d)$/, "0$1");
+        var date = timestamp.getDate() + '/' + (timestamp.getMonth() + 1) + '/' +
+            timestamp.getFullYear() + " " + 
+            timestamp.getHours().toString().replace(/^(\d)$/, "0$1") + ':' + 
+            timestamp.getMinutes().toString().replace(/^(\d)$/, "0$1") + ':' +
+            timestamp.getSeconds().toString().replace(/^(\d)$/, "0$1");
         $("#viewNotificationModalHeaderTitle").text($(this).attr("data-notification-title"));
         var projectId = $(this).attr("data-notification-project-id");
         var a = Mustache.render(notificationProjectLinkTemplate, {projectId: projectId, caption: "Ir para o projeto"});
