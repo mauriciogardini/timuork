@@ -9,34 +9,10 @@ function Dashboard() {
     var notificationLinkTemplate = '<a class="notificationLink" href="#" data-notification-id="{{notificationId}}" data-notification-title="{{notificationTitle}}" data-notification-description="{{notificationDescription}}" data-notification-timestamp="{{notificationTimestamp}}" data-notification-sender-id="{{notificationSenderId}}" data-notification-sender-name="{{notificationSenderName}}" data-notification-project-id="{{notificationProjectId}}" data-notification-project-title="{{notificationProjectTitle}}">{{notificationTitle}} - {{notificationProjectTitle}}</a><br />';
     var notificationProjectLinkTemplate = '<a href="/projects/view/{{projectId}}">{{caption}}</a>';
 
-    var addProjectCallback = function(data) {
-        if(data.errors) {
-            $.each(data.errors, function(index, error) {
-                var div = $("input[name=" + index + "]").parent().parent();
-                var input = $("input[name=" + index + "]");
-                if (error) {
-                    input.popover({ placement: "right", title: "Erro", content: error });
-                    input.popover("enable"); 
-                    div.removeClass("success").addClass("error");
-                }
-                else {
-                    div.removeClass("error").addClass("success");
-                }
-            });
-        }
-        else {
-            console.log("Sem erros");
-            $(".success, .error").popover("hide");
-            $(".modal-body .control-group").removeClass("error").removeClass("success");
-            $("#modalProject").modal("hide");
-        }
-    }
-
     var updateNotificationsCallback = function(data) {
         $("#notifications").empty();
         if(data.notifications && data.notifications.length) {
             $.each(data.notifications, function(index, notification) {
-                console.log("Notificações - "+notification.title);
                 var a = Mustache.render(notificationLinkTemplate, {modalId : "#modalViewNotification", 
                     notificationId : notification.id, notificationTitle : notification.title, 
                     notificationDescription : notification.description, 
@@ -52,7 +28,6 @@ function Dashboard() {
             var placeholder = Mustache.render(notificationsPlaceholderTemplate, {});
             $("#notifications").append(placeholder);
         }
-
         setTimeout(self.getNotifications, 5000);
     }
 
@@ -60,7 +35,6 @@ function Dashboard() {
         $("#otherProjects").empty();
         if(data.otherProjects && data.otherProjects.length) {
             $.each(data.otherProjects, function(index, project) {
-                console.log("Outros projetos - "+project.title);
                 var a = Mustache.render(projectLinkTemplate, {projectId: project.id, caption: project.title});
                 $("#otherProjects").append(a);
             });
@@ -69,15 +43,12 @@ function Dashboard() {
             var placeholder = Mustache.render(otherProjectsPlaceholderTemplate, {});
             $("#otherProjects").append(placeholder);
         }
-
-        setTimeout(self.getOtherProjects, 5000);
     }
 
     var updateMyProjectsCallback = function(data) {
         $("#myProjects").empty();
         if(data.myProjects && data.myProjects.length) {
             $.each(data.myProjects, function(index, project) {
-                console.log("Meus projetos - "+project.title);
                 var a = Mustache.render(projectLinkTemplate, {projectId: project.id, caption: project.title});
                 $("#myProjects").append(a);
             });
@@ -88,8 +59,25 @@ function Dashboard() {
             var placeholder = Mustache.render(myProjectsPlaceholderTemplate, {modalId: "#modalProject", caption: "Crie um novo."});
             $("#myProjects").append(placeholder);
         }
+    }
 
-        setTimeout(self.getMyProjects, 5000);
+    var addProjectCallback = function(data) {
+        if(data.errors) {
+            $.each(data.errors, function(index, error) {
+                var div = $("input[name=" + index + "]").parent().parent();
+                if (error) {
+                    div.showPopover({ placement: "right", title: "Erro", content: error });
+                    div.removeClass("success").addClass("error");
+                }
+                else {
+                    div.hidePopover();
+                    div.removeClass("error").addClass("success");
+                }
+            });
+        }
+        else {
+            location.reload(); 
+        }
     }
 
     var errorCallback = function(xhr, status, error) {
@@ -101,15 +89,16 @@ function Dashboard() {
         if(loadedUsers[user]) {
             var userOption = $("<option />").attr("data-select-user-id", loadedUsers[user]).text(user);
             $("#users").append(userOption);
-            $("#newUserDiv").popover("hide");
+            $("#newUserDiv").hidePopover();
             $("#newUserDiv").removeClass("error");
             $("#newUser").val("");
         }
         else {
-            $("#newUserDiv").popover({ placement: "right", title: "Erro",
-                content: "Usuário inexistente."});
+            $("#newUserDiv").showPopover({ placement: "right", title: "Erro", 
+                content: "Usuário inexistente."}); 
             $("#newUserDiv").addClass("error");
         }
+        $("#newUser").focus();
     }
 
     self.removeUser = function() {
@@ -131,8 +120,7 @@ function Dashboard() {
             description: $("#description").val(),
             userId: userId 
         };
-
-        $.post(addProjectUrl, data, addProjectCallback, "json")
+        $.post(addProjectUrl, data, addProjectCallback)
             .error(errorCallback);
     }
 
@@ -166,32 +154,32 @@ function Dashboard() {
     
     $("#newProject").submit(function(e) {
         e.preventDefault();
-        console.log("Projeto");
         self.addProject();
     });
 
     $("#addUser").click(function(e) {
-        console.log("Adicionar usuário");
-        self.addUser();
+        self.addUser(); 
     });
 
     $("#removeUser").click(function(e) {
-        console.log("Remover usuário");
         self.removeUser(); 
     });
 
     $("#modalProject").on("hide", function() { 
         $("#title").val("");
         $("#description").val("");
+        $("#newUser").val("");
         $("#users option").each(function(i, selected) {
             $(selected).remove();
         });
         $(".modal-body .control-group").removeClass("error").removeClass("success");
-        $(".controls > input").popover("disable");
+        $(".control-group").hidePopover();
     });
 
+    $("#modalProject").on("show", function() {
+        $("#newUser").focus();
+    });
     $(".div-content").on("click", ".notificationLink", function(e) {
-        //TODO - Arrumar a data para ser exibida no formato correto 
         var timestamp = new Date(($(this).attr("data-notification-timestamp"))*1000);
         var date = timestamp.getDate() + '/' + (timestamp.getMonth() + 1) + '/' +
             timestamp.getFullYear() + " " + 
@@ -218,7 +206,6 @@ function Dashboard() {
                 excludeList.push($(this).data("select-user-id")); 
             });
             excludeList.push(adminUserId);
-            console.log(excludeList);
             $.get(refreshUsersUrl, { searchString: query, excludeList: excludeList }, function(response) {
                 var users = [];
                 if (response.users && response.users.length) {

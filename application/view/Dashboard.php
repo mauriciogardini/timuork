@@ -154,11 +154,13 @@
         </form>
     </div>
 </div>
+<?php //if(isset($welcome)) { ?>
 <div id="modalWelcome" class="modal fade">
     <div class="modal-body">
         <h1>Seja bem-vindo!</h1> 
     </div>
 </div>
+<?php// } ?>
 <div id="modalViewNotification" class="modal fade">
     <div class="modal-header">
         <a class="close" data-dismiss="modal">&times;</a>
@@ -190,15 +192,15 @@
             <fieldset>
                 <div class="modal-body">
                     <div id="aboutText">
-                        <ul class="nav nav-tabs">
+                        <ul id="tabs" class="nav nav-tabs">
                             <li class="active">
-                                <a href="#project">O Projeto</a>
+                                <a href="#project" data-toggle="tab">O Projeto</a>
                             </li>
                             <li>
-                                <a href="#author">O Autor</a>
+                                <a href="#author" data-toggle="tab">O Autor</a>
                             </li>
                             <li>
-                                <a href="#thanks">Agradecimentos</a>
+                                <a href="#thanks" data-toggle="tab">Agradecimentos</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -214,9 +216,15 @@
                                 <p><span>Como este é o primeiro desenvolvimento web
                                 feito pelo autor, espera-se que hajam erros, bugs e
                                 afins, afinal este recém começou a aventurar nesta
-                                área. Todavia, quaisquer críticas (Desde que coerentes e
+                                área. Por isso, quaisquer críticas (Desde que coerentes e
                                 bem-educadas), sugestões e elogios serão aceitos de bom 
-                                grado.
+                                grado e ajudarão a melhorar no que eu vier a produzir
+                                no futuro.
+                                </span></p>
+                                <hr /> 
+                                <p><span>
+                                Este projeto foi construído utilizando-se do 
+                                <a href="http://twitter.github.com/bootstrap/">Twitter Bootstap</a>.
                                 </span></p>
                             </div>
                             <div class="tab-pane" id="author">
@@ -230,6 +238,7 @@
                                 para tentar assimilar a maior parte de 
                                 conhecimento deste ainda novo mundo para mim.
                                 </span></p>
+                                <hr />
                                 <p><ul class="unstyled">
                                     <li><a href="http://twitter.com/mauriciogardini">Twitter</a></li>
                                     <li><a href="http://www.linkedin.com/in/mauriciogardini">LinkedIn</a></li>
@@ -264,8 +273,9 @@
 <script src="/scripts/bootstrap-typeahead.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-tab.js" type="text/javascript"></script>
 <script src="/scripts/mustache.js" type="text/javascript"></script>
+<script src="/scripts/timuork-popoverHandler.js" type="text/javascript"></script>
+<script src="/scripts/timuork-settings.js" type="text/javascript"></script>
 <script src="/scripts/timuork-dashboard.js" type="text/javascript"></script>
-<script src="/scripts/timuork-general.js" type="text/javascript"></script>
 <script type="text/javascript">
     var dashboard = new Dashboard();
 </script>

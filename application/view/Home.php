@@ -19,8 +19,8 @@
                 <div class="div-brand">
                 <a class="brand" id="logo" href="/">Timuork</a>
                 <ul class="nav" id="navigationLinks">
-                    <li><a href="#about">Sobre</a></li>
-                    <li><a href="#contact">Contato</a></li>
+                    <li><a href="#modalAbout" data-toggle="modal">Sobre</a></li>
+                    <li><a href="#modalContact" data-toggle="modal">Contato</a></li>
                 </ul>
                 </div>
                 <div id="loginDiv" class="pull-right">
@@ -65,33 +65,45 @@
                     <form id="addUser" method="post" class="center70" action="/users/add">
                         <h3>Novo aqui? Junte-se à nós!</h3>
                         <div id="nameDiv" class="control-group">
+                            <div class="controls">
                                 <input class="input-xlarge" id="name" name="name"
                                     size="30" type="text" placeholder="Nome completo" 
                                     maxlength="20" />
                             </div>
+                        </div>
                         <div id="emailDiv" class="control-group">
+                            <div class="controls">
                                 <input class="input-xlarge" id="email" name="email"
                                     size="30" type="text" placeholder="E-mail" 
                                     maxlength="20" />
                             </div>
+                        </div>
                         <div id="accountDiv" class="control-group">
+                            <div class="controls">
                                 <input class="input-xlarge" id="account"name="account"
                                     size="30" type="text" placeholder="Twitter"
                                     maxlength="15" />
                             </div>
+                        </div>
                         <div hidden="hidden" id="accountTypeDiv">
+                            <div class="controls">
                                 <select class="input-xlarge" id="accountType" name="accountType">
                                     <option selected="selected" value="Twitter">Twitter</option>
                                 </select>
+                            </div>
                         </div>
                         <div id="usernameDiv" class="control-group">
+                            <div class="controls">
                                 <input class="input-xlarge" id="username" name="username" 
                                     size="30" type="text" placeholder="Username" 
                                     maxlength="20" />
+                            </div>
                         </div>
                         <div id="passwordDiv" class="control-group">
+                            <div class="controls">
                                 <input class="input-xlarge" id="password" name="password"
                                     size="30" type="password" placeholder="Senha" />
+                            </div>
                         </div>
                         <div>
                             <button id="registerButtonDiv" class="btn">Registrar</button>
@@ -104,9 +116,96 @@
             <p>&copy; Maurício Gardini - Alguns Direitos Reservados</p>
         </footer>
     </div>
+    <div id="modalAbout" class="modal fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">&times;</a>
+            <h3 id="modalAboutHeader">Sobre</h3>
+        </div>
+        <div class="modal-body">
+            <form class="modal-form form-horizontal" id="about">
+                <fieldset>
+                    <div class="modal-body">
+                        <div id="aboutText">
+                            <ul id="tabs" class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#project" data-toggle="tab">O Projeto</a>
+                                </li>
+                                <li>
+                                    <a href="#author" data-toggle="tab">O Autor</a>
+                                </li>
+                                <li>
+                                    <a href="#thanks" data-toggle="tab">Agradecimentos</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="project">
+                                    <p><span>Timuork é um projeto feito com o 
+                                    objetivo de tentar solucionar um problema 
+                                    frequente para quem é estudante: a falta de um 
+                                    ambiente/ferramenta adequada para a realização 
+                                    dos já costumeiros trabalhos em grupo que
+                                    vivem nos propondo ao longo de nossa vida
+                                    estudantil/acadêmica.
+                                    </span></p>
+                                    <p><span>Como este é o primeiro desenvolvimento web
+                                    feito pelo autor, espera-se que hajam erros, bugs e
+                                    afins, afinal este recém começou a aventurar nesta
+                                    área. Por isso, quaisquer críticas (Desde que coerentes e
+                                    bem-educadas), sugestões e elogios serão aceitos de bom 
+                                    grado e ajudarão a melhorar no que eu vier a produzir
+                                    no futuro.
+                                    </span></p>
+                                    <hr /> 
+                                    <p><span>
+                                    Este projeto foi construído utilizando-se do 
+                                    <a href="http://twitter.github.com/bootstrap/">Twitter Bootstap</a>.
+                                    </span></p>
+                                </div>
+                                <div class="tab-pane" id="author">
+                                    <p><span>Meu nome é Maurício Gardini, tenho 24 
+                                    anos e atualmente curso Ciências da Computação 
+                                    na Universidade de Caxias do Sul.
+                                    </span></p>
+                                    <p><span>Minha experiência com programação web
+                                    ainda é pequena, e o Timuork foi o resultado
+                                    dos meus estudos, experimentações e esforços
+                                    para tentar assimilar a maior parte de 
+                                    conhecimento deste ainda novo mundo para mim.
+                                    </span></p>
+                                    <hr />
+                                    <p><ul class="unstyled">
+                                        <li><a href="http://twitter.com/mauriciogardini">Twitter</a></li>
+                                        <li><a href="http://www.linkedin.com/in/mauriciogardini">LinkedIn</a></li>
+                                        <li><a href="https://github.com/mauriciogardini/">Github</a></li> 
+                                        <li><a href="http://www.last.fm/user/Guitar_Otoko">Last.fm</a></li>
+                                        <li><a href="http://goodreads.com/mauriciogardini">GoodReads</a></li>
+                                    </ul></p>
+                                </div>
+                                <div class="tab-pane" id="thanks">
+                                    <p><span>Um agradecimento enorme à Julio Greff,
+                                        que acompanhou todo o processo de 
+                                        desenvolvimento do projeto e que, sempre que
+                                        requisitado, dispôs do seu parco tempo livre para
+                                        sugerir, corrigir, ensinar e dar soluções.
+                                    </span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input data-dismiss="modal" type="submit" class="btn btn-primary" value="Fechar" />
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
 <script src="/scripts/jquery.min.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-modal.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-tooltip.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-popover.js" type="text/javascript"></script>
+<script src="/scripts/bootstrap-tab.js" type="text/javascript"></script>
+<script src="/scripts/timuork-general.js" type="text/javascript"></script>
+<script src="/scripts/timuork-popoverHandler.js" type="text/javascript"></script>
 <script src="/scripts/timuork-home.js" type="text/javascript"></script>
 <script type="text/javascript">
     var home = new Home();

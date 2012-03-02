@@ -2,13 +2,14 @@ function Home() {
     var addUserCallback = function(data) {
         if (data.errors) {
             $.each(data.errors, function(index, error) {
-                var div = $("input[name=" + index + "]").parent();
+                var div = $("input[name=" + index + "]").parent().parent();
                 if (error) {
-                    div.popover({ placement: "left", title: "Erro",
-                        "content": error });
+                    div.showPopover({ placement: "left", title: "Erro",
+                        content: error });
                     div.removeClass("success").addClass("error");
                 }
                 else {
+                    div.hidePopover();
                     div.removeClass("error").addClass("success");
                 }
             });

@@ -186,6 +186,13 @@
                         $validationErrors["accountValue"] = "O username do Twitter deve conter entre 3 e 15 caracteres.";
                     }
                 }
+                foreach($userEditInfo as $property => $value) {
+                    if(trim($value) == "") {
+                        if($property != "newPassword") {
+                            $validationErrors[$property] = "Campo obrigatório";
+                        }
+                    }
+                }
             }
             else {
                 return array("oldPassword" => "Senha incorreta.");
@@ -385,6 +392,30 @@
                     FROM users
                     WHERE name LIKE ?";
                 $values = array($searchString . "%");
+            }
+            return $this->database->iterateDB($this->database->executeQueryDB($sql,
+                $values), $fn);
+        }
+
+        public function listUsersByProjectIdExcludingListed($fn, $projectId, $searchString, $excludeList) {
+            if (isset($excludeList)) {
+                $sql = sprintf("SELECT users.id, users.name
+                    FROM users
+                    JOIN allowances
+                    ON users.id = allowances.user_id
+                    WHERE users.name LIKE ?
+                    AND allowances.project_id = ?
+                    AND users.id NOT IN (%s)", rtrim(str_repeat('?,', count($excludeList)), ','));
+                $values = array_merge(array($searchString . "%", $projectId), $excludeList);
+            }
+            else {
+                $sql = "SELECT users.id, users.name
+                    FROM users
+                    JOIN allowances
+                    ON users.id = allowances.user_id
+                    WHERE users.name LIKE ?
+                    AND allowances.project_id = ?";
+                $values = array($searchString . "%", $projectId);
             }
             return $this->database->iterateDB($this->database->executeQueryDB($sql,
                 $values), $fn);

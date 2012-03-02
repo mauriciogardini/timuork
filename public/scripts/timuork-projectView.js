@@ -1,6 +1,7 @@
 function Chat() {
     var self = this;
     var timestamp = "";
+    var loadedUsers = {};
 
     var messageTemplate = '<p href="#modalNotification" data-toggle="modal" class="chat-paragraph"><span class="chat-username"><b>{{messageUserName}}</b></span></br><span class="chat-text">{{messageText}}</span></p>';
     var adminUserTemplate = '<p class="admin-online-users-row">{{userName}}</p>';
@@ -79,7 +80,7 @@ function Chat() {
         }
     };
 
-        var errorCallback = function(xhr, status, error) {
+    var errorCallback = function(xhr, status, error) {
         console.log("Erro");
         console.log(arguments);
     };
@@ -90,6 +91,37 @@ function Chat() {
         $.getJSON(updateProjectMessagesUrl, {timestamp: timestamp}).success(updateProjectMessagesCallback)
             .error(errorCallback);
     };
+
+
+    /*<option id=-1>Todos</option>
+    <?php foreach ($projectUsers as $projectUser) { ?>
+    <option id=<?php echo $projectUser->id ?>>
+        <?php echo $projectUser->name ?>
+    </option>
+    <?php } ?>*/
+
+    self.addUser = function() {
+        var user = $("#for").val();
+        if(loadedUsers[user]) {
+            var userOption = $("<option />").attr("data-select-user-id", loadedUsers[user]).text(user);
+            $("#users").append(userOption);
+            $("#forDiv").hidePopover();
+            $("#forDiv").removeClass("error");
+            $("#for").val("");
+        }
+        else {
+            $("#forDiv").showPopover({ placement: "right", title: "Erro", 
+                content: "Usuário inexistente."}); 
+            $("#forDiv").addClass("error");
+        }
+        $("#for").focus();
+    }
+
+    self.removeUser = function() {
+        $('#users :selected').each(function(i, selected) {
+            $(selected).remove();
+        });
+    }
 
     self.sendMessage = function() {
         var sendMessageUrl = $("[data-send-message-url]").data("send-message-url"); 
@@ -119,10 +151,12 @@ function Chat() {
     }
 
     self.createNotification = function() {
-        createNotificationUrl = $("[data-create-notification-url]").data("create-notification-url");
-        users = $("#userSelect :selected").attr('id');
+        var users = []; 
+        var createNotificationUrl = $("[data-create-notification-url]").data("create-notification-url");
         var projectId = $("[data-project-id]").data("project-id"); 
-        console.log(users);
+        $("[data-select-user-id]").each(function() {
+            users.push($(this).data("select-user-id")); 
+        });
         var data = {
             projectId: projectId,
             users: users,
@@ -166,4 +200,38 @@ function Chat() {
         self.createLink();
         e.preventDefault();
     });
+
+    $("#addUser").click(function(e) {
+        self.addUser(); 
+    });
+
+    $("#removeUser").click(function(e) {
+        self.removeUser(); 
+    });
+
+    $("#for").typeahead({
+        source: function(query, callback) {
+            var projectId = $("[data-project-id]").data("project-id"); 
+            var userId = $("[data-user-id]").data("user-id");
+            var refreshProjectUsersUrl = $("[data-search-url]").data("search-url");
+            var excludeList = [];
+            $("[data-select-user-id]").each(function() {
+                excludeList.push($(this).data("select-user-id")); 
+            });
+            excludeList.push(userId);
+            console.log(projectId + "|" + userId + "|" + refreshProjectUsersUrl +
+                "|" + excludeList);
+            $.get(refreshProjectUsersUrl, { searchString: query, excludeList: excludeList, projectId : projectId }, function(response) {
+                var users = [];
+                if (response.users && response.users.length) {
+                    $.each(response.users, function(index, user) {
+                        loadedUsers[user.name] = user.id;
+                        users.push(user.name);
+                    });
+                }    
+                callback(users);
+            }).error(errorCallback);
+        }
+    });
+
 }

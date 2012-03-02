@@ -1,32 +1,41 @@
 function Edit() {
     var loadedUsers = {};
     var currentTimestamp = 0;
+    var allowedUserTemplate = '<option data-select-user-id="{{userId}}">{{userName}}</option>';
+    var participantUserTemplate = '<li data-allowed-user-id="<{{userId}}">{{userName}}</li>';
 
     var editProjectCallback = function(data){
         if(data.errors) {
             $.each(data.errors, function(index, error) {
                 var div = $("input[name=" + index + "]").parent().parent();
                 if (error) {
-                    div.popover({ placement: "left", title: "Erro", "content": error }); div.removeClass("success").addClass("error"); }
+                    div.showPopover({ placement: "left", title: "Erro", content: error });
+                    div.removeClass("success").addClass("error"); }
                 else {
+                    div.hidePopover();
                     div.removeClass("error").addClass("success");
                 }
             });
         }
-        else {
-            console.log("Sem erros");
-            $(".success, .error").popover("hide");
-            $(".modal-body .control-group").removeClass("error").removeClass("success");
-            $("#modalEdit").modal("hide");
-            $("#projectTitle").text(data.project.title);
-            $("#projectDescription").text(data.project.description);
+        else { 
+            location.reload(); 
         }
     };
 
     var errorCallback = function(xhr, status, error) {
-        console.log("Erro");
         console.log(arguments);
     };
+
+    self.updateAllowedUsers = function() {
+        $("#allowedUsers").empty(); 
+        var allowedUsers = $("[data-project-allowed-users]").data("project-allowed-users");
+        if(allowedUsers) {
+            $.each(allowedUsers, function(i, user) {
+                var li = Mustache.render(participantUserTemplate, { userId : user.id, userName : user.name });
+                $("#allowedUsers").append(li);
+            });
+        }
+    }
 
     self.editProject = function() {
         var projectId = $("[data-project-id]").data("project-id");
@@ -48,53 +57,60 @@ function Edit() {
             .error(errorCallback);
     }
 
-    self.fillEditProjectModal = function() {
-        //Fazer post p/ pegar os dados do modal ou pegar de 
-        //alguma forma no HTML?
-    }
-
     self.addUser = function() {
         var user = $("#newUser").val();
         if(loadedUsers[user]) {
             var userOption = $("<option />").attr("data-select-user-id", loadedUsers[user]).text(user);
             $("#users").append(userOption);
-            $("#newUserDiv").popover("hide");
+            $("#newUserDiv").hidePopover();
             $("#newUserDiv").removeClass("error");
             $("#newUser").val("");
         }
         else {
-            $("#newUserDiv").popover({ placement: "right", title: "Erro",
-                "content": "Usuário inexistente."});
+            $("#newUserDiv").showPopover({ placement: "right", title: "Erro",
+                content: "Usuário inexistente."});
             $("#newUserDiv").addClass("error");
         }
+        $("#newUser").focus();
     }
 
     self.removeUser = function() {
-        var index = $("#users")
         $('#users :selected').each(function(i, selected) {
             $(selected).remove();
         });
     }
 
+    self.updateAllowedUsers();
+
     $("#editProject").submit(function(e) {
-        console.log("Edição");
         self.editProject();
         e.preventDefault();
     });
 
-    $("#editProject").on("show", function() {
-        e.preventDefault();
-        console.log("Preenchendo modal");
-        self.fillEditProjectModal();
+    $("#modalEdit").on("show", function() {
+        $("#users").empty(); 
+        $("#title").val($("[data-project-title]").data("project-title"));
+        var adminUserId = $("[data-admin-user-id]").data("admin-user-id"); 
+        $("#description").val($("[data-project-description]").data("project-description"));
+        $("#newUser").val("");
+        var allowedUsers = $("[data-project-allowed-users]").data("project-allowed-users");
+        if(allowedUsers) {
+            $.each(allowedUsers, function(i, user) {
+                if(user.id != adminUserId) {
+                    var option = Mustache.render(allowedUserTemplate, { userId : user.id, userName : user.name });
+                    $("#users").append(option);
+                }
+            });
+        }
+        $(".modal-body .control-group").removeClass("error").removeClass("success");
+        $(".control-group").hidePopover();
     });
 
     $("#addUser").click(function(e) {
-        console.log("Adicionar usuário");
         self.addUser();
     });
 
     $("#removeUser").click(function(e) {
-        console.log("Remover usuário");
         self.removeUser(); 
     });
 
@@ -108,7 +124,6 @@ function Edit() {
                 excludeList.push($(this).data("select-user-id")); 
             });
             excludeList.push(adminUserId);
-            console.log(excludeList);
             $.get(refreshUsersUrl, { searchString: query, excludeList: excludeList }, function(response) {
                 var users = [];
                 if (response.users && response.users.length) {

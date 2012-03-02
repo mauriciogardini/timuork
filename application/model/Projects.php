@@ -62,7 +62,7 @@
             $validationErrors = array("title" => NULL);
             if(!$this->validateProjectTitle($projectInfo->title)) {
                 $validationErrors["title"] = 
-                    "O nome do projeto só pode conter letras, números e '_', e entre 3 e 30 caracteres.";
+                    "O nome do projeto só pode conter letras, números e '_', e entre 3 e 20 caracteres.";
             }
             else if($this->existsProjectTitle($projectInfo->title, $projectInfo->id,
                 $projectInfo->adminUserId)) {
@@ -76,7 +76,7 @@
         }
 
         public function validateProjectTitle($title) {
-            if (preg_match('/^[a-zA-Z0-9_]{3,20}$/', $title)) {
+            if (preg_match('/^([a-zA-Z0-9_]{3,20}\s*)+$/', $title)) {
                 return true;
             }
             else {
@@ -119,8 +119,6 @@
                     &$allowedUsers) {
                     $allowedUsers[] = $item->id;
                     }, $projectInfo->id);
-                var_dump($allowedUsers);
-                var_dump($projectInfo->usersIds);
                 $removedUsers = array_diff($allowedUsers, $projectInfo->usersIds);
                 $addedUsers = array_diff($projectInfo->usersIds, $allowedUsers);
                 $this->disallowUsers($projectInfo->id, $removedUsers);
@@ -393,7 +391,6 @@
                     $this->listAllowedUsersByProjectId(function($item) use(
                         $notificationId, &$allowedUsers) {
                             $allowedUsers[] = $item;
-                            echo($item->id . " - " . $item->account_value);
                         }, $notificationInfo->projectId);
                 }
                 else {
@@ -403,7 +400,6 @@
                 }
                 foreach($allowedUsers as $user) {
                     $result = $this->createNotificationAssociation($notificationId, $user->id);
-                    echo("Associação para o usuário " . $user->id . " criada."); 
                     if ($user->account_type == "Twitter") {
                         echo ("Conta do Twitter"); 
                         $message = "O usuário " . $notificationInfo->senderUserName . 
@@ -507,7 +503,7 @@
         }
 
         private function validateCaption($caption) {
-            if (preg_match('/^[a-zA-Z0-9_]{3,20}$/', $caption)) {
+            if (preg_match('/^([a-zA-Z0-9_]{3,20}\s*)+$/', $caption)) {
                 return true;
             }
             else {

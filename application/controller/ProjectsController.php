@@ -122,7 +122,7 @@
 
         public function view($id) {
             $onlineUsers = array();
-            $projectUsers = array();
+            $allowedUsers = array();
             $sessionUser = $this->SessionUser;
             $project = $this->Projects->getProjectById($id);
             $this->Projects->listOnlineUsersWithAdminFieldByProjectId(function(
@@ -130,14 +130,14 @@
                 $onlineUsers[] = $item;                    
             }, $id);
             $this->Projects->listAllowedUsersByProjectId(function($item) use(
-                &$projectUsers) {
-                $projectUsers[] = $item;                    
+                &$allowedUsers) {
+                $allowedUsers[] = $item;                    
             }, $id);
 
             $data['project'] = $project;
             $data['user'] = $sessionUser;
             $data['onlineUsers'] = $onlineUsers;
-            $data['projectUsers'] = $projectUsers;
+            $data['projectUsers'] = $allowedUsers;
             $this->loadView('ProjectView', $data);
         }
 
@@ -151,7 +151,8 @@
                 &$allowedUsers) {
                 $allowedUsers[] = $item;
             }, $id);
-            $data['allowedUsers'] = $allowedUsers;
+            $allowedUsersString = htmlspecialchars(json_encode($allowedUsers), ENT_QUOTES);
+            $data['allowedUsers'] = $allowedUsersString;
             $this->loadView('ProjectOverview', $data);
         }
 
@@ -172,7 +173,6 @@
                 $errors = $this->Projects->getProjectValidationErrors($projectInfo);
                 $log["errors"] = $errors;
             }
-            $log["project"] = array("title" => $title, "description" => $description);
             echo json_encode($log);
         }
 

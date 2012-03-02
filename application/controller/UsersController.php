@@ -1,3 +1,4 @@
+
 <?php
     require_once('BaseController.php');
 
@@ -75,6 +76,20 @@
             }, $searchString, $excludeList);
             $log['users'] = $users;
 
+            echo json_encode($log);
+        }
+
+        public function refreshProjectUsers() {
+            header('Content-type: application/json');
+            $searchString = $_GET['searchString'];
+            $excludeList = isset($_GET['excludeList']) ? $_GET['excludeList'] : NULL;
+            $projectId = $_GET['projectId'];
+            $users = array();
+            $this->Users->listUsersByProjectIdExcludingListed(function($item) use(
+                &$users) {
+                $users[] = $item;
+                }, $projectId, $searchString, $excludeList);
+            $log['users'] = $users;
             echo json_encode($log);
         }
 
