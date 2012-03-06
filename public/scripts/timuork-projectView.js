@@ -3,16 +3,24 @@ function Chat() {
     var timestamp = "";
     var loadedUsers = {};
 
+    var ownMessageTemplate = '<p href="#modalNotification" data-toggle="modal" class="chat-paragraph own"><span class="chat-username"><b>{{messageUserName}}</b></span></br><span class="chat-text">{{messageText}}</span></p>';
     var messageTemplate = '<p href="#modalNotification" data-toggle="modal" class="chat-paragraph"><span class="chat-username"><b>{{messageUserName}}</b></span></br><span class="chat-text">{{messageText}}</span></p>';
-    var adminUserTemplate = '<p class="admin-online-users-row">{{userName}}</p>';
+    var adminUserTemplate = '<p class="admin-online-users-row"><span class="admin-username">{{userName}}</span><span class="admin-label">ADMIN</span></p>';
     var userTemplate = '<p class="online-users-row">{{userName}}</p>';
     var linkTemplate = '<a href="{{linkUrl}}">{{linkCaption}}</a><br />';
 
     var updateProjectMessagesCallback = function(data) {
+        userId = $("[data-user-id]").data("user-id");
         if(data.messages && data.messages.length) {
             $.each(data.messages, function(index, message) {
-                var a = Mustache.render(messageTemplate, {messageUserName : message.user_name,
-                    messageText : message.message_text}); 
+                if(message.user_id == userId) {
+                    var a = Mustache.render(ownMessageTemplate, {messageUserName : message.user_name,
+                        messageText : message.message_text});
+                }
+                else {
+                    var a = Mustache.render(messageTemplate, {messageUserName : message.user_name,
+                        messageText : message.message_text}); 
+                }
                 $("#chat").append(a); 
             });
             
@@ -159,7 +167,7 @@ function Chat() {
         });
         var data = {
             projectId: projectId,
-            users: users,
+            users: users.toString(),
             title: $("#title").val(),
             description: $("#description").val()
         };

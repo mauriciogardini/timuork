@@ -6,13 +6,42 @@ function Dashboard() {
     var otherProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.</div>';
     var myProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.<p><a data-toggle="modal" href="{{modalId}}">{{caption}}</a></p></div>'
     var notificationsPlaceholderTemplate = '<div class="notification-placeholder">Não há notificações a serem exibidas.</div>';
-    var notificationLinkTemplate = '<a class="notificationLink" href="#" data-notification-id="{{notificationId}}" data-notification-title="{{notificationTitle}}" data-notification-description="{{notificationDescription}}" data-notification-timestamp="{{notificationTimestamp}}" data-notification-sender-id="{{notificationSenderId}}" data-notification-sender-name="{{notificationSenderName}}" data-notification-project-id="{{notificationProjectId}}" data-notification-project-title="{{notificationProjectTitle}}">{{notificationTitle}} - {{notificationProjectTitle}}</a><br />';
+    var notificationLinkTemplate = '<a class="notificationLink" href="#" data-notification-id="{{notificationId}}" data-notification-title="{{notificationTitle}}" data-notification-description="{{notificationDescription}}" data-notification-timestamp="{{notificationTimestamp}}" data-notification-sender-id="{{notificationSenderId}}" data-notification-sender-name="{{notificationSenderName}}" data-notification-project-id="{{notificationProjectId}}" data-notification-project-title="{{notificationProjectTitle}}" data-notification-date="{{notificationDate}}">"{{notificationTitle}}"</a> - Enviado há {{timeSinceNotification}} no projeto <a href="/projects/overview/{{notificationProjectId}}">{{notificationProjectTitle}}</a><br />';
     var notificationProjectLinkTemplate = '<a href="/projects/view/{{projectId}}">{{caption}}</a>';
 
     var updateNotificationsCallback = function(data) {
         $("#notifications").empty();
         if(data.notifications && data.notifications.length) {
             $.each(data.notifications, function(index, notification) {
+                var timestamp = new Date((notification.timestamp)*1000);  
+                var date = 
+                    timestamp.getDate().toString().replace(/^(\d)$/, "0$1") + '/' + 
+                    (timestamp.getMonth() + 1).toString().replace(/^(\d)$/, "0$1") + '/' +
+                    timestamp.getFullYear().toString().replace(/^(\d)$/, "0$1") + " " + 
+                    timestamp.getHours().toString().replace(/^(\d)$/, "0$1") + ':' + 
+                    timestamp.getMinutes().toString().replace(/^(\d)$/, "0$1") + ':' +
+                    timestamp.getSeconds().toString().replace(/^(\d)$/, "0$1");
+                var secondsSince = data.now - notification.timestamp;
+                if (secondsSince < 60) {
+                    var time = Math.floor(secondsSince.toString()) + " segundos";
+                }
+                else {
+                    var minutesSince = secondsSince / 60;
+                    if (minutesSince < 60) {
+                        var time = Math.floor(minutesSince.toString()) + " minutos";
+                    }
+                    else {
+                        var hoursSince = minutesSince / 60;
+                        if (hoursSince < 24) {
+                            var time = Math.floor(hoursSince.toString()) + " horas";
+                        }
+                        else {
+                            var daysSince = hoursSince / 24; 
+                            var time = Math.floor(daysSince.toString()) + " dias";
+                        }
+                    }
+                }
+
                 var a = Mustache.render(notificationLinkTemplate, {modalId : "#modalViewNotification", 
                     notificationId : notification.id, notificationTitle : notification.title, 
                     notificationDescription : notification.description, 
@@ -20,7 +49,8 @@ function Dashboard() {
                     notificationSenderId : notification.sender_user_id, 
                     notificationSenderName : notification.sender_user_name,
                     notificationProjectId : notification.project_id,
-                    notificationProjectTitle : notification.project_title });
+                    notificationProjectTitle : notification.project_title,
+                    notificationDate : date, timeSinceNotification: time });
                 $("#notifications").append(a);
             });
         }
@@ -180,19 +210,14 @@ function Dashboard() {
         $("#newUser").focus();
     });
     $(".div-content").on("click", ".notificationLink", function(e) {
-        var timestamp = new Date(($(this).attr("data-notification-timestamp"))*1000);
-        var date = timestamp.getDate() + '/' + (timestamp.getMonth() + 1) + '/' +
-            timestamp.getFullYear() + " " + 
-            timestamp.getHours().toString().replace(/^(\d)$/, "0$1") + ':' + 
-            timestamp.getMinutes().toString().replace(/^(\d)$/, "0$1") + ':' +
-            timestamp.getSeconds().toString().replace(/^(\d)$/, "0$1");
         $("#viewNotificationModalHeaderTitle").text($(this).attr("data-notification-title"));
         var projectId = $(this).attr("data-notification-project-id");
         var a = Mustache.render(notificationProjectLinkTemplate, {projectId: projectId, caption: "Ir para o projeto"});
-        $("#notificationTimestamp").text(date); 
+        $("#notificationTimestamp").text($(this).attr("data-notification-date"));
         $("#notificationTitle").text($(this).attr("data-notification-title"));
         $("#notificationSender").text($(this).attr("data-notification-sender-name"));
         $("#notificationDescription").text($(this).attr("data-notification-description"));
+        $("#notificationProjectLink").text("");
         $("#notificationProjectLink").append(a);
         $("#modalViewNotification").modal("show");
     });

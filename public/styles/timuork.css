@@ -1,9 +1,10 @@
 html, body {
-    background-color: #FCFCFB;
+    height: 100%;
 }
 
 body {
     padding-top: 40px;
+    background-color: #F5B000;
 }
 
 #navigationLinks li a {
@@ -15,19 +16,19 @@ a {
 }
 
 p.pull-right a {
-    color: #E2C90E;
+    color: #F5B000;
 }
 
 p.pull-right {
     color: #fff;
 }
 
-.container > footer p {
-    text-align: center; /* center align it with the container */
+.outerDiv {
+    min-height: 100%;
 }
 
 .content {
-    background-color: #E2C90E;
+    background-color: #FCFCFB;
     margin: 0 0;
     -webkit-border-radius: 0 0 6px 6px;
     -moz-border-radius: 0 0 6px 6px;
@@ -65,16 +66,8 @@ p.pull-right {
     margin-top:10px;
 }
 
-div.div-sidebar div hr {
-    margin: 4px 0 10px 0;
-}
-
 .project-placeholder {
     padding: 10% 0 10% 0;
-}
-
-#notifications {
-    font-size: 12pt;
 }
 
 .notification-placeholder {
@@ -83,32 +76,27 @@ div.div-sidebar div hr {
 
 #new-project-link {
     text-align: right;
+    margin-top: 9px;
 }
 
 .footer {
-    padding-top:5px;
+    margin: -70px auto 0 auto;
 }
 
 footer.footer p {
     font-weight: bold;
+    text-align: center;
 }
 
 .div-content {
-    background-color: #FCFCFB;
-    -webkit-border-radius: 6px 6px 6px 6px;
-    -moz-border-radius: 6px 6px 6px 6px;
-    border-radius: 6px 6px 6px 6px;
-    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-    box-shadow: 0 1px 2px rgba(0,0,0,.15);
-}
+ }
 
 .div-sidebar, .div-sidebar h3, .div-content, .div-content h2 {
     color: #606060;
 }
 
-.div-content a {
-    color: #DB8600;
+.div-sidebar a, .div-content a {
+    color: #FF7E00;
     font-weight: bold;
 }
 
@@ -126,6 +114,10 @@ footer.footer p {
     margin-left: 4px;
     margin-right: 6px;
     padding: 3% 0 3% 0;
+}
+
+.div-sidebar hr {
+    margin-top: 0;
 }
 
 div.modal-footer input.btn-primary {
@@ -175,8 +167,8 @@ div.modal-header h3 {
 div.modal-footer {
     border-top-width: 1;
     border-top-color: #E2A70E;
-    color: #E2C90E;
-    background-color: #E2C90E;
+    color: #F5B000;
+    background-color: #F5B000;
 }
 
 #newUserDiv {
@@ -197,26 +189,67 @@ div.modal-footer {
     border-radius: 6px 6px 6px 6px;
 }
 
-#notificationSender {
+#notificationsWrap a.notificationLink {
+    font-size: 12pt;
+}
+
+#bodyHeader {
     text-align: right;
 }
 
-/* ProjectOverview.php */
+#notificationProjectLink a {
+    color: #FF7E00;
+    font-weight: bold;
+}
+
+#notificationSender {
+    font-weight: bold;
+}
+
+#notificationTimestamp {
+    font-weight: italic;
+}
+
+#notificationDescription {
+}
+
+#viewNotification .modal-body {
+    padding-bottom: 0;
+}
+
+/* ProjectView.php */
 p.chat-paragraph {
-    background: #EDEDED;
+    background: #F5B000;
     -moz-border-radius: 7px; 
     -webkit-border-radius: 7px; 
     border-radius: 7px;
     padding: 5px 10px 5px 10px;
 }
 
+p.own {
+    background: #EDEDED;
+}
+
+.chat-sidebar hr {
+    margin: 8px 0 4px 0;
+}
+
 p.admin-online-users-row {
     font-weight: bold;
-    background: #FFCC00;
+    background: #FF7E00;
     -moz-border-radius: 3px; 
     -webkit-border-radius: 3px; 
     border-radius: 3px;
     padding-left: 5px;
+}
+
+p.admin-online-users-row .admin-username {
+    text-align: left;
+}
+
+p.admin-online-users-row .admin-label {
+    float: right;
+    padding-right: 5px;
 }
 
 .chat-row {
@@ -242,7 +275,12 @@ p.admin-online-users-row {
     padding: 20px 0 20px 0;
     margin-left: 0;
 }
-    
+
+.linksContent a {
+    color: #FF7E00;
+    font-weight: bold;
+}
+
 .chat-content {
     margin-bottom: 20px;
     height: 400px;
@@ -269,11 +307,29 @@ p.admin-online-users-row {
 
 p.online-users-row {
     font-weight: bold;
-    background: #EDEDED;
+    background: #F5B000;
     -moz-border-radius: 3px; 
     -webkit-border-radius: 3px; 
     border-radius: 3px;
     padding-left: 5px;
+}
+
+#notificationLink {
+    padding-right: 5px;
+    color: #FF7E00;
+    font-weight: bold;
+}
+
+#linkLink {
+    padding: 0 5px 0 5px;
+    color: #FF7E00;
+    font-weight: bold;
+}
+
+#exitLink {
+    padding-left: 5px;
+    color: #FF7E00;
+    font-weight: bold;
 }
 
 /* Home.php */

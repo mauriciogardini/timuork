@@ -25,9 +25,9 @@
             </div>
             <div class="span4">
                 <div class="chat-sidebar">
-                    <a href="#modalNotification" data-toggle="modal">Nova Notificação</a>
-                    <a href="#modalLink" data-toggle="modal">Novo Link</a>
-                    <a href="/">Sair</a>
+                    <a id="notificationLink" href="#modalNotification" data-toggle="modal">Nova Notificação</a>
+                    <a id="linkLink" href="#modalLink" data-toggle="modal">Novo Link</a>
+                    <a id="exitLink" href="/">Sair</a>
                     <hr />
                     <h3>Usuários online</h3>
                     <div class="online-users-content" id="onlineUsersWrap">
@@ -43,10 +43,7 @@
             </div>
         </div>
     </div>
-    <footer id="bottom" class="footer">
-        <p>&copy; Maurício Gardini - Alguns Direitos Reservados</p> 
-    </footer> 
-    </div>
+</div>
 
 <!-- MODALS -->
 <div id="modalNotification" class="modal fade">
@@ -288,6 +285,8 @@
 <script src="/scripts/bootstrap-popover.js" type="text/javascript"></script>
 <script src="/scripts/bootstrap-typeahead.js" type="text/javascript"></script>
 <script src="/scripts/mustache.js" type="text/javascript"></script>
+<script src="/scripts/timuork-popoverHandler.js" type="text/javascript"></script>
+<script src="/scripts/timuork-settings.js" type="text/javascript"></script>
 <script src="/scripts/timuork-projectView.js" type="text/javascript"></script>
 <script src="/scripts/timuork-general.js" type="text/javascript"></script>
 <script type="text/javascript">

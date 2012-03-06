@@ -30,9 +30,6 @@
             </div>
         </div>
     </div>
-    <footer id="bottom" class="footer">
-        <p>&copy; Maurício Gardini - Alguns Direitos Reservados</p> 
-    </footer> 
 </div>
 <div id="modalSettings" class="modal fade">
     <div class="modal-header">
@@ -170,9 +167,8 @@
         <form class="modal-form form-horizontal" id="viewNotification">
             <fieldset>
                 <div class="modal-body">
-                    <p id="notificationTimestamp"></p> 
-                    <p id="notificationSender"></p>
-                    <p><span id="notificationDescription"></span></p>
+                    <p id="bodyHeader">Enviado por <span id="notificationSender"></span> em <span id="notificationTimestamp"></span></p>
+                    <p id="notificationDescription"><span></span></p>
                     <p id="notificationProjectLink"></p> 
                 </div>
                 <div class="modal-footer">

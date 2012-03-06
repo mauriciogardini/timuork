@@ -258,6 +258,12 @@
                 rowCount();
         }
 
+        public function getNowTimestamp() {
+            $sql = "SELECT strftime('%s', 'now') AS now";
+            $result = $this->database->fetchDB($this->database->executeQueryDB($sql));
+            return $result->now;
+        }
+
         public function listMessagesByProjectId($fn, $projectId, $timestamp) {
             if ($timestamp == NULL) {
                 $sql = "SELECT messages.id as message_id,
@@ -441,7 +447,8 @@
                 JOIN notifications ON notifications_users.notification_id = notifications.id
                 JOIN users ON notifications.sender_user_id = users.id
                 JOIN projects ON notifications.project_id = projects.id
-                WHERE notifications_users.user_id = ?";
+                WHERE notifications_users.user_id = ?
+                ORDER BY timestamp DESC";
             $values = array($userId);
             $this->database->iterateDB($this->database->executeQueryDB($sql, 
                 $values), $fn);

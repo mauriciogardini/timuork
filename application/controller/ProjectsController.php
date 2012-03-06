@@ -64,8 +64,10 @@
             $this->Projects->listNotificationsByUserId(function($item) use(
                 &$notifications) {
                 $notifications[] = $item;
-            }, $sessionUser->getId());
+                }, $sessionUser->getId());
+            $now = $this->Projects->getNowTimestamp();
             $log['notifications'] = $notifications;
+            $log['now'] = $now;
 
             echo json_encode($log);
         }
@@ -185,6 +187,7 @@
                     $users = NULL;
                 }
             }
+            var_dump((bool)count($users));
             $title = $_POST['title'];
             $description = $_POST['description'];
             $notificationInfo = (object) array("title" => $title, 
