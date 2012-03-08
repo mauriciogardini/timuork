@@ -9,8 +9,7 @@
     <meta name="author" content="Maurício Gardini">
     <link rel="stylesheet" href="/styles/bootstrap.css">
     <link rel="stylesheet" href="/styles/timuork.css">
-    <!--TODO Fav Icon -->
-    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="shortcut icon" href="img/favicon.ico">
 </head>
 <body>
     <div class="outerDiv">
@@ -75,8 +74,7 @@
                             <div id="emailDiv" class="control-group">
                                 <div class="controls">
                                     <input class="input-xlarge" id="email" name="email"
-                                        size="30" type="text" placeholder="E-mail" 
-                                        maxlength="20" />
+                                        size="30" type="text" placeholder="E-mail" />
                                 </div>
                             </div>
                             <div id="accountDiv" class="control-group">

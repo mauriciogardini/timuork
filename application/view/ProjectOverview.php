@@ -1,13 +1,14 @@
 <div class="container">
     <div class="content">
+        <div class="row header-placeholder"></div>
         <div class="row">
         <div class="span8 div-content" data-project-id="<?php echo $project->id ?>"
             data-admin-user-id="<?php echo $project->admin_user_id ?>" 
             data-project-title="<?php echo $project->title ?>"
             data-project-description="<?php echo $project->description ?>"
             data-project-allowed-users="<?php echo $allowedUsers ?>">
-            <div class="center90"> 
-                <h1 id="projectTitle"><?php echo $project->title ?></h1>
+            <div class="center95"> 
+                <h2 id="projectTitle"><?php echo $project->title ?></h2>
                 <p id="projectDescription"><?php echo $project->description ?></p>
                 <a href="/projects/view/<?php echo $project->id ?>">Ir para o projeto</a>
                 </div>
@@ -16,10 +17,11 @@
             <div class="center90">
                 <?php if ($user->getId() == $project->admin_user_id) { ?>
                 <a href="#modalEdit" data-toggle="modal">Editar</a>
+                <hr />
                 <?php } ?>
                     <h3>Usuários participantes</h3>
-                    <ul id="allowedUsers" class="unstyled">
-                    </ul>
+                    <div id="allowedUsers">
+                    </div>
                 </div>
             </div>
         </div>

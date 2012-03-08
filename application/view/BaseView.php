@@ -7,8 +7,7 @@
     <meta name="author" content="Maurício Gardini">
     <link rel="stylesheet" href="/styles/bootstrap.css">
     <link rel="stylesheet" href="/styles/timuork.css">    
-    <!--TODO Fav Icon -->
-    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="shortcut icon" href="img/favicon.ico">
 </head>
 <body>
     <div class="outerDiv">

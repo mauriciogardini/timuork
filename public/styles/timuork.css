@@ -7,12 +7,21 @@ body {
     background-color: #F5B000;
 }
 
+.container .brand {
+    color: #F5B000;
+}
+
 #navigationLinks li a {
     color:#FCFCFB;
 }
 
+.content {
+    min-height: 500px;
+}
+
 a {
-    color: #606060;
+    color: #F5B000;
+    font-weight: bold;
 }
 
 p.pull-right a {
@@ -88,32 +97,33 @@ footer.footer p {
     text-align: center;
 }
 
-.div-content {
- }
+.header-placeholder {
+    display: block;
+    min-height: 36px;
+    padding: 20px 0 20px 0;
+}
 
 .div-sidebar, .div-sidebar h3, .div-content, .div-content h2 {
     color: #606060;
 }
 
-.div-sidebar a, .div-content a {
-    color: #FF7E00;
+.div-content a {
+    color: #F5B000;
     font-weight: bold;
 }
 
 .div-content {
-    margin-top: 6px;
     margin-bottom: 6px;
     margin-left: 26px;
     margin-right: 4px;
-    padding: 2% 0 2% 0;
+    padding: 0 0 2% 0;
 }
 
 .div-sidebar {
-    margin-top: 6px;
     margin-bottom: 6px;
     margin-left: 4px;
     margin-right: 6px;
-    padding: 3% 0 3% 0;
+    padding: 1% 0 3% 0;
 }
 
 .div-sidebar hr {
@@ -183,18 +193,45 @@ div.modal-footer {
     text-align: center;
 }
 
-#modalWelcome .modal-body{
+#modalWelcome .modal-body {
     -webkit-border-radius: 6px 6px 6px 6px;
     -moz-border-radius: 6px 6px 6px 6px;
     border-radius: 6px 6px 6px 6px;
 }
 
-#notificationsWrap a.notificationLink {
-    font-size: 12pt;
-}
-
 #bodyHeader {
     text-align: right;
+}
+
+/* --------------------- */
+/* Dashboard.php */
+.project-link {
+    display: block;
+    margin: 2px 0 2px 0;
+    -moz-border-radius: 7px; 
+    -webkit-border-radius: 7px; 
+    border-radius: 7px;
+    position: relative;
+    border: 2px solid;
+    padding: 0 0 0 5px; 
+    background: #F5B000;
+    font-weight: bold;
+}
+
+.project-link a.my-project-link {
+    display: block;
+    height: 100%;
+    font-size: 12pt;
+    float: right;
+    padding: 2px 3px 1px 0;
+}
+
+.project-link a.other-project-link {
+    display: block;
+    height: 100%;
+    font-size: 12pt;
+    float: right;
+    padding: 2px 3px 1px 0;
 }
 
 #notificationProjectLink a {
@@ -202,85 +239,82 @@ div.modal-footer {
     font-weight: bold;
 }
 
-#notificationSender {
+.notificationHeader {
+    padding: 5px 5px 5px 5px;
+    display: block;
+}
+
+.notificationProjectTitle {
+    padding: 0 0 0 5px;
+}
+
+.notificationTitle {
+    display: inline;
     font-weight: bold;
 }
 
-#notificationTimestamp {
-    font-weight: italic;
+.notificationProjectTitle {
+    display: inline;
 }
 
-#notificationDescription {
+.notificationSender {
+    display: inline;
+    padding-left: 10px;
+    font-style: italic;
 }
 
-#viewNotification .modal-body {
-    padding-bottom: 0;
+.notificationTimestamp {
+    display: inline;
+    float: right;
 }
 
-/* ProjectView.php */
-p.chat-paragraph {
-    background: #F5B000;
+.notificationBody {
+    padding: 0 5px 5px 5px;
+}
+
+.notification {
+    display: block;
+    margin: 2px 0 2px 0;
     -moz-border-radius: 7px; 
     -webkit-border-radius: 7px; 
     border-radius: 7px;
-    padding: 5px 10px 5px 10px;
+    position: relative;
+    border: 2px solid;
+    background: #E3E3E3;
 }
 
-p.own {
-    background: #EDEDED;
+.notification a.notificationLink {
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-size: 12pt;
+    position:absolute;
 }
 
-.chat-sidebar hr {
-    margin: 8px 0 4px 0;
-}
-
-p.admin-online-users-row {
-    font-weight: bold;
-    background: #FF7E00;
-    -moz-border-radius: 3px; 
-    -webkit-border-radius: 3px; 
-    border-radius: 3px;
-    padding-left: 5px;
-}
-
-p.admin-online-users-row .admin-username {
-    text-align: left;
-}
-
-p.admin-online-users-row .admin-label {
-    float: right;
-    padding-right: 5px;
-}
-
-.chat-row {
-    cellpadding: 10;
-}
-
-.chat-username { 
-    margin: 0px 0px 0px 0px;
-    min-width: 150px;
-    max-width: 150px;
-    display: inline-block;
-}
-
-.chat-text {
-    line-height: 12px;
-}
-
-.chat-sidebar {
-    margin: 0 20px 0 0;
-}
-
+/* --------------------- */
+/* ProjectView.php */
 .chat-header {
     padding: 20px 0 20px 0;
     margin-left: 0;
 }
 
-.linksContent a {
-    color: #FF7E00;
+/* --------------------- */
+/* ProjectOverview.php */
+
+.participant-user {
+    display: block;
+    margin: 2px 0 2px 0;
+    -moz-border-radius: 7px; 
+    -webkit-border-radius: 7px; 
+    border-radius: 7px;
+    position: relative;
+    border: 2px solid;
+    padding: 0 0 0 5px;
+    background: #F5B000;
     font-weight: bold;
 }
 
+/* Chat content */
 .chat-content {
     margin-bottom: 20px;
     height: 400px;
@@ -295,9 +329,41 @@ p.admin-online-users-row .admin-label {
     box-shadow: 0 1px 2px rgba(0,0,0,.15);
 }
 
-.chat-message {
-    margin: 10px 0 0 20px;
-    padding-top: 10px;
+/* General messages */
+p.chat-paragraph {
+    -moz-border-radius: 7px; 
+    -webkit-border-radius: 7px; 
+    border-radius: 7px;
+    padding: 3px 5px 3px 5px;
+    border: 2px solid;
+    border-color: #606060;
+    margin-bottom: 3px;
+    background: #E3E3E3;
+    color: #606060;
+}
+
+.chat-username { 
+    margin: 0px 0px 0px 0px;
+    min-width: 150px;
+    max-width: 150px;
+    display: inline-block;
+    color: #606060;
+}
+
+.chat-text {
+    line-height: 12px;
+}
+
+/* Own messages */
+p.own {
+    border: 2px solid;
+    border-color: #606060;
+    background: #E3E3E3;
+}
+
+/* Sidebar */
+.chat-sidebar hr {
+    margin: 4px 0 4px 0;
 }
 
 .online-users-content {
@@ -305,33 +371,91 @@ p.admin-online-users-row .admin-label {
     overflow: auto;
 }
 
-p.online-users-row {
-    font-weight: bold;
-    background: #F5B000;
-    -moz-border-radius: 3px; 
-    -webkit-border-radius: 3px; 
-    border-radius: 3px;
-    padding-left: 5px;
-}
-
 #notificationLink {
     padding-right: 5px;
-    color: #FF7E00;
+    color: #F5B000;
     font-weight: bold;
 }
 
 #linkLink {
     padding: 0 5px 0 5px;
-    color: #FF7E00;
+    color: #F5B000;
     font-weight: bold;
 }
 
 #exitLink {
     padding-left: 5px;
-    color: #FF7E00;
+    color: #F5B000;
     font-weight: bold;
 }
 
+.chat-sidebar {
+    margin: 0 20px 0 0;
+}
+
+/* Admin online user row */
+p.admin-online-users-row {
+    font-weight: bold;
+    -moz-border-radius: 3px; 
+    -webkit-border-radius: 3px; 
+    border-radius: 3px;
+    border-color: #606060;
+    border-width: 2px;
+    border-style: solid;
+    color: #606060;
+    padding-left: 5px;
+    background: #F5B000;
+    margin-bottom: 3px;
+}
+
+p.admin-online-users-row .admin-username {
+    text-align: left;
+}
+
+p.admin-online-users-row .admin-label {
+    float: right;
+    padding-right: 5px;
+}
+
+/* Online user row */
+p.online-users-row {
+    font-weight: bold; 
+    padding-left: 5px;
+    -moz-border-radius: 3px; 
+    -webkit-border-radius: 3px; 
+    border-radius: 3px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #606060;
+    color: #606060; 
+    background: #F5B000;
+}
+
+/* Link row */
+p.link-row {
+    -moz-border-radius: 3px; 
+    -webkit-border-radius: 3px; 
+    border-radius: 3px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #606060;
+    background: #F5B000;
+    padding-left: 5px;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+p.link-row a {
+    color: #606060;
+}
+
+/* New message */
+.chat-message {
+    margin: 10px 0 0 20px;
+    padding-top: 10px;
+}
+
+/* --------------------- */
 /* Home.php */
 .div-brand {
     margin-top: 10px;
@@ -389,4 +513,15 @@ p.online-users-row {
 
 #addUser div {
     margin-bottom: 0px;
+}
+
+/* --------------------- */
+/* ProjectOverview.php */
+
+#projectDescription {
+    margin-top: 10px;
+}
+
+.div-sidebar hr {
+    margin: 4px 0 4px 0;
 }

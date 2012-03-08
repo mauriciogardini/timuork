@@ -1,13 +1,15 @@
 function Dashboard() {
     var loadedUsers = {};
 
-    var projectLinkTemplate = '<a href="/projects/overview/{{projectId}}">{{caption}}</a><br />';
+    var myProjectLinkTemplate = '<p class="project-link"><a class="my-project-link" href="/projects/view/{{projectId}}"><i class="icon-share-alt icon-white"></i></a><a class="my-project-link" href="/projects/overview/{{projectId}}"><i class="icon-search icon-white"></i></a>{{caption}}</p>';
+    var otherProjectLinkTemplate = '<p class="project-link"><a class="other-project-link" href="/projects/view/{{projectId}}"><i class="icon-share-alt icon-white"></i></a><a class="other-project-link" href="/projects/overview/{{projectId}}"><i class="icon-search icon-white"></i></a>{{caption}}</p>';
     var modalLinkTemplate = '<p id="new-project-link"><a data-add-project-url="/projects/add" data-toggle="modal" href="{{modalId}}">{{caption}}</a></p>';
     var otherProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.</div>';
     var myProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.<p><a data-toggle="modal" href="{{modalId}}">{{caption}}</a></p></div>'
     var notificationsPlaceholderTemplate = '<div class="notification-placeholder">Não há notificações a serem exibidas.</div>';
     var notificationLinkTemplate = '<a class="notificationLink" href="#" data-notification-id="{{notificationId}}" data-notification-title="{{notificationTitle}}" data-notification-description="{{notificationDescription}}" data-notification-timestamp="{{notificationTimestamp}}" data-notification-sender-id="{{notificationSenderId}}" data-notification-sender-name="{{notificationSenderName}}" data-notification-project-id="{{notificationProjectId}}" data-notification-project-title="{{notificationProjectTitle}}" data-notification-date="{{notificationDate}}">"{{notificationTitle}}"</a> - Enviado há {{timeSinceNotification}} no projeto <a href="/projects/overview/{{notificationProjectId}}">{{notificationProjectTitle}}</a><br />';
     var notificationProjectLinkTemplate = '<a href="/projects/view/{{projectId}}">{{caption}}</a>';
+    var notificationTemplate = '<div class="notification"><a class="notificationLink" href="/projects/view/{{projectId}}"></a><div class="notificationHeader"><div class="notificationTitle">{{notificationTitle}}</div><div class="notificationProjectTitle">(Projeto "{{projectTitle}}")</div><div class="notificationSender">{{notificationSender}}</div><div class="notificationTimestamp">{{timeSinceNotification}}</div></div><div class="notificationBody">{{notificationDescription}}</div></div>';
 
     var updateNotificationsCallback = function(data) {
         $("#notifications").empty();
@@ -23,33 +25,36 @@ function Dashboard() {
                     timestamp.getSeconds().toString().replace(/^(\d)$/, "0$1");
                 var secondsSince = data.now - notification.timestamp;
                 if (secondsSince < 60) {
-                    var time = Math.floor(secondsSince.toString()) + " segundos";
+                    var time = Math.floor(secondsSince.toString()) + 
+                        " segundo" + ((secondsSince > 1) ? "s" : "").toString() + " atrás";
                 }
                 else {
                     var minutesSince = secondsSince / 60;
                     if (minutesSince < 60) {
-                        var time = Math.floor(minutesSince.toString()) + " minutos";
+                        var time = Math.floor(minutesSince.toString()) + 
+                            " minuto" + ((minutesSince > 1) ? "s" : "").toString() + " atrás";
                     }
                     else {
                         var hoursSince = minutesSince / 60;
                         if (hoursSince < 24) {
-                            var time = Math.floor(hoursSince.toString()) + " horas";
+                            var time = Math.floor(hoursSince.toString()) +
+                                " hora" + ((hoursSince > 1) ? "s" : "").toString() + " atrás";
                         }
                         else {
                             var daysSince = hoursSince / 24; 
-                            var time = Math.floor(daysSince.toString()) + " dias";
+                            var time = Math.floor(daysSince.toString()) +
+                                " dia" + ((daysSince > 1) ? "s" : "").toString() + " atrás";
                         }
                     }
                 }
 
-                var a = Mustache.render(notificationLinkTemplate, {modalId : "#modalViewNotification", 
-                    notificationId : notification.id, notificationTitle : notification.title, 
+                var a = Mustache.render(notificationTemplate, {
+                    notificationTitle : notification.title, 
                     notificationDescription : notification.description, 
                     notificationTimestamp : notification.timestamp, 
-                    notificationSenderId : notification.sender_user_id, 
-                    notificationSenderName : notification.sender_user_name,
-                    notificationProjectId : notification.project_id,
-                    notificationProjectTitle : notification.project_title,
+                    notificationSender : notification.sender_user_name,
+                    projectId : notification.project_id,
+                    projectTitle : notification.project_title,
                     notificationDate : date, timeSinceNotification: time });
                 $("#notifications").append(a);
             });
@@ -65,7 +70,7 @@ function Dashboard() {
         $("#otherProjects").empty();
         if(data.otherProjects && data.otherProjects.length) {
             $.each(data.otherProjects, function(index, project) {
-                var a = Mustache.render(projectLinkTemplate, {projectId: project.id, caption: project.title});
+                var a = Mustache.render(otherProjectLinkTemplate, {projectId: project.id, caption: project.title});
                 $("#otherProjects").append(a);
             });
         }
@@ -79,7 +84,7 @@ function Dashboard() {
         $("#myProjects").empty();
         if(data.myProjects && data.myProjects.length) {
             $.each(data.myProjects, function(index, project) {
-                var a = Mustache.render(projectLinkTemplate, {projectId: project.id, caption: project.title});
+                var a = Mustache.render(myProjectLinkTemplate, {projectId: project.id, caption: project.title});
                 $("#myProjects").append(a);
             });
             var newProject = Mustache.render(modalLinkTemplate, {modalId: "#modalProject", caption: "Novo Projeto"});

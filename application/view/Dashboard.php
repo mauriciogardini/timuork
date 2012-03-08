@@ -1,5 +1,6 @@
 <div class="container">
     <div class="content">
+        <div class="row header-placeholder"></div> 
         <div class="row">
             <div class="span8 div-content">
                 <div class="center95">

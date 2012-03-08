@@ -7,7 +7,7 @@ function Chat() {
     var messageTemplate = '<p href="#modalNotification" data-toggle="modal" class="chat-paragraph"><span class="chat-username"><b>{{messageUserName}}</b></span></br><span class="chat-text">{{messageText}}</span></p>';
     var adminUserTemplate = '<p class="admin-online-users-row"><span class="admin-username">{{userName}}</span><span class="admin-label">ADMIN</span></p>';
     var userTemplate = '<p class="online-users-row">{{userName}}</p>';
-    var linkTemplate = '<a href="{{linkUrl}}">{{linkCaption}}</a><br />';
+    var linkTemplate = '<p class="link-row"><a href="{{linkUrl}}">{{linkCaption}}</a></p>';
 
     var updateProjectMessagesCallback = function(data) {
         userId = $("[data-user-id]").data("user-id");
@@ -23,7 +23,8 @@ function Chat() {
                 }
                 $("#chat").append(a); 
             });
-            
+            //Scroll Down 
+            //$("#chat-wrap").attr({ scrollTop: $("#chat-wrap").attr("scrollHeight") });
             timestamp = data.messages[data.messages.length - 1].message_timestamp;
             console.log(timestamp);
         }

@@ -19,7 +19,7 @@
                         <textarea id="message" 
                             class="span7"></textarea>
                         <input class="span1" type="submit" 
-                            text="Enviar">
+                            value="Enviar">
                     </form>
                 </div>
             </div>

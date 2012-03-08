@@ -448,7 +448,8 @@
                 JOIN users ON notifications.sender_user_id = users.id
                 JOIN projects ON notifications.project_id = projects.id
                 WHERE notifications_users.user_id = ?
-                ORDER BY timestamp DESC";
+                ORDER BY timestamp DESC
+                LIMIT 5";
             $values = array($userId);
             $this->database->iterateDB($this->database->executeQueryDB($sql, 
                 $values), $fn);

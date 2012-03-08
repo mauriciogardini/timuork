@@ -2,7 +2,7 @@ function Edit() {
     var loadedUsers = {};
     var currentTimestamp = 0;
     var allowedUserTemplate = '<option data-select-user-id="{{userId}}">{{userName}}</option>';
-    var participantUserTemplate = '<li data-allowed-user-id="<{{userId}}">{{userName}}</li>';
+    var participantUserTemplate = '<div class="participant-user" data-allowed-user-id="<{{userId}}">{{userName}}</div>';
 
     var editProjectCallback = function(data){
         if(data.errors) {
