@@ -15,8 +15,11 @@
             if($flash) {
                 if(array_key_exists("welcome", $flash)) { 
                     $data["welcome"] = $flash["welcome"];
-                    $sessionUser->setAttribute("flash", NULL);
-                } 
+                }
+                if(array_key_exists("warning", $flash)) {
+                    $data["warning"] = $flash["warning"];
+                }
+                $sessionUser->setAttribute("flash", NULL);
             }      
             if ($sessionUser->getId()) {   
                 $data['user'] = $sessionUser;

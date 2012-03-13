@@ -150,13 +150,20 @@
         </form>
     </div>
 </div>
-<?php //if(isset($welcome)) { ?>
+<?php if(isset($welcome)) { ?>
 <div id="modalWelcome" class="modal fade">
     <div class="modal-body">
-        <h1>Seja bem-vindo!</h1> 
+    <h1><?php echo $welcome; ?></h1> 
     </div>
 </div>
-<?php// } ?>
+<?php } ?>
+<?php if(isset($warning)) { ?>
+<div id="modalWarning" class="modal fade">
+    <div class="modal-body">
+    <h2><?php echo $warning; ?></h2>
+    </div>
+</div>
+<?php } ?>
 <div id="modalEdit" class="modal fade">
     <div class="modal-header">
         <a class="close" data-dismiss="modal">&times;</a>

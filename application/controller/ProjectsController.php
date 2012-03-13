@@ -144,8 +144,10 @@
                 $this->loadView('ProjectView', $data);
             }
             else {
+                $sessionUser->setAttribute("flash", array(
+                    "warning" => "Você não tem permissão de acesso à este projeto."));
                 $data['user'] = $sessionUser;
-                $this->loadView('Dashboard', $data);
+                redirect('/', 0);
             }
         }
 

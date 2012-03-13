@@ -353,6 +353,12 @@ function Dashboard() {
             $("#modalWelcome").modal("hide")
         }, 3000);
     } 
+    if($("#modalWarning").length) {
+        $("#modalWarning").modal("show");
+        setTimeout(function() {
+            $("#modalWarning").modal("hide")
+        }, 3000);
+    } 
     self.getMyProjects();
     self.getOtherProjects();
     self.getNotifications();

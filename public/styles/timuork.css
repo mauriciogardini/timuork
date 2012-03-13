@@ -189,18 +189,32 @@ div.modal-footer {
     padding-top: 20px;
 }
 
-#modalWelcome .modal-body h1 {
+#modalWelcome .modal-body h1, #modalWarning .modal-body h2 {
     text-align: center;
 }
 
-#modalWelcome .modal-body {
+#modalWelcome .modal-body, #modalWarning .modal-body {
     -webkit-border-radius: 6px 6px 6px 6px;
     -moz-border-radius: 6px 6px 6px 6px;
     border-radius: 6px 6px 6px 6px;
+    padding: 50px 0 50px 0;
+}
+
+#modalWelcome, #modalWarning {
+    top: 70%;
 }
 
 #bodyHeader {
     text-align: right;
+}
+
+#aboutText h2 {
+    text-align: center;
+    padding-bottom: 15px;
+}
+
+.sublogin-fieldset {
+    display: none;
 }
 
 /* --------------------- */
