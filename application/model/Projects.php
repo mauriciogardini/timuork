@@ -185,6 +185,16 @@
                 $sql, $values))->count; 
         }
 
+        public function isAllowedUser($projectId, $userId) {
+            $sql = "SELECT COUNT(*) AS count
+                FROM allowances
+                WHERE project_id = ? AND user_id = ?";
+            $values = array($projectId, $userId);
+            return (bool) $this->database->fetchDB($this->database->executeQueryDB(
+                $sql, $values))->count; 
+        }
+
+
         public function existsProjectAllowance($projectId, $userId) {
             $sql = "SELECT COUNT(*) AS count
                 FROM allowances

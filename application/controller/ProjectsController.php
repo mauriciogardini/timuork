@@ -58,6 +58,7 @@
         }
 
         public function updateNotifications() {
+            header('Content-type: application/json'); 
             $log = array();
             $notifications = array();
             $sessionUser = $this->SessionUser;
@@ -126,36 +127,43 @@
             $onlineUsers = array();
             $allowedUsers = array();
             $sessionUser = $this->SessionUser;
-            $project = $this->Projects->getProjectById($id);
-            $this->Projects->listOnlineUsersWithAdminFieldByProjectId(function(
-                $item) use(&$onlineUsers) {
-                $onlineUsers[] = $item;                    
-            }, $id);
-            $this->Projects->listAllowedUsersByProjectId(function($item) use(
-                &$allowedUsers) {
-                $allowedUsers[] = $item;                    
-            }, $id);
-
-            $data['project'] = $project;
-            $data['user'] = $sessionUser;
-            $data['onlineUsers'] = $onlineUsers;
-            $data['projectUsers'] = $allowedUsers;
-            $this->loadView('ProjectView', $data);
+            if ($this->Projects->isAllowedUser($id, $sessionUser->getId())) {
+                $project = $this->Projects->getProjectById($id);
+                $this->Projects->listOnlineUsersWithAdminFieldByProjectId(function(
+                    $item) use(&$onlineUsers) {
+                    $onlineUsers[] = $item;                    
+                }, $id);
+                $this->Projects->listAllowedUsersByProjectId(function($item) use(
+                    &$allowedUsers) {
+                    $allowedUsers[] = $item;                    
+                }, $id);
+                $data['project'] = $project;
+                $data['user'] = $sessionUser;
+                $data['onlineUsers'] = $onlineUsers;
+                $data['projectUsers'] = $allowedUsers;
+                $this->loadView('ProjectView', $data);
+            }
+            else {
+                $data['user'] = $sessionUser;
+                $this->loadView('Dashboard', $data);
+            }
         }
 
-        public function overview($id) {
+        public function getProjectInfo() {
+            header('Content-type: application/json');  
             $allowedUsers = array();
-            $sessionUser = $this->SessionUser;
-            $project = $this->Projects->getProjectById($id);
-            $data['project'] = $project;
-            $data['user'] = $sessionUser;
+            $log = array();
+            $projectId = $_POST['projectId'];
+            $project = $this->Projects->getProjectById($projectId);
+            $log['project'] = $project;
             $this->Projects->listAllowedUsersByProjectId(function($item) use(
                 &$allowedUsers) {
                 $allowedUsers[] = $item;
-            }, $id);
-            $allowedUsersString = htmlspecialchars(json_encode($allowedUsers), ENT_QUOTES);
-            $data['allowedUsers'] = $allowedUsersString;
-            $this->loadView('ProjectOverview', $data);
+            }, $projectId);
+            $allowedUsersString = json_encode($allowedUsers);
+            $log['allowedUsers'] = $allowedUsers;
+            
+            echo json_encode($log);
         }
 
         public function edit() {

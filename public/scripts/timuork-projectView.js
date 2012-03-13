@@ -23,8 +23,7 @@ function Chat() {
                 }
                 $("#chat").append(a); 
             });
-            //Scroll Down 
-            //$("#chat-wrap").attr({ scrollTop: $("#chat-wrap").attr("scrollHeight") });
+            $("#chat-wrap").scrollTop($("#chat-wrap").height());
             timestamp = data.messages[data.messages.length - 1].message_timestamp;
             console.log(timestamp);
         }

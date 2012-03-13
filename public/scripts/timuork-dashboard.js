@@ -1,8 +1,9 @@
 function Dashboard() {
-    var loadedUsers = {};
+    var loadedUsersNew = {};
+    var loadedUsersEdit = {};
 
-    var myProjectLinkTemplate = '<p class="project-link"><a class="my-project-link" href="/projects/view/{{projectId}}"><i class="icon-share-alt icon-white"></i></a><a class="my-project-link" href="/projects/overview/{{projectId}}"><i class="icon-search icon-white"></i></a>{{caption}}</p>';
-    var otherProjectLinkTemplate = '<p class="project-link"><a class="other-project-link" href="/projects/view/{{projectId}}"><i class="icon-share-alt icon-white"></i></a><a class="other-project-link" href="/projects/overview/{{projectId}}"><i class="icon-search icon-white"></i></a>{{caption}}</p>';
+    var myProjectLinkTemplate = '<p class="project-link" data-project-id="{{projectId}}"><a class="my-project-link view-project-link" href="/projects/view/{{projectId}}"><i class="icon-share-alt"></i></a><a class="my-project-link overview-project-link" data-get-project-info-url="/projects/getProjectInfo" href="#"><i class="icon-search"></i></a><a href="#" class="my-project-link edit-project-link" data-get-project-info-url="/projects/getProjectInfo"><i class="icon-cog"></i></a>{{caption}}</p>';
+    var otherProjectLinkTemplate = '<p class="project-link" data-project-id="{{projectId}}"><a class="other-project-link view-project-link" href="/projects/view/{{projectId}}"><i class="icon-share-alt"></i></a><a class="other-project-link overview-project-link" data-get-project-info-url="/projects/getProjectInfo" href="#"><i class="icon-search"></i></a>{{caption}}</p>';
     var modalLinkTemplate = '<p id="new-project-link"><a data-add-project-url="/projects/add" data-toggle="modal" href="{{modalId}}">{{caption}}</a></p>';
     var otherProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.</div>';
     var myProjectsPlaceholderTemplate = '<div class="project-placeholder">Não há projetos a serem exibidos.<p><a data-toggle="modal" href="{{modalId}}">{{caption}}</a></p></div>'
@@ -10,7 +11,12 @@ function Dashboard() {
     var notificationLinkTemplate = '<a class="notificationLink" href="#" data-notification-id="{{notificationId}}" data-notification-title="{{notificationTitle}}" data-notification-description="{{notificationDescription}}" data-notification-timestamp="{{notificationTimestamp}}" data-notification-sender-id="{{notificationSenderId}}" data-notification-sender-name="{{notificationSenderName}}" data-notification-project-id="{{notificationProjectId}}" data-notification-project-title="{{notificationProjectTitle}}" data-notification-date="{{notificationDate}}">"{{notificationTitle}}"</a> - Enviado há {{timeSinceNotification}} no projeto <a href="/projects/overview/{{notificationProjectId}}">{{notificationProjectTitle}}</a><br />';
     var notificationProjectLinkTemplate = '<a href="/projects/view/{{projectId}}">{{caption}}</a>';
     var notificationTemplate = '<div class="notification"><a class="notificationLink" href="/projects/view/{{projectId}}"></a><div class="notificationHeader"><div class="notificationTitle">{{notificationTitle}}</div><div class="notificationProjectTitle">(Projeto "{{projectTitle}}")</div><div class="notificationSender">{{notificationSender}}</div><div class="notificationTimestamp">{{timeSinceNotification}}</div></div><div class="notificationBody">{{notificationDescription}}</div></div>';
+    var allowedUserTemplate = '<option data-select-user-id="{{userId}}">{{userName}}</option>';
+    var projectViewUserTemplate = '<div class="project-view-user">{{userName}}</div>';
+    var projectViewAdminUserTemplate = '<div class="project-view-admin-user">{{userName}}<i class="icon-star"></i></div>';
 
+
+    /* Callbacks */
     var updateNotificationsCallback = function(data) {
         $("#notifications").empty();
         if(data.notifications && data.notifications.length) {
@@ -115,50 +121,204 @@ function Dashboard() {
         }
     }
 
-    var errorCallback = function(xhr, status, error) {
-        console.log(arguments);
+    var showEditProjectModalCallback = function(data) {
+        if(data.project) {
+            $("#usersEdit").empty(); 
+            $("#titleEdit").val(data.project.title);
+            var adminUserId = data.project.admin_user_id;
+            $("#descriptionEdit").val(data.project.description);
+            $("#newUserEdit").val("");
+            if(data.allowedUsers) {
+                $.each(data.allowedUsers, function(i, user) {
+                    if(user.id != adminUserId) {
+                        var option = Mustache.render(allowedUserTemplate, { userId : user.id, userName : user.name });
+                        $("#usersEdit").append(option);
+                    }
+                });
+            }
+            $(".modal-body .control-group").removeClass("error").removeClass("success");
+            $(".control-group").hidePopover();
+            $("#modalEdit").modal("show");    
+        }
     }
 
-    self.addUser = function() {
-        var user = $("#newUser").val();
-        if(loadedUsers[user]) {
-            var userOption = $("<option />").attr("data-select-user-id", loadedUsers[user]).text(user);
-            $("#users").append(userOption);
+    var showViewProjectModalCallback = function(data) {
+        if(data.project) {
+            $("#usersView").empty();
+            $("#modalViewHeader").text(data.project.title);
+            var adminUserId = data.project.admin_user_id;
+            $("#descriptionView").text(data.project.description);
+            $("#titleView").text(data.project.title);
+            if(data.allowedUsers) {
+                $.each(data.allowedUsers, function(i, user) {
+                    if(user.id != adminUserId) {
+                        var user = Mustache.render(projectViewUserTemplate, { userName : user.name });
+                        $("#usersView").append(user);
+                    }
+                    else {
+                        var user = Mustache.render(projectViewAdminUserTemplate, { userName : user.name });
+                        $("#usersView").append(user);
+                    }
+                });
+            }
+            $("#modalView").modal("show");
+        }
+    }
+
+    var editProjectCallback = function(data){
+        if(data.errors) {
+            $.each(data.errors, function(index, error) {
+                var div = $("input[name=" + index + "]").parent().parent();
+                if (error) {
+                    div.showPopover({ placement: "left", title: "Erro", content: error });
+                    div.removeClass("success").addClass("error"); }
+                else {
+                    div.hidePopover();
+                    div.removeClass("error").addClass("success");
+                }
+            });
+        }
+        else { 
+            location.reload(); 
+        }
+    };
+
+    var errorCallback = function(xhr, status, error) {
+        console.log(arguments);
+        console.log(xhr);
+    }
+
+    /* Modal-related */
+    self.addUserNew = function() {
+        var user = $("#newUserNew").val();
+        if(loadedUsersNew[user]) {
+            var userOption = $("<option />").attr("data-select-user-id", loadedUsersNew[user]).text(user);
+            $("#usersNew").append(userOption);
             $("#newUserDiv").hidePopover();
             $("#newUserDiv").removeClass("error");
-            $("#newUser").val("");
+            $("#newUserNew").val("");
         }
         else {
             $("#newUserDiv").showPopover({ placement: "right", title: "Erro", 
                 content: "Usuário inexistente."}); 
             $("#newUserDiv").addClass("error");
         }
-        $("#newUser").focus();
+        $("#newUserNew").focus();
     }
 
-    self.removeUser = function() {
-        $('#users :selected').each(function(i, selected) {
+    self.removeUserNew = function() {
+        $('#usersNew :selected').each(function(i, selected) {
             $(selected).remove();
         });
     }
-  
+    
+    self.addUserEdit = function() {
+        var user = $("#newUserEdit").val();
+        if(loadedUsersEdit[user]) {
+            var userOption = $("<option />").attr("data-select-user-id", loadedUsersEdit[user]).text(user);
+            $("#usersEdit").append(userOption);
+            $("#newUserEditDiv").hidePopover();
+            $("#newUserEditDiv").removeClass("error");
+            $("#newUserEdit").val("");
+        }
+        else {
+            $("#newUserEditDiv").showPopover({ placement: "right", title: "Erro", 
+                content: "Usuário inexistente."}); 
+            $("#newUserEditDiv").addClass("error");
+        }
+        $("#newUserEdit").focus();
+    }
+
+    self.removeUserEdit = function() {
+        $('#usersEdit :selected').each(function(i, selected) {
+            $(selected).remove();
+        });
+    }
+
+    $("#newUserNew").typeahead({
+        source: function(query, callback) {
+            var adminUserId = $("[data-user-id]").data("user-id");
+            var refreshUsersUrl = $("[data-search-url]").data("search-url");
+            var excludeList = [];
+            $("#usersNew > [data-select-user-id]").each(function() {
+                excludeList.push($(this).data("select-user-id")); 
+            });
+            excludeList.push(adminUserId);
+            $.get(refreshUsersUrl, { searchString: query, excludeList: excludeList }, function(response) {
+                var users = [];
+                if (response.users && response.users.length) {
+                    $.each(response.users, function(index, user) {
+                        loadedUsersNew[user.name] = user.id;
+                        users.push(user.name);
+                    });
+                }    
+                callback(users);
+            });
+        }
+    });
+
+    $("#newUserEdit").typeahead({
+        source: function(query, callback) {
+            var projectId = $("[data-project-id]").data("project-id");
+            var adminUserId = $("[data-user-id]").data("user-id");
+            var refreshUsersUrl = $("[data-search-url]").data("search-url");
+            var excludeList = [];
+            $("#usersEdit > [data-select-user-id]").each(function() {
+                excludeList.push($(this).data("select-user-id")); 
+            });
+            excludeList.push(adminUserId);
+            $.get(refreshUsersUrl, { searchString: query, excludeList: excludeList }, function(response) {
+                var users = [];
+                if (response.users && response.users.length) {
+                    $.each(response.users, function(index, user) {
+                        loadedUsersEdit[user.name] = user.id;
+                        users.push(user.name);
+                    });
+                }    
+                callback(users);
+            });
+        }
+    });
+
+    /* Data-changing related */
     self.addProject = function() {
         var allowedUsers = [];
         var addProjectUrl = $("[data-add-project-url]").data("add-project-url");
         var userId = $("[data-user-id]").data("user-id");
-        $("#users option").each(function() {
+        $("#usersNew option").each(function() {
             allowedUsers.push($(this).data("select-user-id")); 
         });
         var data = {
             allowedUsers: allowedUsers,
-            title: $("#title").val(),
-            description: $("#description").val(),
+            title: $("#titleNew").val(),
+            description: $("#descriptionNew").val(),
             userId: userId 
         };
         $.post(addProjectUrl, data, addProjectCallback)
             .error(errorCallback);
     }
 
+    self.editProject = function() {
+        var projectId = $("[data-project-id]").data("project-id");
+        var adminUserId = $("[data-user-id]").data("user-id");
+        var editProjectUrl = $("[data-edit-project-url]").data("edit-project-url");
+        var users = [];
+        $("[data-select-user-id]").each(function() {
+            users.push($(this).data("select-user-id")); 
+        });
+        users.push(adminUserId);
+        var data = {
+            users : users,
+            projectId : projectId,
+            title : $("#titleEdit").val(),
+            description : $("#descriptionEdit").val(),
+            adminUserId : adminUserId
+        };
+        $.post(editProjectUrl, data, editProjectCallback, "json")
+            .error(errorCallback);
+    }
+
+    /* View related */
     self.getMyProjects = function() {
         updateMyProjectsUrl = $("[data-update-my-projects-url]").data("update-my-projects-url");
         $.getJSON(updateMyProjectsUrl).success(updateMyProjectsCallback)
@@ -177,6 +337,16 @@ function Dashboard() {
             .error(errorCallback);
     }
 
+    self.showEditProjectModal = function(id, url) {
+        $.post(url, { projectId : id } , showEditProjectModalCallback, "json")
+            .error(errorCallback);
+    }
+
+    self.showViewProjectModal = function(id, url) {
+        $.post(url, { projectId : id } , showViewProjectModalCallback, "json")
+            .error(errorCallback);
+    }
+
     if($("#modalWelcome").length) {
         $("#modalWelcome").modal("show");
         setTimeout(function() {
@@ -186,25 +356,53 @@ function Dashboard() {
     self.getMyProjects();
     self.getOtherProjects();
     self.getNotifications();
-    
+   
+    /* Event related */
     $("#newProject").submit(function(e) {
         e.preventDefault();
         self.addProject();
     });
 
-    $("#addUser").click(function(e) {
-        self.addUser(); 
+    $("#editProject").submit(function(e) {
+        self.editProject();
+        e.preventDefault();
     });
 
-    $("#removeUser").click(function(e) {
-        self.removeUser(); 
+    $("#addUserNew").click(function(e) {
+        self.addUserNew(); 
+    });
+
+    $("#removeUserNew").click(function(e) {
+        self.removeUserNew(); 
+    });
+
+    $("#addUserEdit").click(function(e) {
+        self.addUserEdit(); 
+    });
+
+    $("#removeUserEdit").click(function(e) {
+        self.removeUserEdit(); 
+    });
+
+    $("#myProjects").on("click", ".edit-project-link", function(e) {
+        e.preventDefault(); 
+        var id = ($(this).parent()).attr("data-project-id");
+        var url = ($(this)).attr("data-get-project-info-url");
+        self.showEditProjectModal(id, url);
+    });
+
+    $("#myProjects, #otherProjects").on("click", ".overview-project-link", function(e) {
+        e.preventDefault(); 
+        var id = ($(this).parent()).attr("data-project-id");
+        var url = ($(this)).attr("data-get-project-info-url");
+        self.showViewProjectModal(id, url);
     });
 
     $("#modalProject").on("hide", function() { 
-        $("#title").val("");
-        $("#description").val("");
-        $("#newUser").val("");
-        $("#users option").each(function(i, selected) {
+        $("#titleNew").val("");
+        $("#descriptionNew").val("");
+        $("#newUserNew").val("");
+        $("#usersNew option").each(function(i, selected) {
             $(selected).remove();
         });
         $(".modal-body .control-group").removeClass("error").removeClass("success");
@@ -212,8 +410,9 @@ function Dashboard() {
     });
 
     $("#modalProject").on("show", function() {
-        $("#newUser").focus();
+        $("#newUserNew").focus();
     });
+
     $(".div-content").on("click", ".notificationLink", function(e) {
         $("#viewNotificationModalHeaderTitle").text($(this).attr("data-notification-title"));
         var projectId = $(this).attr("data-notification-project-id");
@@ -225,27 +424,5 @@ function Dashboard() {
         $("#notificationProjectLink").text("");
         $("#notificationProjectLink").append(a);
         $("#modalViewNotification").modal("show");
-    });
-
-    $("#newUser").typeahead({
-        source: function(query, callback) {
-            var adminUserId = $("[data-user-id]").data("user-id");
-            var refreshUsersUrl = $("[data-search-url]").data("search-url");
-            var excludeList = [];
-            $("[data-select-user-id]").each(function() {
-                excludeList.push($(this).data("select-user-id")); 
-            });
-            excludeList.push(adminUserId);
-            $.get(refreshUsersUrl, { searchString: query, excludeList: excludeList }, function(response) {
-                var users = [];
-                if (response.users && response.users.length) {
-                    $.each(response.users, function(index, user) {
-                        loadedUsers[user.name] = user.id;
-                        users.push(user.name);
-                    });
-                }    
-                callback(users);
-            });
-        }
     });
 }

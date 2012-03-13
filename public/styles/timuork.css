@@ -223,7 +223,8 @@ div.modal-footer {
     height: 100%;
     font-size: 12pt;
     float: right;
-    padding: 2px 3px 1px 0;
+    padding: 0 4px 0 0; 
+    color: #FCFCFB;
 }
 
 .project-link a.other-project-link {
@@ -231,7 +232,8 @@ div.modal-footer {
     height: 100%;
     font-size: 12pt;
     float: right;
-    padding: 2px 3px 1px 0;
+    padding: 0 4px 0 0; 
+    color: #FCFCFB;
 }
 
 #notificationProjectLink a {
@@ -289,6 +291,20 @@ div.modal-footer {
     height: 100%;
     font-size: 12pt;
     position:absolute;
+}
+
+#modalView .row, #modalView .span4, #modalView span {
+    margin: 0;
+}
+
+#modalView .span2 {
+    margin-left: 60px;
+    padding-top: 5px;
+}
+
+#modalView i {
+    vertical-align: 3%;
+    padding-left: 4px;
 }
 
 /* --------------------- */
