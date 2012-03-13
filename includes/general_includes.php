@@ -1,16 +1,11 @@
 <?php
-function redirect($url, $seconds_to_redirect)
-{
+function redirect($url, $secondsToRedirect) {
     $url = str_replace('&amp;', '&', $url); 
              
-    if($seconds_to_redirect > 0) 
-    { 
-        header("Refresh: $seconds_to_redirect; URL=$url"); 
+    if($secondsToRedirect > 0) { 
+        header("Refresh: $secondsToRedirect; URL=$url"); 
     } 
-    else 
-    {   //Como funciona isso? 
-        //@ob_flush();
-        //@ob_end_clean();
+    else {
         header("Location: $url"); 
         exit; 
     } 

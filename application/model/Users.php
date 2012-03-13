@@ -225,6 +225,10 @@
                 $validationErrors["email"] = 
                     "E-mail inválido.";
             }
+            else if($this->existsEmail($userInfo->email)) {
+                $validationErrors["email"] = 
+                    "Já existe um usuário utilizando este e-mail.";
+            }
             if(!$this->validateAccount($userInfo->account, 
                 $userInfo->accountType)) {
                 if($userInfo->accountType == "Twitter") {
@@ -307,6 +311,15 @@
             else {
                 return NULL;
             }
+        }
+
+        public function existsEmail($email) {
+            $sql = "SELECT COUNT(*) AS count 
+                FROM users 
+                WHERE email = ?";
+            $count = $this->database->fetchDB($this->database->executeQueryDB(
+                $sql, array($email)))->count;
+            return $count;
         }
 
         public function validateName($name) {

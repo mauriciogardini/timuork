@@ -7,6 +7,7 @@
             que precisa fazer um trabalho de escola/faculdade, mas não 
             quer ver a caixa de entrada do seu e-mail lotada por causa disso.">
         <meta name="author" content="Maurício Gardini">
+        <meta name="google-site-verification" content="Po3uG-hyZF3gkCQ50utqfoik8BVeJS82f-EEQ26BzK8" />
         <link rel="stylesheet" href="/styles/bootstrap.css">
         <link rel="stylesheet" href="/styles/timuork.css">
         <link rel="shortcut icon" href="img/favicon.ico">
