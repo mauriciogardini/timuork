@@ -166,7 +166,8 @@
                                         estudantil/acadêmica.
                                         </span></p>
                                         <p><span>Como este é o primeiro desenvolvimento web
-                                        feito pelo autor, espera-se que hajam erros, bugs e
+                                        feito pelo autor e o mesmo encontra-se em fase de
+                                        testes/beta, espera-se que hajam erros, bugs e
                                         afins, afinal este recém começou a aventurar nesta
                                         área. Por isso, quaisquer críticas (Desde que coerentes e
                                         bem-educadas), sugestões e elogios serão aceitos de bom 
@@ -229,6 +230,16 @@
     <script src="/scripts/timuork-general.js" type="text/javascript"></script>
     <script src="/scripts/timuork-popoverHandler.js" type="text/javascript"></script>
     <script src="/scripts/timuork-home.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30009537-1']);
+        _gaq.push(['_trackPageview']);
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>
     <script type="text/javascript">
         var home = new Home();
     </script>
