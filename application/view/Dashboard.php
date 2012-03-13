@@ -164,6 +164,26 @@
     </div>
 </div>
 <?php } ?>
+<div id="modalContact" class="modal fade">
+    <div class="modal-header">
+        <a class="close" data-dismiss="modal">&times;</a>
+        <h3 id="modalContactHeader">Contato</h3>
+    </div>
+    <div class="modal-body">
+        <form class="modal-form form-horizontal" id="contact">
+            <fieldset>
+                <div class="modal-body">
+                    <div id="aboutText">
+                        <h2><a href="mailto:contato@timuork.com">contato@timuork.com</a></h2>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input data-dismiss="modal" type="submit" class="btn btn-primary" value="Fechar" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div> 
 <div id="modalEdit" class="modal fade">
     <div class="modal-header">
         <a class="close" data-dismiss="modal">&times;</a>
@@ -372,6 +392,14 @@
 <script src="/scripts/timuork-popoverHandler.js" type="text/javascript"></script>
 <script src="/scripts/timuork-settings.js" type="text/javascript"></script>
 <script src="/scripts/timuork-dashboard.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var uvOptions = {};
+    (function() {
+        var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+        uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/jRfGATYEO5Ddk7ipnMTqjw.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+    })();
+</script>
 <script type="text/javascript">
     var dashboard = new Dashboard();
 </script>

@@ -18,7 +18,7 @@
                         <a class="brand" href="/">Timuork</a>
                         <ul class="nav" id="navigationLinks">
                             <li><a href="#modalAbout" data-toggle="modal">Sobre</a></li>
-                            <li><a href="#contact">Contato</a></li>
+                            <li><a href="#modalContact" data-toggle="modal">Contato</a></li>
                         </ul>
                         <p class="pull-right logged-in">Logado como 
                             <a data-toggle="modal" href="#modalSettings"
