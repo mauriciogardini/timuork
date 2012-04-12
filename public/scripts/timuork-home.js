@@ -27,7 +27,7 @@ function Home() {
         console.log(arguments);
     };
 
-    self.addUser = function(form) {
+    var addUser = function(form) {
         var form = $(form);
         var action = form.attr("action");
         var data = form.serialize();
@@ -36,6 +36,6 @@ function Home() {
 
     $("#addUser").submit(function(e) {
         e.preventDefault();
-        self.addUser(this);
+        addUser(this);
     });
 }
